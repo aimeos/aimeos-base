@@ -1,0 +1,5 @@
+tmp/
+vendor/
+config/
+confdoc.ser
+composer.lock
