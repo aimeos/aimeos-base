@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Aimeos Base" default="all">
+	<property name="bindir" value="${project.basedir}/vendor/bin/" override="false" />
+
+	<target name="test" description="Executes unit tests">
+		<echo msg="Executing unit tests" />
+		<exec command="${bindir}phpunit --configuration=phpunit.xml"
+			dir="tests" checkreturn="true" logoutput="true" passthru="true" />
+	</target>
+
+	<target name="coverage" description="Generates code coverage report">
+		<echo msg="Generating code coverage report" />
+		<delete file="tests/coverage.xml" quiet="true" failonerror="false" />
+		<exec command="${bindir}phpunit --configuration=phpunit-coverage.xml"
+			dir="tests" checkreturn="true" logoutput="true" passthru="true" />
+	</target>
+
+	<target name="check" description="Executes code sniffer">
+		<echo msg="Executing code sniffer" />
+		<exec command="${bindir}phpcs -n --standard=.phpcs/ src tests"
+			checkreturn="true" logoutput="true" passthru="true" />
+	</target>
+
+	<target name="clean" description="Cleans up temporary files">
+		<delete file="tests/coverage.xml" quiet="true" failonerror="false" />
+		<delete file="tests/confdoc.ser" quiet="true" failonerror="false" />
+		<delete dir="tmp" quiet="true" failonerror="false" />
+	</target>
+
+	<target name="all" depends="coverage,check" description="Builds all parts of the package">
+	</target>
+
+</project>
