@@ -3,3 +3,5 @@ vendor/
 config/
 confdoc.ser
 composer.lock
+.phpunit.result.cache
+
