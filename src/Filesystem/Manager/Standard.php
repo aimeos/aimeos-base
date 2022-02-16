@@ -26,9 +26,9 @@ class Standard implements Iface
 	/**
 	 * Initializes the object
 	 *
-	 * @param \Aimeos\Base\Config\Iface $config Configuration object
+	 * @param array $config Configuration object
 	 */
-	public function __construct( \Aimeos\Base\Config\Iface $config )
+	public function __construct( array $config )
 	{
 		$this->config = $config;
 	}
@@ -84,13 +84,13 @@ class Standard implements Iface
 	 */
 	protected function getConfig( string $name )
 	{
-		if( ( $conf = $this->config->get( 'resource/' . $name ) ) !== null ) {
-			return $conf;
+		if( isset( $this->config[$name] ) ) {
+			return $this->config[$name];
 		}
 
 		$name = 'fs';
-		if( ( $conf = $this->config->get( 'resource/fs' ) ) !== null ) {
-			return $conf;
+		if( isset( $this->config[$name] ) ) {
+			return $this->config[$name];
 		}
 
 		$msg = sprintf( 'No resource configuration for "%1$s" available', $name );
