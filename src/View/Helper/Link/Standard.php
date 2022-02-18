@@ -26,10 +26,11 @@ class Standard
 	 *
 	 * @param string $cfgkey Prefix of the configuration key for the URL settings
 	 * @param array $params Associative list of parameters that should be part of the URL
+	 * @param array $config Associated list of additional configuration
 	 * @param string[] $fragments Trailing URL fragment that are not relevant to identify the resource
 	 * @return string Complete URL that can be used in the template
 	 */
-	public function transform( string $cfgkey, array $params = [], array $fragments = [] ) : string
+	public function transform( string $cfgkey, array $params = [], $config = [], array $fragments = [] ) : string
 	{
 		$view = $this->view();
 		$list = array_slice( explode( '/', $cfgkey ), 2 );
@@ -38,7 +39,7 @@ class Standard
 		$target = $view->config( $cfgkey . '/target' );
 		$cntl = $view->config( $cfgkey . '/controller', $cntl ? ucfirst( $cntl ) : null );
 		$action = $view->config( $cfgkey . '/action', array_shift( $list ) );
-		$config = $view->config( $cfgkey . '/config', [] );
+		$config = array_replace( $view->config( $cfgkey . '/config', [] ), $config );
 		$filter = $view->config( $cfgkey . '/filter', [] );
 
 		$params = array_diff_key( $params, array_flip( $filter ) );

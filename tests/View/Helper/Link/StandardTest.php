@@ -34,10 +34,12 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testTransform()
 	{
-		$expected = '/baseurl/module/test/index/?plain=1&multi%5Bsub%5D=1';
-		$params = array( 'plain' => 1, 'multi' => array( 'sub' => true ) );
+		$expected = '/baseurl/module/test/index/a-b-c?plain=1&multi%5Bsub%5D=1';
+		$params = ['plain' => 1, 'multi' => ['sub' => true]];
+		$config = ['absoluteUri' => true];
+		$fragments = ['a', 'b', 'c'];
 
-		$this->assertEquals( $expected, $this->object->transform( 'test', $params ) );
+		$this->assertEquals( $expected, $this->object->transform( 'test', $params, $config, $fragments ) );
 	}
 
 }
