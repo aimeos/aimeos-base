@@ -46,6 +46,7 @@ class NoneTest extends \PHPUnit\Framework\TestCase
 	public function testBcc()
 	{
 		$this->assertInstanceOf( \Aimeos\Base\Mail\Message\Iface::class, $this->object->bcc( 'test@example.com' ) );
+		$this->assertInstanceOf( \Aimeos\Base\Mail\Message\Iface::class, $this->object->bcc( ['test@example.com', 'a@b.com'] ) );
 	}
 
 

@@ -33,11 +33,10 @@ interface Iface
 	/**
 	 * Adds a destination e-mail address for a hidden copy of the message.
 	 *
-	 * @param string $email Destination address for a hidden copy
-	 * @param string|null $name Name of the user owning the target mailbox or null for no name
+	 * @param array|string $email Destination address for a hidden copy
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function bcc( string $email, string $name = null ) : Iface;
+	public function bcc( $email ) : Iface;
 
 	/**
 	 * Adds a destination e-mail address for a copy of the message.
