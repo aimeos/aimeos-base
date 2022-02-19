@@ -160,13 +160,13 @@ class None
 	/**
 	 * Adds an attachment to the message.
 	 *
-	 * @param string $data Binary or string @author nose
-	 * @param string $mimetype Mime type of the attachment (e.g. "text/plain", "application/octet-stream", etc.)
+	 * @param string|null $data Binary or string @author nose
+	 * @param string|null $mimetype Mime type of the attachment (e.g. "text/plain", "application/octet-stream", etc.)
 	 * @param string|null $filename Name of the attached file (or null if inline disposition is used)
 	 * @param string $disposition Type of the disposition ("attachment" or "inline")
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function attach( string $data, string $mimetype, string $filename, string $disposition = 'attachment' ) : Iface
+	public function attach( ?string $data, string $filename = null, string $mimetype = null, string $disposition = 'attachment' ) : Iface
 	{
 		return $this;
 	}
@@ -175,12 +175,12 @@ class None
 	/**
 	 * Embeds an attachment into the message and returns its reference.
 	 *
-	 * @param string $data Binary or string
-	 * @param string $mimetype Mime type of the attachment (e.g. "text/plain", "application/octet-stream", etc.)
+	 * @param string|null $data Binary or string
+	 * @param string|null $mimetype Mime type of the attachment (e.g. "text/plain", "application/octet-stream", etc.)
 	 * @param string|null $filename Name of the attached file
 	 * @return string Content ID for referencing the attachment in the HTML body
 	 */
-	public function embed( string $data, string $mimetype, string $filename ) : string
+	public function embed( ?string $data, string $filename = null, string $mimetype = null ) : string
 	{
 		return '';
 	}

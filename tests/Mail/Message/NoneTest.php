@@ -94,12 +94,12 @@ class NoneTest extends \PHPUnit\Framework\TestCase
 
 	public function testAttach()
 	{
-		$this->assertInstanceOf( \Aimeos\Base\Mail\Message\Iface::class, $this->object->attach( 'test', 'mime', 'file' ) );
+		$this->assertInstanceOf( \Aimeos\Base\Mail\Message\Iface::class, $this->object->attach( 'test' ) );
 	}
 
 
 	public function testEmbed()
 	{
-		$this->assertEquals( '', $this->object->embed( 'test', 'mime', 'file' ) );
+		$this->assertEquals( '', $this->object->embed( 'test' ) );
 	}
 }
