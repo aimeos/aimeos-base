@@ -13,6 +13,30 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testClone()
+	{
+		$object = new \Aimeos\Base\Process\Pcntl();
+		$this->assertNotSame( $object, clone $object );
+	}
+
+
+	public function testExec()
+	{
+		$fcn = function() {};
+		$result = $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] );
+	}
+
+
+	public function testExecException()
+	{
+		$fcn = function() {
+			throw new \RuntimeException();
+		};
+
+		$result = $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] );
+	}
+
+
 	public function testIsAvailable()
 	{
 		$object = new \Aimeos\Base\Process\Pcntl();
@@ -22,11 +46,11 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 
 	public function testRun()
 	{
-		$object = new \Aimeos\Base\Process\Pcntl();
+		$object = new \Aimeos\Base\Process\Pcntl( 1 );
 		$fcn = function() { sleep( 1 ); };
 
 		$start = microtime( true );
-		$return = $object->start( $fcn, [] )->start( $fcn, [] )->wait();
+		$return = $object->start( $fcn, [\TestHelper::getConfig()] )->start( $fcn, [] )->wait();
 		$msec = ( microtime( true ) - $start );
 
 		$this->assertInstanceOf( \Aimeos\Base\Process\Iface::class, $return );
@@ -47,6 +71,16 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 		stream_filter_remove( $filter );
 
 		$this->assertInstanceOf( \Aimeos\Base\Process\Iface::class, $result );
+	}
+
+
+	protected function access( $name )
+	{
+		$class = new \ReflectionClass( \Aimeos\Base\Process\Pcntl::class );
+		$method = $class->getMethod( $name );
+		$method->setAccessible( true );
+
+		return $method;
 	}
 }
 

@@ -180,13 +180,6 @@ class Pcntl implements Iface
 		{
 			call_user_func_array( $fcn, $data );
 		}
-		catch( \Exception $e ) // for PHP 5.x
-		{
-			fwrite( STDERR, $e->getMessage() );
-			fwrite( STDERR, $e->getTraceAsString() );
-
-			return 1;
-		}
 		catch( \Throwable $t )
 		{
 			fwrite( STDERR, $t->getMessage() );
