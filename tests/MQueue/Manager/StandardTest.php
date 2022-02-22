@@ -25,6 +25,13 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testClone()
+	{
+		$this->config->set( 'resource/mq-email', array( 'adapter' => 'None' ) );
+		$this->assertInstanceof( 'Aimeos\Base\MQueue\Manager\Iface', clone $this->object );
+	}
+
+
 	public function testGet()
 	{
 		$this->config->set( 'resource/mq-email', array( 'adapter' => 'None' ) );
@@ -36,6 +43,13 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->config->set( 'resource/mq', array( 'adapter' => 'None' ) );
 		$this->assertInstanceof( 'Aimeos\Base\MQueue\Iface', $this->object->get( 'mq-email' ) );
+	}
+
+
+	public function testGetException()
+	{
+		$this->expectException( \Aimeos\Base\MQueue\Exception::class );
+		$this->object->get( 'xx' );
 	}
 
 

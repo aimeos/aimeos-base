@@ -12,7 +12,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$this->basedir = dirname( __DIR__ ) . '/tmp/';
-		$this->object = new \Aimeos\Base\Filesystem\Standard( array( 'basedir' => $this->basedir ) );
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => $this->basedir] );
 	}
 
 
@@ -22,9 +22,37 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testTempdirException()
+	{
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		new \Aimeos\Base\Filesystem\Standard( ['tempdir' => '/invalid'] );
+	}
+
+
+	public function testBasedirException()
+	{
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		new \Aimeos\Base\Filesystem\Standard( ['tempdir' => $this->basedir] );
+	}
+
+
+	public function testBasedirPermissionException()
+	{
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		new \Aimeos\Base\Filesystem\Standard( ['tempdir' => $this->basedir, 'basedir' => '/invalid'] );
+	}
+
+
 	public function testIsdir()
 	{
 		$this->assertTrue( $this->object->isdir( '' ) );
+	}
+
+
+	public function testIsdirException()
+	{
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->isdir( '..' );
 	}
 
 
@@ -234,8 +262,10 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWriteException()
 	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
 		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
-		$this->object->write( '', 'test' );
+		$this->object->write( 'path', 'test' );
 	}
 
 
@@ -285,8 +315,19 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWritesException()
 	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
 		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
-		$this->object->writes( 'file10ex', null );
+		$this->object->writes( 'path', null );
+	}
+
+
+	public function testWritesFileException()
+	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->writes( '.', null );
 	}
 
 
@@ -307,6 +348,24 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testMoveException()
+	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->move( 'path', 'dest' );
+	}
+
+
+	public function testMoveRenameException()
+	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->move( '.', '.' );
+	}
+
+
 	public function testCopy()
 	{
 		touch( $this->basedir . 'file12' );
@@ -322,5 +381,23 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf( \Aimeos\Base\Filesystem\Iface::class, $object );
 		$this->assertTrue( $result );
 		$this->assertTrue( $result2 );
+	}
+
+
+	public function testCopyException()
+	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->copy( 'path', 'dest' );
+	}
+
+
+	public function testCopyRenameException()
+	{
+		$this->object = new \Aimeos\Base\Filesystem\Standard( ['basedir' => '/root'] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$this->object->copy( '.', '.' );
 	}
 }

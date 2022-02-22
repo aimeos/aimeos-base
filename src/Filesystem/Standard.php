@@ -34,7 +34,7 @@ class Standard implements Iface, DirIface, MetaIface
 			$config['tempdir'] = sys_get_temp_dir();
 		}
 
-		if( !is_dir( $config['tempdir'] ) && mkdir( $config['tempdir'], 0755, true ) === false ) {
+		if( !is_dir( $config['tempdir'] ) && @mkdir( $config['tempdir'], 0755, true ) === false ) {
 			throw new Exception( sprintf( 'Directory "%1$s" could not be created', $config['tempdir'] ) );
 		}
 
@@ -42,7 +42,7 @@ class Standard implements Iface, DirIface, MetaIface
 			throw new Exception( sprintf( 'Configuration option "%1$s" missing', 'basedir' ) );
 		}
 
-		if( !is_dir( $config['basedir'] ) && mkdir( $config['basedir'], 0755, true ) === false ) {
+		if( !is_dir( $config['basedir'] ) && @mkdir( $config['basedir'], 0755, true ) === false ) {
 			throw new Exception( sprintf( 'Directory "%1$s" could not be created', $config['basedir'] ) );
 		}
 
@@ -371,7 +371,7 @@ class Standard implements Iface, DirIface, MetaIface
 	{
 		$path = trim( $path, '/' );
 
-		if( strncmp( $path, '../', 3 ) === 0 || strpos( $path, '/../' ) !== false ) {
+		if( strpos( $path, '..' ) !== false ) {
 			throw new Exception( sprintf( 'No ".." allowed in path "%1$s"', $path ) );
 		}
 

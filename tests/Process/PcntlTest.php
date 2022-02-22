@@ -27,6 +27,19 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testExecException()
+	{
+		$fcn = function() { throw new \Exception(); };
+
+		stream_filter_register( "redirect", "\Aimeos\Base\Process\DiscardFilter" );
+		$filter = stream_filter_prepend( STDERR, "redirect", STREAM_FILTER_WRITE );
+
+		$this->assertEquals( 1, $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] ) );
+
+		stream_filter_remove( $filter );
+	}
+
+
 	public function testIsAvailable()
 	{
 		$object = new \Aimeos\Base\Process\Pcntl();
@@ -45,22 +58,6 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertInstanceOf( \Aimeos\Base\Process\Iface::class, $return );
 		$this->assertGreaterThan( 1, $msec );
-	}
-
-
-	public function testRunError()
-	{
-		$fcn = function() { throw new \Exception(); };
-
-		stream_filter_register( "redirect", "\Aimeos\Base\Process\DiscardFilter" );
-		$filter = stream_filter_prepend( STDERR, "redirect", STREAM_FILTER_WRITE );
-
-		$object = new \Aimeos\Base\Process\Pcntl();
-		$result = $object->start( $fcn, [], true )->wait();
-
-		stream_filter_remove( $filter );
-
-		$this->assertInstanceOf( \Aimeos\Base\Process\Iface::class, $result );
 	}
 
 

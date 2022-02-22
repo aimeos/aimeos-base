@@ -7,12 +7,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 {
 	public function testGet()
 	{
-		$config = \TestHelper::getConfig()->get( 'resource' );
-		$config['fs-media'] = [
-			'adapter' => 'Standard',
-			'basedir' => __DIR__
-		];
-
+		$config = ['fs-media' => ['adapter' => 'Standard', 'basedir' => __DIR__]];
 		$object = new \Aimeos\Base\Filesystem\Manager\Standard( $config );
 
 		$this->assertInstanceof( 'Aimeos\Base\Filesystem\Iface', $object->get( 'fs-media' ) );
@@ -21,14 +16,25 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetFallback()
 	{
-		$config = \TestHelper::getConfig()->get( 'resource' );
-		$config['fs'] = [
-			'adapter' => 'Standard',
-			'basedir' => __DIR__
-		];
-
+		$config = ['fs' => ['adapter' => 'Standard', 'basedir' => __DIR__]];
 		$object = new \Aimeos\Base\Filesystem\Manager\Standard( $config );
 
 		$this->assertInstanceof( 'Aimeos\Base\Filesystem\Iface', $object->get( 'fs-media' ) );
+	}
+
+
+	public function testGetException()
+	{
+		$object = new \Aimeos\Base\Filesystem\Manager\Standard( [] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$object->get( 'xx' );
+	}
+
+
+	public function testSleep()
+	{
+		$object = new \Aimeos\Base\Filesystem\Manager\Standard( [] );
+		$this->assertEquals( ['config' => [], 'objects' => []], $object->__sleep() );
 	}
 }
