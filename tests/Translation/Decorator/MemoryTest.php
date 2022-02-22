@@ -35,6 +35,12 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testAll()
+	{
+		$this->assertEquals( [], $this->object->all( 'domain' ) );
+	}
+
+
 	public function testDt()
 	{
 		$this->assertEquals( 'translation singular', $this->object->dt( 'domain', 'test singular' ) );

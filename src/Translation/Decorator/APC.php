@@ -21,7 +21,7 @@ class APC
 	extends \Aimeos\Base\Translation\Decorator\Base
 	implements \Aimeos\Base\Translation\Decorator\Iface
 {
-	private $enable = false;
+	private $enable;
 	private $prefix;
 
 
@@ -35,11 +35,8 @@ class APC
 	{
 		parent::__construct( $object );
 
-		if( function_exists( 'apcu_store' ) === true )
-		{
-			$this->enable = true;
-			$this->prefix = $prefix;
-		}
+		$this->enable = function_exists( 'apcu_store' );
+		$this->prefix = $prefix;
 	}
 
 
@@ -52,8 +49,8 @@ class APC
 	 */
 	public function dt( string $domain, string $string ) : string
 	{
-		if( $this->enable === false ) {
-			return parent::dt( $domain, $string );
+		if( !$this->enable ) {
+			return $this->object()->dt( $domain, $string );
 		}
 
 		$key = $this->prefix . $domain . '|' . $this->getLocale() . '|' . $string;
@@ -67,7 +64,7 @@ class APC
 		}
 
 		// not cached
-		$value = parent::dt( $domain, $string );
+		$value = $this->object()->dt( $domain, $string );
 
 		apcu_store( $key, $value );
 
@@ -86,8 +83,8 @@ class APC
 	 */
 	public function dn( string $domain, string $singular, string $plural, int $number ) : string
 	{
-		if( $this->enable === false ) {
-			return parent::dn( $domain, $singular, $plural, $number );
+		if( !$this->enable ) {
+			return $this->object()->dn( $domain, $singular, $plural, $number );
 		}
 
 		$locale = $this->getLocale();
@@ -103,7 +100,7 @@ class APC
 		}
 
 		// not cached
-		$value = parent::dn( $domain, $singular, $plural, $number );
+		$value = $this->object()->dn( $domain, $singular, $plural, $number );
 
 		apcu_store( $key, $value );
 

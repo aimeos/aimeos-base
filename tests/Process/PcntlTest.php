@@ -23,17 +23,7 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 	public function testExec()
 	{
 		$fcn = function() {};
-		$result = $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] );
-	}
-
-
-	public function testExecException()
-	{
-		$fcn = function() {
-			throw new \RuntimeException();
-		};
-
-		$result = $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] );
+		$this->assertEquals( 0, $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] ) );
 	}
 
 

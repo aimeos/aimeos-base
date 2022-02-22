@@ -48,11 +48,7 @@ class Memory
 	 */
 	public function dt( string $domain, string $string ) : string
 	{
-		if( isset( $this->translations[$domain][$string][0] ) ) {
-			return $this->translations[$domain][$string][0];
-		}
-
-		return parent::dt( $domain, $string );
+		return $this->translations[$domain][$string][0] ?? parent::dt( $domain, $string );
 	}
 
 
@@ -68,11 +64,6 @@ class Memory
 	public function dn( string $domain, string $singular, string $plural, int $number ) : string
 	{
 		$index = $this->getPluralIndex( $number, $this->getLocale() );
-
-		if( isset( $this->translations[$domain][$singular][$index] ) ) {
-			return $this->translations[$domain][$singular][$index];
-		}
-
-		return parent::dn( $domain, $singular, $plural, $number );
+		return $this->translations[$domain][$singular][$index] ?? parent::dn( $domain, $singular, $plural, $number );
 	}
 }

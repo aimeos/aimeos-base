@@ -171,10 +171,7 @@ class Pcntl implements Iface
 	protected function exec( \Closure $fcn, array $data ) : int
 	{
 		pcntl_setpriority( $this->prio );
-
-		for( $i = 0; $i < ob_get_level(); $i++ ) {
-			ob_end_clean(); // avoid printing buffered messages of the parent again
-		}
+		ob_clean(); // avoid printing buffered messages of the parent again
 
 		try
 		{
@@ -182,9 +179,7 @@ class Pcntl implements Iface
 		}
 		catch( \Throwable $t )
 		{
-			fwrite( STDERR, $t->getMessage() );
-			fwrite( STDERR, $t->getTraceAsString() );
-
+			fwrite( STDERR, $t->getMessage() . "\n" . $t->getTraceAsString() );
 			return 1;
 		}
 
