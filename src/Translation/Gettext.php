@@ -10,8 +10,6 @@
 
 namespace Aimeos\Base\Translation;
 
-use Gettext\Translations;
-
 
 /**
  * Translation using Gettext library
@@ -121,7 +119,7 @@ class Gettext
 	{
 		if( !isset( $this->files[$domain] ) )
 		{
-			if ( !isset( $this->sources[$domain] ) )
+			if( !isset( $this->sources[$domain] ) )
 			{
 				$msg = sprintf( 'No translation directory for domain "%1$s" available', $domain );
 				throw new \Aimeos\Base\Translation\Exception( $msg );

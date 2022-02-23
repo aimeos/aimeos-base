@@ -18,23 +18,36 @@ class GettextTest extends \PHPUnit\Framework\TestCase
 	{
 		$ds = DIRECTORY_SEPARATOR;
 
-		$this->translationSources = array(
+		$translationSources = array(
 			'testDomain' => array( __DIR__ . $ds . 'testfiles' . $ds . 'case1' ),
 		);
 
-		$this->object = new \Aimeos\Base\Translation\Gettext( $this->translationSources, 'de_DE' );
+		$this->object = new \Aimeos\Base\Translation\Gettext( $translationSources, 'de_DE' );
 	}
 
 
 	protected function tearDown() : void
 	{
-		$this->object = null;
+		unset( $this->object );
+	}
+
+
+	public function testDomainInvalid()
+	{
+		$this->expectException( \Aimeos\Base\Translation\Exception::class );
+		$this->object->dt( 'invalid', 'File' );
 	}
 
 
 	public function testDt()
 	{
 		$this->assertEquals( 'Datei', $this->object->dt( 'testDomain', 'File' ) );
+	}
+
+
+	public function testDtFallback()
+	{
+		$this->assertEquals( 'notexisting', $this->object->dt( 'testDomain', 'notexisting' ) );
 	}
 
 
@@ -46,8 +59,13 @@ class GettextTest extends \PHPUnit\Framework\TestCase
 		 * 1, if $n == 2..4, 22..24, 32..34, ...
 		 * 2, if $n == 5..20, 25..30, 35..40, .
 		 */
+		$ds = DIRECTORY_SEPARATOR;
 
-		$object = new \Aimeos\Base\Translation\Gettext( $this->translationSources, 'ru' );
+		$translationSources = array(
+			'testDomain' => array( __DIR__ . $ds . 'testfiles' . $ds . 'case1' ),
+		);
+
+		$object = new \Aimeos\Base\Translation\Gettext( $translationSources, 'ru' );
 
 		$this->assertEquals( 'plural 2', $object->dn( 'testDomain', 'File', 'Files', 0 ) );
 		$this->assertEquals( 'singular', $object->dn( 'testDomain', 'File', 'Files', 1 ) );
@@ -57,6 +75,13 @@ class GettextTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals( 'plural 1', $object->dn( 'testDomain', 'File', 'Files', 22 ) );
 		$this->assertEquals( 'plural 2', $object->dn( 'testDomain', 'File', 'Files', 25 ) );
 		$this->assertEquals( 'singular', $object->dn( 'testDomain', 'File', 'Files', 31 ) );
+	}
+
+
+	public function testDnFallback()
+	{
+		$this->assertEquals( 'notexists', $this->object->dn( 'testDomain', 'notexists', 'notexisting', 1 ) );
+		$this->assertEquals( 'notexisting', $this->object->dn( 'testDomain', 'notexists', 'notexisting', 2 ) );
 	}
 
 

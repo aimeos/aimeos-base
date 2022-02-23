@@ -92,14 +92,9 @@ abstract class Base
 	 * @param  int $number Quantity to find the plural index
 	 * @param  string  $locale Locale to be used
 	 * @return int Number of the plural index
-	 *
-	 * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
-	 * @license    New BSD License, https://opensource.org/licenses/BSD-3-Clause
 	 */
 	protected function getPluralIndex( int $number, string $locale ) : int
 	{
-		$number = abs( (int) $number );
-
 		if( $locale == 'pt_BR' ) {
 			$locale = 'xbr'; // temporary set a locale for brasilian
 		}
@@ -108,6 +103,22 @@ abstract class Base
 			$locale = substr( $locale, 0, -strlen( strrchr( $locale, '_' ) ) );
 		}
 
+		return $this->index( abs( $number ), $locale );
+	}
+
+
+	/**
+	 * Returns the plural index for the given locale.
+	 *
+	 * @param int $number Quantity to find the plural index
+	 * @param string $locale Locale to be used
+	 * @return int Number of the plural index
+	 *
+	 * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+	 * @license    New BSD License, https://opensource.org/licenses/BSD-3-Clause
+	 */
+	protected function index( int $number, string $locale ) : int
+	{
 		switch( $locale )
 		{
 			case 'af':

@@ -38,7 +38,7 @@ class Mo
 	 */
 	public function __construct( string $filepath )
 	{
-		if( ( $str = file_get_contents( $filepath ) ) === false ) {
+		if( ( $str = @file_get_contents( $filepath ) ) === false ) {
 			throw new \Aimeos\Base\Translation\Exception( sprintf( 'Unable to read from file "%1$s"', $filepath ) );
 		}
 
@@ -67,11 +67,7 @@ class Mo
 	 */
 	public function get( string $original )
 	{
-		if( isset( $this->messages[$original] ) ) {
-			return $this->messages[$original];
-		}
-
-		return null;
+		return $this->messages[$original] ?? null;
 	}
 
 
@@ -98,12 +94,12 @@ class Mo
 		$originals = $this->readInt( $byteOrder ); //offset of original table
 		$trans = $this->readInt( $byteOrder ); //offset of translation table
 
-		$this->seekto( $originals );
+		$this->seekto( (int) $originals );
 		$originalTable = $this->readIntArray( $byteOrder, $total * 2 );
-		$this->seekto( $trans );
+		$this->seekto( (int) $trans );
 		$translationTable = $this->readIntArray( $byteOrder, $total * 2 );
 
-		return $this->extractTable( $originalTable, $translationTable, $total );
+		return $this->extractTable( $originalTable, $translationTable, (int) $total );
 	}
 
 
@@ -166,7 +162,7 @@ class Mo
 	 */
 	protected function readInt( string $byteOrder ) : ?int
 	{
-		if( ( $content = $this->read( 4 )) === null ) {
+		if( ( $content = $this->read( 4 ) ) === '' ) {
 			return null;
 		}
 
@@ -192,15 +188,17 @@ class Mo
 	 * Returns a part of the file
 	 *
 	 * @param int $bytes Number of bytes to read
-	 * @return string|null Read bytes or null on failure
+	 * @return string Read bytes or empty on failure
 	 */
-	protected function read( int $bytes ) : ?string
+	protected function read( int $bytes ) : string
 	{
-		if( ( $data = substr( $this->str, $this->pos, $bytes ) ) !== null ) {
+		$data = substr( $this->str, $this->pos, $bytes );
+
+		if( $data !== false && $data !== '' ) {
 			$this->seekto( $this->pos + $bytes );
 		}
 
-		return $data;
+		return (string) $data;
 	}
 
 
