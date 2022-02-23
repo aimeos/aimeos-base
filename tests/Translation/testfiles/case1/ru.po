@@ -1,0 +1,22 @@
+#
+# @license LGPLv3, http://opensource.org/licenses/LGPL-3.0
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Testfile for gettext adapter\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-12 22:21+0100\n"
+"PO-Revision-Date: 2016-02-07 16:41+0000\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+msgid "File"
+msgid_plural "Files"
+msgstr[0] "singular"
+msgstr[1] "plural 1"
+msgstr[2] "plural 2"
+msgstr[3] "plural 3"

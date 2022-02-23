@@ -1,0 +1,28 @@
+#
+# @license LGPLv3, http://opensource.org/licenses/LGPL-3.0
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Testfile for zend translation adapter gettext\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-26 17:27+0100\n"
+"PO-Revision-Date: 2012-09-26 18:26+0100\n"
+"Language-Team: test team\n"
+"Language: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+
+msgid "File"
+msgid_plural "Files"
+msgstr[0] "Datei mehr"
+msgstr[1] "Dateien mehr"
+
+msgid "Car"
+msgid_plural "Cars"
+msgstr[0] "KFZ"
+msgstr[1] "KFZs"
+
+msgid "Update"
+msgstr "Neue Version"
