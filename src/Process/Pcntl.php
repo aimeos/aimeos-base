@@ -171,7 +171,10 @@ class Pcntl implements Iface
 	protected function exec( \Closure $fcn, array $data ) : int
 	{
 		pcntl_setpriority( $this->prio );
-		ob_clean(); // avoid printing buffered messages of the parent again
+
+		if( ob_get_level() > 0 ) {
+			ob_clean(); // avoid printing buffered messages of the parent again
+		}
 
 		try
 		{
