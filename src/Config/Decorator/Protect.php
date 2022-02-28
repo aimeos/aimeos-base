@@ -59,27 +59,4 @@ class Protect
 
 		throw new \Aimeos\Base\Config\Exception( sprintf( 'Not allowed to access "%1$s" configuration', $name ) );
 	}
-
-
-	/**
-	 * Sets the value for the specified key
-	 *
-	 * @param string $name Path to the requested value like tree/node/classname
-	 * @param mixed $value Value that should be associated with the given path
-	 * @return \Aimeos\Base\Config\Iface Config instance for method chaining
-	 * @throws \Aimeos\Base\Config\Exception If setting configuration isn't allowed
-	 */
-	public function set( string $name, $value ) : \Aimeos\Base\Config\Iface
-	{
-		foreach( $this->prefixes as $prefix => $len )
-		{
-			if( strncmp( $name, $prefix, $len ) === 0 )
-			{
-				parent::set( $name, $value );
-				return $this;
-			}
-		}
-
-		throw new \Aimeos\Base\Config\Exception( sprintf( 'Not allowed to set "%1$s" configuration', $name ) );
-	}
 }

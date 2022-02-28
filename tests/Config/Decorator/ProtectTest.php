@@ -30,14 +30,12 @@ class ProtectTest extends \PHPUnit\Framework\TestCase
 
 	public function testSet()
 	{
-		$this->object->set( 'client/html/test', 'value' );
-		$this->assertEquals( 'value', $this->object->get( 'client/html/test' ) );
+		$this->assertInstanceOf( \Aimeos\Base\Config\Iface::class, $this->object->set( 'client/html/test', 'testval' ) );
 	}
 
 
-	public function testSetProtected()
+	public function testApply()
 	{
-		$this->expectException( 'Aimeos\Base\Config\Exception' );
-		$this->object->set( 'resource/db', [] );
+		$this->assertInstanceOf( \Aimeos\Base\Config\Iface::class, $this->object->apply( ['resource' => ['db' => []]] ) );
 	}
 }

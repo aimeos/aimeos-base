@@ -21,7 +21,7 @@ class APC
 	extends \Aimeos\Base\Config\Decorator\Base
 	implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $enable = false;
+	private $enable;
 	private $prefix;
 
 
@@ -35,11 +35,8 @@ class APC
 	{
 		parent::__construct( $object );
 
-		if( function_exists( 'apcu_store' ) === true )
-		{
-			$this->enable = true;
-			$this->prefix = $prefix;
-		}
+		$this->enable = function_exists( 'apcu_store' );
+		$this->prefix = $prefix;
 	}
 
 
@@ -52,8 +49,8 @@ class APC
 	 */
 	public function get( string $path, $default = null )
 	{
-		if( $this->enable === false ) {
-			return parent::get( $path, $default );
+		if( !$this->enable ) {
+			return $this->object()->get( $path, $default );
 		}
 
 		$path = trim( $path, '/' );
@@ -75,7 +72,7 @@ class APC
 		}
 
 		// not cached
-		if( ( $value = parent::get( $path, null ) ) === null )
+		if( ( $value = $this->object()->get( $path, null ) ) === null )
 		{
 			apcu_store( '-' . $this->prefix . $path, null );
 			return $default;
@@ -96,13 +93,13 @@ class APC
 	 */
 	public function set( string $path, $value ) : \Aimeos\Base\Config\Iface
 	{
-		if( $this->enable === false ) {
-			return parent::set( $path, $value );
+		if( !$this->enable ) {
+			return $this->object()->set( $path, $value );
 		}
 
 		$path = trim( $path, '/' );
 
-		parent::set( $path, $value );
+		$this->object()->set( $path, $value );
 
 		apcu_store( $this->prefix . $path, $value );
 		return $this;

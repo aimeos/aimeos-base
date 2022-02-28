@@ -23,6 +23,7 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 
 	protected function tearDown() : void
 	{
+		unset( $this->object );
 	}
 
 
@@ -32,10 +33,10 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
 
 		$local = ['resource' => ['db' => ['host' => '127.0.0.1']]];
-		$this->object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
-		$this->object->apply( ['resource' => ['db' => ['host' => '127.0.0.2', 'database' => 'testdb']]] );
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+		$object->apply( ['resource' => ['db' => ['host' => '127.0.0.2', 'database' => 'testdb']]] );
 
-		$result = $this->object->get( 'resource/db', [] );
+		$result = $object->get( 'resource/db', [] );
 		$this->assertEquals( 'testdb', $result['database'] );
 		$this->assertEquals( '127.0.0.2', $result['host'] );
 	}
@@ -52,9 +53,9 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 	{
 		$conf = new \Aimeos\Base\Config\PHPArray( [] );
 		$local = ['resource' => ['db' => ['host' => '127.0.0.1']]];
-		$this->object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
 
-		$this->assertEquals( '127.0.0.1', $this->object->get( 'resource/db/host', '127.0.0.2' ) );
+		$this->assertEquals( '127.0.0.1', $object->get( 'resource/db/host', '127.0.0.2' ) );
 	}
 
 
@@ -70,10 +71,20 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
 
 		$local = ['resource' => ['db' => ['host' => '127.0.0.1']]];
-		$this->object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
 
-		$result = $this->object->get( 'resource/db', [] );
+		$result = $object->get( 'resource/db', [] );
 		$this->assertArrayNotHasKey( 'database', $result );
 		$this->assertArrayHasKey( 'host', $result );
+	}
+
+
+	public function testSet()
+	{
+		$conf = new \Aimeos\Base\Config\PHPArray( [] );
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, [] );
+
+		$this->assertInstanceOf( \Aimeos\Base\Config\Iface::class, $object->set( 'notexisting', null ) );
+		$this->assertEquals( null, $object->get( 'notexisting' ) );
 	}
 }
