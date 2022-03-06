@@ -64,10 +64,11 @@ interface Iface
 	 * Reads the content of the remote file and writes it to a local one
 	 *
 	 * @param string $path Path to the remote file
+	 * @param string|null $local Path to the local file (optional)
 	 * @return string Path of the local file
 	 * @throws \Aimeos\Base\Filesystem\Exception If an error occurs
 	 */
-	public function readf( string $path ) : string;
+	public function readf( string $path, string $local = null ) : string;
 
 	/**
 	 * Returns the stream descriptor of the remote file

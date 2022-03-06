@@ -32,7 +32,7 @@ interface MetaIface
 	 * Returns the Unix modification time stamp of the file
 	 *
 	 * @param string $path Path to the file
-	 * @return int Unix time stamp in seconds
+	 * @return int Unix time stamp in seconds since 1970-01-01 00:00:00
 	 * @throws \Aimeos\Base\Filesystem\Exception If an error occurs
 	 */
 	public function time( string $path ) : int;
