@@ -17,12 +17,12 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
-		if( \TestHelperMw::getConfig()->get( 'resource/db/adapter', false ) === false ) {
+		if( \TestHelper::getConfig()->get( 'resource/db/adapter', false ) === false ) {
 			$this->markTestSkipped( 'No database configured' );
 		}
 
 
-		$dbm = \TestHelperMw::getDBManager();
+		$dbm = \TestHelper::getDBManager();
 
 		$conn = $dbm->acquire();
 		$this->object = new \Aimeos\Base\Criteria\SQL( $conn );
@@ -198,14 +198,14 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 		$types = array( 'int_column' => \Aimeos\Base\DB\Statement\Base::PARAM_INT );
 
 		$this->object->setConditions( $this->object->compare( '==', 'icol', 10 ) );
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->getConditionSource( $types );
 	}
 
 
 	public function testGetConditionSourceInvalidOperator()
 	{
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->setConditions( $this->object->compare( '?', 'int_column', 10 ) );
 	}
 
@@ -239,14 +239,14 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 		$translations = array( 'asc_column' => 'asc_int_col' );
 
 		$this->object->setSortations( array( $this->object->sort( '+', 'asc_col' ) ) );
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->getSortationSource( $types, $translations );
 	}
 
 
 	public function testGetSortationSourceInvalidDirection()
 	{
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->setSortations( array( $this->object->sort( '/', 'asc_column' ) ) );
 	}
 
@@ -328,21 +328,21 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testParseInvalid()
 	{
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->parse( ['=][attribute.id]=15'] );
 	}
 
 
 	public function testParseInvalidOperator()
 	{
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->parse( ['><' => ['name', 'value']] );
 	}
 
 
 	public function testParseInvalidStructure()
 	{
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		$this->object->parse( ['&&' => ['name', 'value']] );
 	}
 

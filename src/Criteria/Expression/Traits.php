@@ -61,15 +61,15 @@ trait Traits
 		}
 
 		if( ( $pos = strpos( $name, '(' ) ) === false ) {
-			throw new \Aimeos\Base\Common\Exception( 'Missing opening bracket for function syntax' );
+			throw new \Aimeos\Base\Exception( 'Missing opening bracket for function syntax' );
 		}
 
 		if( ( $paramstr = substr( $name, $pos, $len - $pos ) ) === false ) {
-			throw new \Aimeos\Base\Common\Exception( 'Unable to extract function parameter' );
+			throw new \Aimeos\Base\Exception( 'Unable to extract function parameter' );
 		}
 
 		if( ( $namestr = substr( $name, 0, $pos ) ) === false ) {
-			throw new \Aimeos\Base\Common\Exception( 'Unable to extract function name' );
+			throw new \Aimeos\Base\Exception( 'Unable to extract function name' );
 		}
 
 		$params = json_decode( str_replace( ['(', ')'], ['[', ']'], $paramstr ) );
@@ -185,7 +185,7 @@ trait Traits
 	 */
 	protected function setPlugins( array $plugins )
 	{
-		$this->exprPlugins = \Aimeos\Base\Common\Base::checkClassList( \Aimeos\Base\Criteria\Plugin\Iface::class, $plugins );
+		$this->exprPlugins = \Aimeos\Base\Criteria\Base::implements( \Aimeos\Base\Criteria\Plugin\Iface::class, $plugins );
 	}
 
 
@@ -205,7 +205,7 @@ trait Traits
 	 *
 	 * @param mixed $item Parameter value
 	 * @return string Internal parameter type
-	 * @throws \Aimeos\Base\Common\Exception If an error occurs
+	 * @throws \Aimeos\Base\Exception If an error occurs
 	 */
 	abstract protected function getParamType( &$item ) : string;
 }

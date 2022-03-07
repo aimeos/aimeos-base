@@ -34,7 +34,7 @@ class SQL extends Base
 	public function __construct( \Aimeos\Base\DB\Connection\Iface $conn, string $operator, string $name )
 	{
 		if( !isset( self::$operators[$operator] ) ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
 		}
 
 		parent::__construct( $operator, $name );
@@ -70,11 +70,11 @@ class SQL extends Base
 		$transname = $this->translateName( $name, $translations, $funcs );
 
 		if( !$transname ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid sorting "%1$s"', $this->getName() ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid sorting "%1$s"', $this->getName() ) );
 		}
 
 		if( !isset( $types[$name] ) ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid name "%1$s"', $name ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid name "%1$s"', $name ) );
 		}
 
 		return $transname . ' ' . self::$operators[$this->getOperator()];
@@ -120,7 +120,7 @@ class SQL extends Base
 	 *
 	 * @param mixed &$item Reference to parameter value (will be updated if necessary)
 	 * @return string Internal parameter type
-	 * @throws \Aimeos\Base\Common\Exception If an error occurs
+	 * @throws \Aimeos\Base\Exception If an error occurs
 	 */
 	protected function getParamType( &$item ) : string
 	{

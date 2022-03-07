@@ -14,7 +14,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 {
 	protected function setUp() : void
 	{
-		if( \TestHelperMw::getConfig()->get( 'resource/db/adapter', false ) === false ) {
+		if( \TestHelper::getConfig()->get( 'resource/db/adapter', false ) === false ) {
 			$this->markTestSkipped( 'No database configured' );
 		}
 	}
@@ -44,7 +44,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testToString()
 	{
-		$dbm = \TestHelperMw::getDBManager();
+		$dbm = \TestHelper::getDBManager();
 		$conn = $dbm->acquire();
 		$dbm->release( $conn );
 
@@ -78,14 +78,14 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 		$obj = new \Aimeos\Base\Criteria\Expression\Combine\SQL( '&&', [] );
 		$this->assertEquals( '', $obj->toSource( $types ) );
 
-		$this->expectException( \Aimeos\Base\Common\Exception::class );
+		$this->expectException( \Aimeos\Base\Exception::class );
 		new \Aimeos\Base\Criteria\Expression\Combine\SQL( '', [] );
 	}
 
 
 	public function testToArray()
 	{
-		$dbm = \TestHelperMw::getDBManager();
+		$dbm = \TestHelper::getDBManager();
 		$conn = $dbm->acquire();
 		$dbm->release( $conn );
 

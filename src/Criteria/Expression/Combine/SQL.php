@@ -32,7 +32,7 @@ class SQL extends Base
 	public function __construct( string $operator, array $list )
 	{
 		if( !isset( self::$operators[$operator] ) ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
 		}
 
 		parent::__construct( $operator, $list );

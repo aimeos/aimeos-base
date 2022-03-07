@@ -32,11 +32,10 @@ abstract class Base implements Iface
 	public function __construct( string $operator, array $list )
 	{
 		$list = array_filter( $list ); // remove NULL values
+		\Aimeos\Base\Criteria\Base::implements( \Aimeos\Base\Criteria\Expression\Iface::class, $list );
 
-		\Aimeos\Base\Common\Base::checkClassList( \Aimeos\Base\Criteria\Expression\Iface::class, $list );
-
-		$this->operator = $operator;
 		$this->expressions = $list;
+		$this->operator = $operator;
 	}
 
 

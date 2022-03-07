@@ -16,12 +16,12 @@ class PgSQLTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
-		if( \TestHelperMw::getConfig()->get( 'resource/db/adapter', false ) === false ) {
+		if( \TestHelper::getConfig()->get( 'resource/db/adapter', false ) === false ) {
 			$this->markTestSkipped( 'No database configured' );
 		}
 
 
-		$dbm = \TestHelperMw::getDBManager();
+		$dbm = \TestHelper::getDBManager();
 
 		$conn = $dbm->acquire();
 		$this->object = new \Aimeos\Base\Criteria\PgSQL( $conn );

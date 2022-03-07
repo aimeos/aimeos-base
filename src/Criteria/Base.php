@@ -21,6 +21,27 @@ namespace Aimeos\Base\Criteria;
 abstract class Base implements \Aimeos\Base\Criteria\Iface
 {
 	/**
+	 * Tests if all list entries implement the passed interface name
+	 *
+	 * @param string $interface Interface name
+	 * @param iterable $list List of items
+	 * @return List of tested items
+	 * @throws \Aimeos\Base\Exception If at least one items doesn't implement the interface
+	 */
+	public static function implements( string $interface, iterable $list ) : iterable
+	{
+		foreach( $list as $entry )
+		{
+			if( !( $entry instanceof $interface ) ) {
+				throw new \Aimeos\Base\Exception( "Does not implement $interface: " . print_r( $entry, true ) );
+			}
+		}
+
+		return $list;
+	}
+
+
+	/**
 	 * Returns an array representation of the expression that can be parsed again
 	 *
 	 * @return array Multi-dimensional expression structure
@@ -236,7 +257,7 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 			return $this->createCompareExpression( $op, (array) $value );
 		}
 
-		throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid operator "%1$s"', $op ) );
+		throw new \Aimeos\Base\Exception( sprintf( 'Invalid operator "%1$s"', $op ) );
 	}
 
 
@@ -269,7 +290,7 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 	 * @param string $operator One of the "combine" operators
 	 * @param array $list List of arrays with "combine" or "compare" representations
 	 * @return \Aimeos\Base\Criteria\Expression\Combine\Iface Combine expression object
-	 * @throws \Aimeos\Base\Common\Exception If operator is invalid
+	 * @throws \Aimeos\Base\Exception If operator is invalid
 	 */
 	protected function createCombineExpression( string $operator, array $list )
 	{
@@ -281,7 +302,7 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 			$entry = (array) $entry;
 
 			if( ( $op = key( $entry ) ) === null ) {
-				throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid combine condition array "%1$s"', json_encode( $entry ) ) );
+				throw new \Aimeos\Base\Exception( sprintf( 'Invalid combine condition array "%1$s"', json_encode( $entry ) ) );
 			}
 
 			if( in_array( $op, $operators['combine'], true ) ) {
@@ -291,7 +312,7 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 				$results[] = $this->createCompareExpression( $op, (array) $entry[$op] );
 			}
 			else {
-				throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid operator "%1$s"', $op ) );
+				throw new \Aimeos\Base\Exception( sprintf( 'Invalid operator "%1$s"', $op ) );
 			}
 		}
 
@@ -305,12 +326,12 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 	 * @param string $op One of the "compare" operators
 	 * @param array $pair Associative list containing one name/value pair
 	 * @return \Aimeos\Base\Criteria\Expression\Compare\Iface Compare expression object
-	 * @throws \Aimeos\Base\Common\Exception If no name/value pair is available
+	 * @throws \Aimeos\Base\Exception If no name/value pair is available
 	 */
 	protected function createCompareExpression( $op, array $pair )
 	{
 		if( ( $value = reset( $pair ) ) === false ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid compare condition array "%1$s"', json_encode( $pair ) ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid compare condition array "%1$s"', json_encode( $pair ) ) );
 		}
 
 		return $this->compare( $op, key( $pair ), $value );

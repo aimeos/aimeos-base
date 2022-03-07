@@ -5,6 +5,7 @@
 		<testsuite name="Base">
 			<directory>Cache/</directory>
 			<directory>Config/</directory>
+			<directory>Criteria/</directory>
 			<directory>DB/</directory>
 			<directory>Filesystem/</directory>
 			<directory>Logger/</directory>

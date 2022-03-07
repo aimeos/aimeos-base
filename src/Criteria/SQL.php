@@ -154,7 +154,7 @@ class SQL extends \Aimeos\Base\Criteria\Base
 	public function setConditions( \Aimeos\Base\Criteria\Expression\Iface $conditions ) : Iface
 	{
 		if( $conditions instanceof \Aimeos\Base\Criteria\Expression\Sort\Iface ) {
-			throw new \Aimeos\Base\Common\Exception( 'Sortation objects are not allowed' );
+			throw new \Aimeos\Base\Exception( 'Sortation objects are not allowed' );
 		}
 
 		$this->conditions = $conditions;
@@ -177,7 +177,7 @@ class SQL extends \Aimeos\Base\Criteria\Base
 			reset( $types );
 
 			if( ( $name = key( $types ) ) === false ) {
-				throw new \Aimeos\Base\Common\Exception( 'No sortation types available' );
+				throw new \Aimeos\Base\Exception( 'No sortation types available' );
 			}
 
 			return $this->sort( '+', $name )->toSource( $types, $translations, [], $funcs );
@@ -216,7 +216,7 @@ class SQL extends \Aimeos\Base\Criteria\Base
 	 */
 	public function setSortations( array $sortations ) : Iface
 	{
-		\Aimeos\Base\Common\Base::checkClassList( \Aimeos\Base\Criteria\Expression\Sort\Iface::class, $sortations );
+		self::implements( \Aimeos\Base\Criteria\Expression\Sort\Iface::class, $sortations );
 
 		$this->sortations = $sortations;
 		return $this;

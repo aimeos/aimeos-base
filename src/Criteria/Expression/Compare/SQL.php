@@ -35,7 +35,7 @@ class SQL extends Base
 	public function __construct( \Aimeos\Base\DB\Connection\Iface $conn, string $operator, string $name, $value )
 	{
 		if( !isset( self::$operators[$operator] ) ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid operator "%1$s"', $operator ) );
 		}
 
 		parent::__construct( $operator, $name, $value );
@@ -99,7 +99,7 @@ class SQL extends Base
 			case '!=': return $name . ' IS NOT NULL';
 		}
 
-		throw new \Aimeos\Base\Common\Exception( sprintf( 'NULL value not allowed for operator "%1$s"', $this->getOperator() ) );
+		throw new \Aimeos\Base\Exception( sprintf( 'NULL value not allowed for operator "%1$s"', $this->getOperator() ) );
 	}
 
 
@@ -206,7 +206,7 @@ class SQL extends Base
 	 *
 	 * @param mixed &$item Reference to parameter value (will be updated if necessary)
 	 * @return string Internal parameter type
-	 * @throws \Aimeos\Base\Common\Exception If an error occurs
+	 * @throws \Aimeos\Base\Exception If an error occurs
 	 */
 	protected function getParamType( &$item ) : string
 	{

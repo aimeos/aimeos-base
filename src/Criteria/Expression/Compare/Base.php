@@ -36,7 +36,7 @@ abstract class Base implements Iface
 	 */
 	public function __construct( string $operator, string $name, $value )
 	{
-		$this->value = is_map( $value ) ? $value->toArray() : $value;
+		$this->value = is_array( $value ) ? $value : ( is_iterable( $value ) ? iterator_to_array( $value, true ) : $value );
 		$this->operator = $operator;
 		$this->name = $name;
 	}
@@ -112,7 +112,7 @@ abstract class Base implements Iface
 		$transvalue = $this->translateValue( $name, $this->value );
 
 		if( !isset( $types[$name] ) ) {
-			throw new \Aimeos\Base\Common\Exception( sprintf( 'Invalid name "%1$s"', $name ) );
+			throw new \Aimeos\Base\Exception( sprintf( 'Invalid name "%1$s"', $name ) );
 		}
 
 		if( $transvalue === null && in_array( $this->getOperator(), ['==', '!='] ) ) {
