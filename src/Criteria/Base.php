@@ -25,7 +25,7 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 	 *
 	 * @param string $interface Interface name
 	 * @param iterable $list List of items
-	 * @return List of tested items
+	 * @return iterable List of tested items
 	 * @throws \Aimeos\Base\Exception If at least one items doesn't implement the interface
 	 */
 	public static function implements( string $interface, iterable $list ) : iterable
