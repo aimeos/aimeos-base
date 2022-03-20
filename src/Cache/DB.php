@@ -115,12 +115,12 @@ class DB
 	 */
 	public function deleteMultiple( iterable $keys ) : bool
 	{
-		if( ( $cnt = count( $keys ) ) === 0 ) {
-			return true;
-		}
-
 		try
 		{
+			if( ( $cnt = count( $keys ) ) === 0 ) {
+				return true;
+			}
+
 			$pos = 1;
 			$sql = $this->sql( 'delete' );
 			$sql = substr_replace( $sql, str_repeat( ',?', $cnt - 1 ), strrpos( $sql, '?' ) + 1, 0 );
@@ -157,15 +157,21 @@ class DB
 	{
 		try
 		{
+			if( ( $cnt = count( $tags ) ) === 0 ) {
+				return true;
+			}
+
 			$pos = 1;
 			$sql = $this->sql( 'deletebytag' );
-			$sql = substr_replace( $sql, str_repeat( ',?', count( $tags ) - 1 ), strrpos( $sql, '?' ) + 1, 0 );
+			$sql = substr_replace( $sql, str_repeat( ',?', $cnt - 1 ), strrpos( $sql, '?' ) + 1, 0 );
 
 			$stmt = $this->conn->create( $sql );
 
 			foreach( $tags as $tag ) {
-				$stmt->bind( $pos++, $tag )->execute()->finish();
+				$stmt->bind( $pos++, $tag );
 			}
+
+			$stmt->execute()->finish();
 		}
 		catch( \Exception $e )
 		{
@@ -193,11 +199,15 @@ class DB
 	{
 		try
 		{
+			if( ( $cnt = count( $keys ) ) === 0 ) {
+				return true;
+			}
+
 			$pos = 2;
 			$list = [];
 
 			$sql = $this->sql( 'get' );
-			$sql = substr_replace( $sql, str_repeat( ',?', count( $keys) - 1 ), strrpos( $sql, '?' ) + 1, 0 );
+			$sql = substr_replace( $sql, str_repeat( ',?', $cnt - 1 ), strrpos( $sql, '?' ) + 1, 0 );
 
 			$stmt = $this->conn->create( $sql )
 				->bind( 1, date( 'Y-m-d H:i:00' ) );
