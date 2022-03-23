@@ -20,6 +20,14 @@ namespace Aimeos\Base\DB\Connection;
 interface Iface
 {
 	/**
+	 * Closes the connection to the database server
+	 *
+	 * @return \Aimeos\MW\DB\Connection\Iface Connection instance for method chaining
+	 */
+	public function close() : Iface;
+
+
+	/**
 	 * Connects (or reconnects) to the database server
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining

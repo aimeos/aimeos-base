@@ -40,6 +40,22 @@ class PDO extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Con
 
 
 	/**
+	 * Closes the connection to the database server
+	 *
+	 * @return \Aimeos\MW\DB\Connection\Iface Connection instance for method chaining
+	 */
+	public function close() : Iface
+	{
+		if( $this->inTransaction() ) {
+			$this->rollback();
+		}
+
+		unset( $this->connection );
+		return $this;
+	}
+
+
+	/**
 	 * Connects (or reconnects) to the database server
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining

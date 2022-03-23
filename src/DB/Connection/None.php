@@ -22,6 +22,17 @@ class None
 	implements \Aimeos\Base\DB\Connection\Iface
 {
 	/**
+	 * Closes the connection to the database server
+	 *
+	 * @return \Aimeos\MW\DB\Connection\Iface Connection instance for method chaining
+	 */
+	public function close() : Iface
+	{
+		throw new \Aimeos\Base\DB\Exception( 'This method is not implemented' );
+	}
+
+
+	/**
 	 * Connects (or reconnects) to the database server
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining

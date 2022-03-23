@@ -40,6 +40,22 @@ class DBAL extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Co
 
 
 	/**
+	 * Closes the connection to the database server
+	 *
+	 * @return \Aimeos\MW\DB\Connection\Iface Connection instance for method chaining
+	 */
+	public function close() : Iface
+	{
+		if( $this->inTransaction() ) {
+			$this->rollback();
+		}
+
+		$this->connection->close();
+		return $this;
+	}
+
+
+	/**
 	 * Connects (or reconnects) to the database server
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
@@ -113,7 +129,13 @@ class DBAL extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Co
 	 */
 	public function inTransaction() : bool
 	{
-		return $this->connection->getWrappedConnection()->inTransaction();
+		$conn = $this->connection->getWrappedConnection();
+
+		if( $conn instanceof \PDO ) {
+			return $conn->inTransaction();
+		}
+
+		return $conn->getNativeConnection()->inTransaction();
 	}
 
 
