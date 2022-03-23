@@ -24,7 +24,7 @@ class None
 	/**
 	 * Closes the connection to the database server
 	 *
-	 * @return \Aimeos\MW\DB\Connection\Iface Connection instance for method chaining
+	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
 	 */
 	public function close() : Iface
 	{

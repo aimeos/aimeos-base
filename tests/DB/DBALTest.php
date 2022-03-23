@@ -6,7 +6,6 @@ namespace Aimeos\Base\DB;
 class DBALTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
-	private $config;
 	private $conn;
 
 

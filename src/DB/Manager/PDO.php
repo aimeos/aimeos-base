@@ -125,7 +125,7 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 					$this->count[$name] = 0;
 				}
 
-				$limit = $cfg['limit'] ?? -1;
+				$limit = $this->config[$name]['limit'] ?? -1;
 
 				if( $limit >= 0 && $this->count[$name] >= $limit )
 				{
