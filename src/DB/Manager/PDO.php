@@ -12,7 +12,7 @@ namespace Aimeos\Base\DB\Manager;
 
 
 /**
- * Manager for database connections using the \PDO library.
+ * Manager for database connections using the PDO library.
  *
  * @package Base
  * @subpackage DB
@@ -20,6 +20,7 @@ namespace Aimeos\Base\DB\Manager;
 class PDO implements \Aimeos\Base\DB\Manager\Iface
 {
 	private $connections = [];
+	private $conns = [];
 	private $count = [];
 	private $config;
 
@@ -27,9 +28,9 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 	/**
 	 * Initializes the database manager object
 	 *
-	 * @param \Aimeos\Base\Config\Iface $config Object holding the configuration data
+	 * @param array $config Database resource configuration
 	 */
-	public function __construct( \Aimeos\Base\Config\Iface $config )
+	public function __construct( array $config )
 	{
 		$this->config = $config;
 	}
@@ -46,6 +47,10 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 				unset( $this->connections[$name][$key] );
 			}
 		}
+
+		foreach( $this->conns as $key => $conn ) {
+			unset( $this->conns[$key] );
+		}
 	}
 
 
@@ -55,6 +60,7 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 	public function __clone()
 	{
 		$this->connections = [];
+		$this->conns = [];
 		$this->count = [];
 	}
 
@@ -67,9 +73,33 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 		$this->__destruct();
 
 		$this->connections = [];
+		$this->conns = [];
 		$this->count = [];
 
 		return get_object_vars( $this );
+	}
+
+
+	/**
+	 * Returns a database connection.
+	 *
+	 * @param string $name Name of the resource in configuration
+	 * @param bool $new Create a new connection instead of returning the existing one
+	 * @return \Aimeos\Base\DB\Connection\Iface
+	 */
+	public function get( string $name = 'db', bool $new = false ) : \Aimeos\Base\DB\Connection\Iface
+	{
+		$name = isset( $this->config[$name] ) ? $name : 'db';
+
+		if( $new ) {
+			return $this->create( $name );
+		}
+
+		if( !isset( $this->conns[$name] ) ) {
+			$this->conns[$name] = $this->create( $name );
+		}
+
+		return $this->conns[$name];
 	}
 
 
@@ -83,11 +113,11 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 	{
 		try
 		{
-			if( $this->config->get( 'resource/' . $name ) === null ) {
-				$name = 'db';
-			}
+			$name = isset( $this->config[$name] ) ? $name : 'db';
 
-			$adapter = $this->config->get( 'resource/' . $name . '/adapter', 'mysql' );
+			if( !isset( $this->config[$name] ) ) {
+				throw new \Aimeos\Base\DB\Exception( "No database configuration for resource \"$name\" available" );
+			}
 
 			if( !isset( $this->connections[$name] ) || empty( $this->connections[$name] ) )
 			{
@@ -95,15 +125,15 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 					$this->count[$name] = 0;
 				}
 
-				$limit = $this->config->get( 'resource/' . $name . '/limit', -1 );
+				$limit = $cfg['limit'] ?? -1;
 
 				if( $limit >= 0 && $this->count[$name] >= $limit )
 				{
-					$msg = sprintf( 'Maximum number of connections (%1$d) for "%2$s" exceeded', $limit, $name );
+					$msg = "Maximum number of connections ($limit) for \"$name\" exceeded";
 					throw new \Aimeos\Base\DB\Exception( $msg );
 				}
 
-				$this->connections[$name] = array( $this->createConnection( $name, $adapter ) );
+				$this->connections[$name] = array( $this->create( $name ) );
 				$this->count[$name]++;
 			}
 
@@ -127,9 +157,7 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 			throw new \Aimeos\Base\DB\Exception( 'Connection object isn\'t of type \PDO' );
 		}
 
-		if( $this->config->get( 'resource/' . $name ) === null ) {
-			$name = 'db';
-		}
+		$name = isset( $this->config[$name] ) ? $name : 'db';
 
 		$this->connections[$name][] = $connection;
 	}
@@ -139,19 +167,19 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 	 * Creates a new database connection.
 	 *
 	 * @param string $name Name to the database configuration in the resource file
-	 * @param string $adapter Name of the database adapter, e.g. "mysql"
 	 * @return \Aimeos\Base\DB\Connection\Iface Database connection
 	 */
-	protected function createConnection( string $name, string $adapter ) : \Aimeos\Base\DB\Connection\Iface
+	protected function create( string $name ) : \Aimeos\Base\DB\Connection\Iface
 	{
-		$params = $this->config->get( 'resource/' . $name );
+		$params = $this->config[$name] ?? [];
 
 		if( !isset( $params['dsn'] ) )
 		{
-			$host = $this->config->get( 'resource/' . $name . '/host' );
-			$port = $this->config->get( 'resource/' . $name . '/port' );
-			$sock = $this->config->get( 'resource/' . $name . '/socket' );
-			$dbase = $this->config->get( 'resource/' . $name . '/database' );
+			$adapter = $params['adapter'] ?? 'mysql';
+			$host = $params['host'] ?? null;
+			$port = $params['port'] ?? null;
+			$sock = $params['socket'] ?? null;
+			$dbase = $params['database'] ?? null;
 
 			$dsn = $adapter . ':';
 
@@ -174,8 +202,6 @@ class PDO implements \Aimeos\Base\DB\Manager\Iface
 			$params['dsn'] = $dsn;
 		}
 
-		$stmts = $this->config->get( 'resource/' . $name . '/stmt', [] );
-
-		return new \Aimeos\Base\DB\Connection\PDO( $params, $stmts );
+		return new \Aimeos\Base\DB\Connection\PDO( $params, $params['stmt'] ?? [] );
 	}
 }

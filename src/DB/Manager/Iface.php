@@ -23,10 +23,18 @@ interface Iface
 	 * Returns a database connection.
 	 *
 	 * @param string $name Name of the resource in configuration
+	 * @param bool $new Create a new connection instead of returning the existing one
+	 * @return \Aimeos\Base\DB\Connection\Iface
+	 */
+	public function get( string $name = 'db', bool $new = false ) : \Aimeos\Base\DB\Connection\Iface;
+
+	/**
+	 * Returns a database connection.
+	 *
+	 * @param string $name Name of the resource in configuration
 	 * @return \Aimeos\Base\DB\Connection\Iface
 	 */
 	public function acquire( string $name = 'db' );
-
 
 	/**
 	 * Releases the connection for reuse

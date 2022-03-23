@@ -20,9 +20,7 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 		$table->setPrimaryKey( array( 'id' ) );
 
 
-		$this->config = \TestHelper::getConfig();
-		$this->object = new \Aimeos\Base\DB\Manager\DBAL( $this->config );
-
+		$this->object = new \Aimeos\Base\DB\Manager\DBAL( \TestHelper::getConfig()->get( 'resource' ) );
 		$this->conn = $this->object->acquire();
 
 		foreach( $schema->toSQL( $this->conn->getRawObject()->getDatabasePlatform() ) as $sql ) {

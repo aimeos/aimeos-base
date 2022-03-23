@@ -12,8 +12,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
-		$this->config = \TestHelper::getConfig();
-		$this->object = new \Aimeos\Base\DB\Manager\PDO( $this->config );
+		$this->object = new \Aimeos\Base\DB\Manager\PDO( \TestHelper::getConfig()->get( 'resource' ) );
 
 		$sql = 'CREATE TABLE "mw_unit_test" ( "id" INTEGER NOT NULL, "name" VARCHAR(20) NOT NULL )';
 
