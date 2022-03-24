@@ -35,6 +35,6 @@ class Factory
 			throw new \Aimeos\Base\DB\Exception( sprintf( 'Database manager "%1$s" not found', $type ) );
 		}
 
-		return new $classname( $config->get( 'resource' ) );
+		return new $classname( $config->get( 'resource', [] ) );
 	}
 }
