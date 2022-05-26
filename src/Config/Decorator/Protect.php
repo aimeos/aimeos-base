@@ -56,13 +56,13 @@ class Protect
 	 */
 	public function get( string $name, $default = null )
 	{
-		foreach( $this->deny as $regex )
+		foreach( $this->deny as $deny )
 		{
-			if( preg_match( $regex, $name ) === 1 )
+			if( preg_match( $deny, $name ) === 1 )
 			{
-				foreach( $this->allow as $regex )
+				foreach( $this->allow as $allow )
 				{
-					if( preg_match( $regex, $name ) === 1 ) {
+					if( preg_match( $allow, $name ) === 1 ) {
 						return parent::get( $name, $default );
 					}
 				}
