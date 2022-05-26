@@ -21,21 +21,27 @@ class Protect
 	extends \Aimeos\Base\Config\Decorator\Base
 	implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $prefixes = [];
+	private $allow = [];
+	private $deny = [];
 
 
 	/**
 	 * Initializes the decorator
 	 *
 	 * @param \Aimeos\Base\Config\Iface $object Config object or decorator
-	 * @param string[] $prefixes Allowed prefixes for getting and setting values
+	 * @param string[] $allow Allowed prefixes for getting and setting values
+	 * @param string[] $deny Denied prefixes for getting and setting values
 	 */
-	public function __construct( \Aimeos\Base\Config\Iface $object, array $prefixes = [] )
+	public function __construct( \Aimeos\Base\Config\Iface $object, array $allow = [], array $deny = [] )
 	{
 		parent::__construct( $object );
 
-		foreach( $prefixes as $prefix ) {
-			$this->prefixes[$prefix] = strlen( $prefix );
+		foreach( $allow as $prefix ) {
+			$this->allow[] = '#^' . str_replace( '*', '[^/]+', $prefix ) . '#';
+		}
+
+		foreach( $deny as $prefix ) {
+			$this->deny[] = '#^' . str_replace( '*', '[^/]+', $prefix ) . '#';
 		}
 	}
 
@@ -50,13 +56,21 @@ class Protect
 	 */
 	public function get( string $name, $default = null )
 	{
-		foreach( $this->prefixes as $prefix => $len )
+		foreach( $this->deny as $regex )
 		{
-			if( strncmp( $name, $prefix, $len ) === 0 ) {
-				return parent::get( $name, $default );
+			if( preg_match( $regex, $name ) === 1 )
+			{
+				foreach( $this->allow as $regex )
+				{
+					if( preg_match( $regex, $name ) === 1 ) {
+						return parent::get( $name, $default );
+					}
+				}
+
+				throw new \Aimeos\Base\Config\Exception( sprintf( 'Not allowed to access "%1$s" configuration', $name ) );
 			}
 		}
 
-		throw new \Aimeos\Base\Config\Exception( sprintf( 'Not allowed to access "%1$s" configuration', $name ) );
+		return parent::get( $name, $default );
 	}
 }

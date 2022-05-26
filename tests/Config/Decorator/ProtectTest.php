@@ -11,12 +11,13 @@ class ProtectTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$conf = new \Aimeos\Base\Config\PHPArray( [] );
-		$this->object = new \Aimeos\Base\Config\Decorator\Protect( $conf, array( 'client', 'admin' ) );
+		$this->object = new \Aimeos\Base\Config\Decorator\Protect( $conf, ['resource/*/baseurl'], ['resource'] );
 	}
 
 
 	public function testGet()
 	{
+		$this->assertEquals( 'value', $this->object->get( 'resource/fs/baseurl', 'value' ) );
 		$this->assertEquals( 'value', $this->object->get( 'client/html/test', 'value' ) );
 	}
 
