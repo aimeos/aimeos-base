@@ -36,9 +36,8 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
 		$object->apply( ['resource' => ['db' => ['host' => '127.0.0.2', 'database' => 'testdb']]] );
 
-		$result = $object->get( 'resource/db', [] );
-		$this->assertEquals( 'testdb', $result['database'] );
-		$this->assertEquals( '127.0.0.2', $result['host'] );
+		$this->assertEquals( 'testdb', $object->get( 'resource/db/database' ) );
+		$this->assertEquals( '127.0.0.1', $object->get( 'resource/db/host' ) );
 	}
 
 
