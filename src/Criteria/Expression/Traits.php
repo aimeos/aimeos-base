@@ -72,7 +72,7 @@ trait Traits
 			throw new \Aimeos\Base\Exception( 'Unable to extract function name' );
 		}
 
-		$params = json_decode( str_replace( ['(', ')'], ['[', ']'], $paramstr ) );
+		$params = json_decode( str_replace( ['(', ')'], ['[', ']'], $paramstr ), true );
 		$name = $namestr . '()';
 
 		return true;
