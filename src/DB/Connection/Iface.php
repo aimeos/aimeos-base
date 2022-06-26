@@ -94,4 +94,45 @@ interface Iface
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
 	 */
 	public function rollback() : Iface;
+
+
+	/**
+	 * Deletes the records from the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $conditions Key/value pairs of column names and value to compare with
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function delete( string $table, array $conditions = [] ) : \Aimeos\Base\DB\Result\Iface;
+
+
+	/**
+	 * Inserts a record into the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $data Key/value pairs of column name/value to insert
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function insert( string $table, array $data ) : \Aimeos\Base\DB\Result\Iface;
+
+
+	/**
+	 * Executes a custom SQL query
+	 *
+	 * @param string $sql Custom SQL statement
+	 * @param array $params List of positional parameters
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function query( string $sql, array $params = [] ) : \Aimeos\Base\DB\Result\Iface;
+
+
+	/**
+	 * Updates the records from the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $data Key/value pairs of column name/value to update
+	 * @param array $conditions Key/value pairs of column names and value to compare with
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function update( string $table, array $data, array $conditions = [] ) : \Aimeos\Base\DB\Result\Iface;
 }

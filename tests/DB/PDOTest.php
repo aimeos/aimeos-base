@@ -31,6 +31,19 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testCrud()
+	{
+		$this->conn->insert( 'mw_unit_test', ['id' => 1, 'name' => 'test'] );
+		$this->conn->update( 'mw_unit_test', ['name' => 'test 2'], ['id' => 1] );
+
+		$result = $this->conn->query( 'SELECT * FROM "mw_unit_test" WHERE "id"=?', [1] )->fetch();
+
+		$this->conn->delete( 'mw_unit_test', ['id' => 1] );
+
+		$this->assertEquals( ['id' => 1, 'name' => 'test 2'], $result );
+	}
+
+
 	public function testTransactionCommit()
 	{
 		$sqlinsert = 'INSERT INTO "mw_unit_test" ("id", "name") VALUES (1, \'a\')';

@@ -17,7 +17,7 @@ namespace Aimeos\Base\DB\Connection;
  * @package Base
  * @subpackage DB
  */
-abstract class Base
+abstract class Base implements Iface
 {
 	private $params;
 
@@ -78,5 +78,173 @@ abstract class Base
 	public function inTransaction() : bool
 	{
 		return true; // safe default
+	}
+
+
+	/**
+	 * Deletes the records from the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $conditions Key/value pairs of column names and value to compare with
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function delete( string $table, array $conditions = [] ) : \Aimeos\Base\DB\Result\Iface
+	{
+		$sql = 'DELETE FROM ' . $this->qi( $table );
+
+		if( !empty( $conditions ) )
+		{
+			$where = [];
+			$sql .= ' WHERE ';
+
+			foreach( $conditions as $name => $val ) {
+				$where[] = $this->qi( $name ) . '=?';
+			}
+
+			$sql .= join( ', ', $where );
+		}
+
+		$stmt = $this->create( $sql );
+		$idx = 0;
+
+		foreach( $conditions as $val ) {
+			$stmt->bind( ++$idx, $val, $this->getType( $val ) );
+		}
+
+		return $stmt->execute();
+	}
+
+
+	/**
+	 * Inserts a record into the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $data Key/value pairs of column name/value to insert
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function insert( string $table, array $data ) : \Aimeos\Base\DB\Result\Iface
+	{
+		if( empty( $data ) ) {
+			throw new \Aimeos\Base\DB\Exception( 'Inserting rows requires key/value pairs in second parameter' );
+		}
+
+		$cols = [];
+		$sql = 'INSERT INTO ' . $this->qi( $table );
+
+		foreach( $data as $name => $val ) {
+			$cols[$this->qi( $name )] = '?';
+		}
+
+		$sql .= ' (' . join( ', ', array_keys( $cols ) ) . ') VALUES( ' . join( ', ', $cols ) . ')';
+		$stmt = $this->create( $sql );
+		$idx = 0;
+
+		foreach( $data as $val ) {
+			$stmt->bind( ++$idx, $val, $this->getType( $val ) );
+		}
+
+		return $stmt->execute();
+	}
+
+
+	/**
+	 * Executes a custom SQL query
+	 *
+	 * @param string $sql Custom SQL statement
+	 * @param array $params List of positional parameters
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function query( string $sql, array $params = [] ) : \Aimeos\Base\DB\Result\Iface
+	{
+		$stmt = $this->create( $sql );
+		$idx = 0;
+
+		foreach( $params as $val ) {
+			$stmt->bind( ++$idx, $val, $this->getType( $val ) );
+		}
+
+		return $stmt->execute();
+	}
+
+
+	/**
+	 * Updates the records from the given table
+	 *
+	 * @param string $table Name of the table
+	 * @param array $data Key/value pairs of column name/value to update
+	 * @param array $conditions Key/value pairs of column names and value to compare with
+	 * @return \Aimeos\Base\DB\Result\Iface Result object
+	 */
+	public function update( string $table, array $data, array $conditions = [] ) : \Aimeos\Base\DB\Result\Iface
+	{
+		if( empty( $data ) ) {
+			throw new \Aimeos\Base\DB\Exception( 'Updating rows requires key/value pairs in second parameter' );
+		}
+
+		$set = $where = [];
+		$sql = 'UPDATE ' . $this->qi( $table ) . ' SET ';
+
+		foreach( $data as $name => $val ) {
+			$set[] = $this->qi( $name ) . '=?';
+		}
+
+		$sql .= join( ', ', $set );
+
+		if( !empty( $conditions ) )
+		{
+			$sql .= ' WHERE ';
+
+			foreach( $conditions as $name => $val ) {
+				$where[] = $this->qi( $name ) . '=?';
+			}
+
+			$sql .= join( ', ', $where );
+		}
+
+		$stmt = $this->create( $sql );
+		$idx = 0;
+
+		foreach( array_merge( $data, $conditions ) as $val ) {
+			$stmt->bind( ++$idx, $val, $this->getType( $val ) );
+		}
+
+		return $stmt->execute();
+	}
+
+
+	/**
+	 * Returns the parameter type for the passed value
+	 *
+	 * @param mixed $value Parameter value
+	 * @return int Parameter type constant
+	 */
+	protected function getType( $value ) : int
+	{
+		switch( gettype( $value ) )
+		{
+			case 'NULL': return \Aimeos\Base\DB\Statement\Base::PARAM_NULL;
+			case 'boolean': return \Aimeos\Base\DB\Statement\Base::PARAM_BOOL;
+			case 'integer': return \Aimeos\Base\DB\Statement\Base::PARAM_INT;
+			case 'double': return \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT;
+		}
+
+		return \Aimeos\Base\DB\Statement\Base::PARAM_STR;
+	}
+
+
+	/**
+	 * Returns a quoted identifier for the passed name
+	 *
+	 * @param string $name Identifier name
+	 * @return string Quoted identifier
+	 * @throws \Aimeos\Base\DB\Exception If identifier name already contains an apostroph
+	 */
+	protected function qi( string $name ) : string
+	{
+		if( strpos( $name, '"' ) !== false ) {
+			throw new \Aimeos\Base\DB\Exception( sprintf( 'Identifier "%1$s"must not contain an apostroph' ) );
+		}
+
+		return '"' . $name . '"';
 	}
 }
