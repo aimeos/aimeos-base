@@ -54,6 +54,16 @@ interface Iface
 
 
 	/**
+	 * Returns a quoted identifier for the passed name
+	 *
+	 * @param string $name Identifier name
+	 * @return string Quoted identifier
+	 * @throws \Aimeos\Base\DB\Exception If identifier name already contains a quote character
+	 */
+	public function qi( string $name ) : string;
+
+
+	/**
 	 * Returns the underlying connection object
 	 *
 	 * @return mixed Underlying connection object

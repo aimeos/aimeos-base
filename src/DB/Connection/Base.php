@@ -82,6 +82,23 @@ abstract class Base implements Iface
 
 
 	/**
+	 * Returns a quoted identifier for the passed name
+	 *
+	 * @param string $name Identifier name
+	 * @return string Quoted identifier
+	 * @throws \Aimeos\Base\DB\Exception If identifier name already contains a quote character
+	 */
+	public function qi( string $name ) : string
+	{
+		if( strpos( $name, '"' ) !== false ) {
+			throw new \Aimeos\Base\DB\Exception( sprintf( 'Identifier "%1$s"must not contain a quote character' ) );
+		}
+
+		return '"' . $name . '"';
+	}
+
+
+	/**
 	 * Deletes the records from the given table
 	 *
 	 * @param string $table Name of the table
@@ -229,22 +246,5 @@ abstract class Base implements Iface
 		}
 
 		return \Aimeos\Base\DB\Statement\Base::PARAM_STR;
-	}
-
-
-	/**
-	 * Returns a quoted identifier for the passed name
-	 *
-	 * @param string $name Identifier name
-	 * @return string Quoted identifier
-	 * @throws \Aimeos\Base\DB\Exception If identifier name already contains an apostroph
-	 */
-	protected function qi( string $name ) : string
-	{
-		if( strpos( $name, '"' ) !== false ) {
-			throw new \Aimeos\Base\DB\Exception( sprintf( 'Identifier "%1$s"must not contain an apostroph' ) );
-		}
-
-		return '"' . $name . '"';
 	}
 }
