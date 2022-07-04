@@ -102,7 +102,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	{
 		$enc = $this->object->transform();
 
-		$this->assertEquals( '&lt;a&gt;text&lt;/a&gt;', $enc->html( '<a>text</a>' ) );
+		$this->assertEquals( 'text', $enc->html( '<a>text</a>' ) );
 	}
 
 

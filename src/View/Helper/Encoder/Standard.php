@@ -77,7 +77,7 @@ class Standard
 		}
 
 		// Avoid client side template injection
-		return str_replace( ['{', '}'], '', Str::html( (string) $value, ENT_QUOTES ) );
+		return str_replace( ['{', '}'], '', Str::html( strip_tags( (string) $value ), ENT_QUOTES ) );
 	}
 
 
