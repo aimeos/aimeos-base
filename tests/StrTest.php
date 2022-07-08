@@ -120,7 +120,7 @@ class StrTest extends \PHPUnit\Framework\TestCase
 	public function testSlug()
 	{
 		$this->assertEquals( 'a_b_c', Str::slug( 'a/b&c', 'en', '_' ) );
-		$this->assertEquals( 'Ae-oe-ue', Str::slug( 'Ä/ö&ü', 'de' ) );
+		$this->assertEquals( 'Ae-oe-ue_ss', Str::slug( 'Ä/ö&ü_ß', 'de' ) );
 		$this->assertEquals( 'a-o-u', Str::slug( 'ä/ö&ü' ) );
 		$this->assertEquals( 'a-b-c', Str::slug( 'a/b&c' ) );
 		$this->assertEquals( 'a-b', Str::slug( 'a~b' ) );
@@ -139,7 +139,7 @@ class StrTest extends \PHPUnit\Framework\TestCase
 
 		\Aimeos\Base\Str::macro( 'slug', function( $str, $lang, $sep ) {
 			$str = \voku\helper\ASCII::to_ascii( (string) $str, $lang );
-			return trim( preg_replace( '/[^A-Za-z0-9]+/', $sep, $str ), $sep );
+			return trim( preg_replace( '/[^A-Za-z0-9_]+/', $sep, $str ), $sep );
 		} );
 	}
 
