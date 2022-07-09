@@ -160,7 +160,8 @@ class Str
 		}
 
 		$str = \voku\helper\ASCII::to_ascii( (string) $str, $lang );
-		return trim( preg_replace( '/[^A-Za-z0-9_]+/', $sep, $str ), $sep );
+		$str = preg_replace( '/[^A-Za-z0-9_]+/', $sep, $str );
+		return trim( preg_replace( '/(' . preg_quote( $sep, '/' ) . '){2,}/', $sep, $str ), $sep );
 	}
 
 
