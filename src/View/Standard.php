@@ -198,7 +198,7 @@ class Standard implements \Aimeos\Base\View\Iface
 
 		foreach( explode( '/', ltrim( $key, '/' ) ) as $part )
 		{
-			if( is_array( $values ) && isset( $values[$part] ) ) {
+			if( ( is_array( $values ) || $values instanceof \ArrayAccess ) && isset( $values[$part] ) ) {
 				$values = $values[$part];
 			} else {
 				return $default;
