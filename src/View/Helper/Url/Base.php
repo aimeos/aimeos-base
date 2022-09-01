@@ -20,7 +20,7 @@ namespace Aimeos\Base\View\Helper\Url;
 abstract class Base extends \Aimeos\Base\View\Helper\Base
 {
 	/**
-	 * Replaces dangerous characteris in the parameters
+	 * Replaces dangerous characters in the parameters
 	 *
 	 * @param array $params Associative list of key/value pairs
 	 * @param string[] $names Replace characters in the parameters of the given names, empty for all

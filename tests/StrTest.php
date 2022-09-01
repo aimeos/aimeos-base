@@ -124,7 +124,7 @@ class StrTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals( 'a-o-u', Str::slug( 'ä/ö&ü' ) );
 		$this->assertEquals( 'a-b-c', Str::slug( 'A/b&c' ) );
 		$this->assertEquals( 'a-c', Str::slug( 'a-&-c' ) );
-		$this->assertEquals( 'a-b', Str::slug( 'a~b' ) );
+		$this->assertEquals( 'a~b', Str::slug( 'a~b' ) );
 		$this->assertEquals( '123', Str::slug( 123 ) );
 		$this->assertEquals( '', Str::slug( null ) );
 	}
