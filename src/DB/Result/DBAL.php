@@ -38,7 +38,17 @@ class DBAL extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result
 	 */
 	public function __destruct()
 	{
-		$this->result->free();
+		$class = '\Doctrine\DBAL\Driver\Result';
+
+		if( $this->result instanceof $class ) {
+			$this->result->free();
+		}
+
+		$class = '\Doctrine\DBAL\Driver\Statement';
+
+		if( $this->result instanceof $class ) {
+			$this->result->closeCursor();
+		}
 	}
 
 
@@ -90,9 +100,22 @@ class DBAL extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result
 	 */
 	public function finish() : Iface
 	{
-		try {
-			$this->result->free();
-		} catch( \Doctrine\DBAL\Driver\Exception $e ) {
+		try
+		{
+			$class = '\Doctrine\DBAL\Driver\Result';
+
+			if( $this->result instanceof $class ) {
+				$this->result->free();
+			}
+
+			$class = '\Doctrine\DBAL\Driver\Statement';
+
+			if( $this->result instanceof $class ) {
+				$this->result->closeCursor();
+			}
+		}
+		catch( \Doctrine\DBAL\Driver\Exception $e )
+		{
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage(), $e->getCode() );
 		}
 
