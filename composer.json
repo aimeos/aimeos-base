@@ -21,7 +21,7 @@
 		"ext-PDO": "*",
 		"aimeos/macro": "~1.0",
 		"nyholm/psr7": "~1.2",
-		"doctrine/dbal": "~2.0||~3.0",
+		"doctrine/dbal": "~2.9||~3.0",
 		"psr/http-message": "~1.0",
 		"voku/portable-ascii": "~1.4||~2.0"
 	},
