@@ -35,7 +35,6 @@ class SQL extends \Aimeos\Base\Criteria\Base
 	public function __construct( \Aimeos\Base\DB\Connection\Iface $conn )
 	{
 		$this->conn = $conn;
-		$this->conditions = $this->compare( '==', '1', '1' );
 	}
 
 
@@ -130,7 +129,7 @@ class SQL extends \Aimeos\Base\Criteria\Base
 			return $string;
 		}
 
-		return '1=1';
+		return '1 = 1';
 	}
 
 

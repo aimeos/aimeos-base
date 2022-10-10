@@ -212,11 +212,10 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetConditions()
 	{
-		$this->assertInstanceOf( \Aimeos\Base\Criteria\Expression\Compare\SQL::class, $this->object->getConditions() );
-
 		$conditions = $this->object->compare( '==', 'int_column', 10 );
 		$this->object->setConditions( $conditions );
 		$this->assertEquals( $conditions, $this->object->getConditions() );
+		$this->assertInstanceOf( \Aimeos\Base\Criteria\Expression\Compare\SQL::class, $conditions );
 	}
 
 
