@@ -29,14 +29,10 @@ class PcntlTest extends \PHPUnit\Framework\TestCase
 
 	public function testExecException()
 	{
+		$this->expectException( \Exception::class );
+
 		$fcn = function() { throw new \Exception(); };
-
-		stream_filter_register( "redirect", "\Aimeos\Base\Process\DiscardFilter" );
-		$filter = stream_filter_prepend( STDERR, "redirect", STREAM_FILTER_WRITE );
-
-		$this->assertEquals( 1, $this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] ) );
-
-		stream_filter_remove( $filter );
+		$this->access( 'exec' )->invokeArgs( new \Aimeos\Base\Process\Pcntl(), [$fcn, []] );
 	}
 
 
