@@ -176,16 +176,7 @@ class Pcntl implements Iface
 			ob_clean(); // avoid printing buffered messages of the parent again
 		}
 
-		try
-		{
-			call_user_func_array( $fcn, $data );
-		}
-		catch( \Throwable $t )
-		{
-			fwrite( STDERR, $t->getMessage() . "\n" . $t->getTraceAsString() );
-			return 1;
-		}
-
+		call_user_func_array( $fcn, $data );
 		return 0;
 	}
 
@@ -206,13 +197,8 @@ class Pcntl implements Iface
 		list( $fcn, $data, $restart ) = $this->list[$pid];
 		unset( $this->list[$pid] );
 
-		if( $status > 0 )
-		{
-			if( $restart === false ) {
-				fwrite( STDERR, sprintf( 'Process (PID "%1$s") failed with status "%2$s"', $pid, $status ) );
-			} else {
-				$this->start( $fcn, $data, false );
-			}
+		if( $status > 0 && $restart !== false ) {
+			$this->start( $fcn, $data, false );
 		}
 	}
 }
