@@ -41,7 +41,7 @@ class Standard
 		$this->value = $value;
 
 		if( $value ) {
-			$this->formfield = '<input class="csrf-token" type="hidden" name="' . $this->name . '" value="' . $this->value . '" />';
+			$this->formfield = '<input class="csrf-token" type="hidden" name="' . $this->name . '" value="' . $this->value . '">';
 		}
 	}
 
