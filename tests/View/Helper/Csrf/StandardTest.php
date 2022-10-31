@@ -47,7 +47,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testTransformFormfield()
 	{
-		$expected = '<input class="csrf-token" type="hidden" name="cname" value="cvalue" />';
+		$expected = '<input class="csrf-token" type="hidden" name="cname" value="cvalue">';
 
 		$this->assertEquals( $expected, $this->object->transform()->formfield() );
 	}
