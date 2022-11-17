@@ -22,12 +22,12 @@ class Factory
 	/**
 	 * Creates and returns a database manager.
 	 *
-	 * @param \Aimeos\Base\Config\Iface $config Configuration class instance
+	 * @param array $config Database connection configurations
 	 * @param string $type Name of the manager
 	 * @return \Aimeos\Base\DB\Manager\Iface Instance of a database manager
 	 * @throws \Aimeos\Base\DB\Exception if database manager class isn't found
 	 */
-	public static function create( \Aimeos\Base\Config\Iface $config, $type = 'PDO' )
+	public static function create( array $config, $type = 'PDO' )
 	{
 		$classname = '\Aimeos\Base\DB\Manager\\' . ucfirst( $type );
 
@@ -35,6 +35,6 @@ class Factory
 			throw new \Aimeos\Base\DB\Exception( sprintf( 'Database manager "%1$s" not found', $type ) );
 		}
 
-		return new $classname( $config->get( 'resource', [] ) );
+		return new $classname( $config );
 	}
 }

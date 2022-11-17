@@ -19,7 +19,7 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 		$table->setPrimaryKey( array( 'id' ) );
 
 
-		$this->object = new \Aimeos\Base\DB\Manager\DBAL( \TestHelper::getConfig()->get( 'resource' ) );
+		$this->object = new \Aimeos\Base\DB\Manager\DBAL( \TestHelper::getConfig()->get( 'resource', [] ) );
 		$this->conn = $this->object->acquire();
 
 		foreach( $schema->toSQL( $this->conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
@@ -323,6 +323,6 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 	public function testFactoryFail()
 	{
 		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig(), 'notDefined' );
+		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig()->get( 'resource', [] ), 'notDefined' );
 	}
 }

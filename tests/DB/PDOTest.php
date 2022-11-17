@@ -11,7 +11,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
-		$this->object = new \Aimeos\Base\DB\Manager\PDO( \TestHelper::getConfig()->get( 'resource' ) );
+		$this->object = new \Aimeos\Base\DB\Manager\PDO( \TestHelper::getConfig()->get( 'resource', [] ) );
 
 		$sql = 'CREATE TABLE "mw_unit_test" ( "id" INTEGER NOT NULL, "name" VARCHAR(20) NOT NULL )';
 
@@ -396,6 +396,6 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 	public function testFactoryFail()
 	{
 		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig(), 'notDefined' );
+		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig()->get( 'resource', [] ), 'notDefined' );
 	}
 }

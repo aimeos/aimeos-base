@@ -34,7 +34,7 @@ class TestHelper
 	 */
 	public static function getDBManager()
 	{
-		return \Aimeos\Base\DB\Factory::create( self::getConfig(), 'DBAL' );
+		return \Aimeos\Base\DB\Factory::create( self::getConfig()->get( 'resource', [] ), 'DBAL' );
 	}
 
 
