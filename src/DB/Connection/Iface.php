@@ -20,12 +20,18 @@ namespace Aimeos\Base\DB\Connection;
 interface Iface
 {
 	/**
+	 * Initializes the DBAL connection object
+	 *
+	 * @param array $params Associative list of connection parameters
+	 */
+	public function __construct( array $params );
+
+	/**
 	 * Closes the connection to the database server
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
 	 */
 	public function close() : Iface;
-
 
 	/**
 	 * Connects (or reconnects) to the database server
@@ -33,7 +39,6 @@ interface Iface
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
 	 */
 	public function connect() : Iface;
-
 
 	/**
 	 * Creates a database statement.
@@ -43,7 +48,6 @@ interface Iface
 	 */
 	public function create( string $sql ) : \Aimeos\Base\DB\Statement\Iface;
 
-
 	/**
 	 * Escapes the value if necessary for direct inclusion in SQL statement.
 	 *
@@ -51,7 +55,6 @@ interface Iface
 	 * @return string Escaped string
 	 */
 	public function escape( string $data = null ) : string;
-
 
 	/**
 	 * Returns a quoted identifier for the passed name
@@ -62,7 +65,6 @@ interface Iface
 	 */
 	public function qi( string $name ) : string;
 
-
 	/**
 	 * Returns the underlying connection object
 	 *
@@ -70,14 +72,12 @@ interface Iface
 	 */
 	public function getRawObject();
 
-
 	/**
 	 * Checks if a transaction is currently running
 	 *
 	 * @return bool True if transaction is currently running, false if not
 	 */
 	public function inTransaction() : bool;
-
 
 	/**
 	 * Starts a transaction for this connection.
@@ -89,7 +89,6 @@ interface Iface
 	 */
 	public function begin() : Iface;
 
-
 	/**
 	 * Commits the changes done inside of the transaction to the storage.
 	 *
@@ -97,14 +96,12 @@ interface Iface
 	 */
 	public function commit() : Iface;
 
-
 	/**
 	 * Discards the changes done inside of the transaction.
 	 *
 	 * @return \Aimeos\Base\DB\Connection\Iface Connection instance for method chaining
 	 */
 	public function rollback() : Iface;
-
 
 	/**
 	 * Deletes the records from the given table
@@ -115,7 +112,6 @@ interface Iface
 	 */
 	public function delete( string $table, array $conditions = [] ) : \Aimeos\Base\DB\Result\Iface;
 
-
 	/**
 	 * Inserts a record into the given table
 	 *
@@ -125,7 +121,6 @@ interface Iface
 	 */
 	public function insert( string $table, array $data ) : \Aimeos\Base\DB\Result\Iface;
 
-
 	/**
 	 * Executes a custom SQL query
 	 *
@@ -134,7 +129,6 @@ interface Iface
 	 * @return \Aimeos\Base\DB\Result\Iface Result object
 	 */
 	public function query( string $sql, array $params = [] ) : \Aimeos\Base\DB\Result\Iface;
-
 
 	/**
 	 * Updates the records from the given table

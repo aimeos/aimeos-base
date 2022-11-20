@@ -5,7 +5,6 @@ namespace Aimeos\Base\DB;
 
 class DBALTest extends \PHPUnit\Framework\TestCase
 {
-	private $object;
 	private $conn;
 
 
@@ -19,8 +18,7 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 		$table->setPrimaryKey( array( 'id' ) );
 
 
-		$this->object = new \Aimeos\Base\DB\Manager\DBAL( \TestHelper::getConfig()->get( 'resource', [] ) );
-		$this->conn = $this->object->acquire();
+		$this->conn = new \Aimeos\Base\DB\Connection\DBAL( \TestHelper::getConfig()->get( 'resource/db', [] ) );
 
 		foreach( $schema->toSQL( $this->conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
 			$this->conn->create( $sql )->execute()->finish();
@@ -31,9 +29,8 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 	protected function tearDown() : void
 	{
 		$this->conn->create( 'DROP TABLE "mw_unit_test"' )->execute()->finish();
-		$this->object->release( $this->conn );
 
-		unset( $this->object );
+		unset( $this->conn );
 	}
 
 
@@ -302,27 +299,5 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->expectException( \Aimeos\Base\DB\Exception::class );
 		$this->conn->create( 'SELECT *' )->execute()->finish();
-	}
-
-
-	public function testDBALException()
-	{
-		$mock = $this->getMockBuilder( \Aimeos\Base\DB\Connection\Iface::class )->getMock();
-
-		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		$this->object->release( $mock );
-	}
-
-
-	public function testDBFactory()
-	{
-		$this->assertInstanceOf( \Aimeos\Base\DB\Manager\Iface::class, $this->object );
-	}
-
-
-	public function testFactoryFail()
-	{
-		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig()->get( 'resource', [] ), 'notDefined' );
 	}
 }

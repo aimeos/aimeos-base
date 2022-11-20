@@ -5,18 +5,12 @@ namespace Aimeos\Base\MQueue\Queue;
 
 class StandardTest extends \PHPUnit\Framework\TestCase
 {
-	private static $dbm;
+	private static $conn;
 	private $object;
 
 
 	public static function setUpBeforeClass() : void
 	{
-		self::$dbm = \TestHelper::getDBManager();
-
-		if( !( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL ) ) {
-			return;
-		}
-
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 
 		$table = $schema->createTable( 'mw_mqueue_test' );
@@ -27,27 +21,17 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 		$table->addColumn( 'message', 'text', array( 'length' => 0xffff ) );
 		$table->setPrimaryKey( array( 'id' ) );
 
+		self::$conn = \TestHelper::getConnection();
 
-		$conn = self::$dbm->acquire();
-
-		foreach( $schema->toSQL( $conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
-			$conn->create( $sql )->execute()->finish();
+		foreach( $schema->toSQL( self::$conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
+			self::$conn->create( $sql )->execute()->finish();
 		}
-
-		self::$dbm->release( $conn );
 	}
 
 
 	public static function tearDownAfterClass() : void
 	{
-		if( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL )
-		{
-			$conn = self::$dbm->acquire();
-
-			$conn->create( 'DROP TABLE "mw_mqueue_test"' )->execute()->finish();
-
-			self::$dbm->release( $conn );
-		}
+		self::$conn->create( 'DROP TABLE "mw_mqueue_test"' )->execute()->finish();
 	}
 
 

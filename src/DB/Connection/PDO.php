@@ -17,7 +17,7 @@ namespace Aimeos\Base\DB\Connection;
  * @package Base
  * @subpackage DB
  */
-class PDO extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Connection\Iface
+class PDO extends Base implements Iface
 {
 	private $connection;
 	private $txnumber = 0;
@@ -28,13 +28,16 @@ class PDO extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Con
 	 * Initializes the PDO connection object.
 	 *
 	 * @param array $params Associative list of connection parameters
-	 * @param string[] $stmts List of SQL statements to execute after connecting
 	 */
-	public function __construct( array $params, array $stmts )
+	public function __construct( array $params )
 	{
+		if( !isset( $params['dsn'] ) ) {
+			$params['dsn'] = $this->dsn( $params );
+		}
+
 		parent::__construct( $params );
 
-		$this->stmts = $stmts;
+		$this->stmts = $params['stmt'] ?? [];
 		$this->connect();
 	}
 
@@ -187,5 +190,41 @@ class PDO extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Con
 
 		$this->txnumber--;
 		return $this;
+	}
+
+
+	/**
+	 * Returns the connection DSN
+	 *
+	 * @param array $params Associative list of connection parameters
+	 * @return string Connection DSN
+	 */
+	protected function dsn( array $params ) : string
+	{
+		$adapter = $params['adapter'] ?? 'mysql';
+		$host = $params['host'] ?? null;
+		$port = $params['port'] ?? null;
+		$sock = $params['socket'] ?? null;
+		$dbase = $params['database'] ?? null;
+
+		$dsn = $adapter . ':';
+
+		if( $adapter === 'sqlsrv' )
+		{
+			$dsn .= 'Database=' . $dbase;
+			$dsn .= isset( $host ) ? ';Server=' . $host . ( isset( $port ) ? ',' . $port : '' ) : '';
+		}
+		elseif( $sock == null )
+		{
+			$dsn .= 'dbname=' . $dbase;
+			$dsn .= isset( $host ) ? ';host=' . $host : '';
+			$dsn .= isset( $port ) ? ';port=' . $port : '';
+		}
+		else
+		{
+			$dsn .= 'dbname=' . $dbase . ';unix_socket=' . $sock;
+		}
+
+		return $dsn;
 	}
 }

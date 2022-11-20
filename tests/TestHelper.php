@@ -17,7 +17,7 @@ class TestHelper
 	 *
 	 * @return \Aimeos\Base\Config\Iface Configuration object
 	 */
-	public static function getConfig()
+	public static function getConfig() : \Aimeos\Base\Config\Iface
 	{
 		if( !isset( self::$config ) ) {
 			self::$config = self::createConfig();
@@ -28,13 +28,17 @@ class TestHelper
 
 
 	/**
-	 * Returns the database manager object
+	 * Returns the database connection object
 	 *
-	 * @return \Aimeos\Base\DB\Manager\Iface Database manager object
+	 * @return \Aimeos\Base\DB\Connection\Iface Database connection object
 	 */
-	public static function getDBManager()
+	public static function getConnection() : \Aimeos\Base\DB\Connection\Iface
 	{
-		return \Aimeos\Base\DB\Factory::create( self::getConfig()->get( 'resource', [] ), 'DBAL' );
+		if( !isset( self::$dbm ) ) {
+			self::$dbm = new \Aimeos\Base\DB\Manager\Standard( self::getConfig()->get( 'resource', [] ), 'DBAL' );
+		}
+
+		return self::$dbm->get();
 	}
 
 
@@ -43,7 +47,7 @@ class TestHelper
 	 *
 	 * @return \Aimeos\Base\Config\Iface Configuration object
 	 */
-	private static function createConfig()
+	private static function createConfig() : \Aimeos\Base\Config\Iface
 	{
 		$path = dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'config';
 		$file = __DIR__ . DIRECTORY_SEPARATOR . 'confdoc.ser';

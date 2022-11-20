@@ -25,7 +25,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 			),
 		);
 
-		$object = \Aimeos\Base\Cache\Factory::create( 'None', $config, \TestHelper::getDBManager() );
+		$object = \Aimeos\Base\Cache\Factory::create( 'None', $config, \TestHelper::getConnection() );
 		$this->assertInstanceOf( \Aimeos\Base\Cache\Iface::class, $object );
 	}
 

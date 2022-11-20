@@ -3,14 +3,14 @@
 namespace Aimeos\Base\DB\Manager;
 
 
-class PDOTest extends \PHPUnit\Framework\TestCase
+class StandardTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
 
 
 	protected function setUp() : void
 	{
-		$this->object = new \Aimeos\Base\DB\Manager\PDO( \TestHelper::getConfig()->get( 'resource' ) );
+		$this->object = new \Aimeos\Base\DB\Manager\Standard( \TestHelper::getConfig()->get( 'resource', [] ) );
 	}
 
 

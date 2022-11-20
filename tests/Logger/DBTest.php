@@ -5,18 +5,12 @@ namespace Aimeos\Base\Logger;
 
 class DBTest extends \PHPUnit\Framework\TestCase
 {
-	private static $dbm;
+	private static $conn;
 	private $object;
 
 
 	public static function setUpBeforeClass() : void
 	{
-		self::$dbm = \TestHelper::getDBManager();
-
-		if( !( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL ) ) {
-			return;
-		}
-
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 
 		$table = $schema->createTable( 'mw_log_test' );
@@ -26,55 +20,30 @@ class DBTest extends \PHPUnit\Framework\TestCase
 		$table->addColumn( 'priority', 'integer', [] );
 		$table->addColumn( 'message', 'text', array( 'length' => 0xffff ) );
 
-		$conn = self::$dbm->acquire();
+		self::$conn = \TestHelper::getConnection();
 
-		foreach( $schema->toSQL( $conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
-			$conn->create( $sql )->execute()->finish();
+		foreach( $schema->toSQL( self::$conn->getRawObject()->getDatabasePlatform() ) as $sql ) {
+			self::$conn->create( $sql )->execute()->finish();
 		}
-
-		self::$dbm->release( $conn );
 	}
 
 
 	public static function tearDownAfterClass() : void
 	{
-		if( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL )
-		{
-			$conn = self::$dbm->acquire();
-
-			$conn->create( 'DROP TABLE "mw_log_test"' )->execute()->finish();
-
-			self::$dbm->release( $conn );
-		}
+		self::$conn->create( 'DROP TABLE "mw_log_test"' )->execute()->finish();
 	}
 
 
 	protected function setUp() : void
 	{
-		if( !( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL ) ) {
-			$this->markTestSkipped( 'No DBAL database manager configured' );
-		}
-
-
-		$conn = self::$dbm->acquire();
-
 		$sql = 'INSERT INTO "mw_log_test" ( "facility", "tstamp", "priority", "message", "request" ) VALUES ( ?, ?, ?, ?, ? )';
-		$this->object = new \Aimeos\Base\Logger\DB( $conn->create( $sql ) );
-
-		self::$dbm->release( $conn );
+		$this->object = new \Aimeos\Base\Logger\DB( self::$conn->create( $sql ) );
 	}
 
 
 	protected function tearDown() : void
 	{
-		if( self::$dbm instanceof \Aimeos\Base\DB\Manager\DBAL )
-		{
-			$conn = self::$dbm->acquire();
-
-			$conn->create( 'DELETE FROM "mw_log_test"' )->execute()->finish();
-
-			self::$dbm->release( $conn );
-		}
+		self::$conn->create( 'DELETE FROM "mw_log_test"' )->execute()->finish();
 	}
 
 
@@ -82,12 +51,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object->log( 'error' );
 
-		$conn = self::$dbm->acquire();
-
-		$result = $conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
+		$result = self::$conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
 		$row = $result->fetch();
-
-		self::$dbm->release( $conn );
 
 		if( $row === null ) {
 			throw new \RuntimeException( 'No log record found' );
@@ -107,16 +72,13 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testScalarLog()
 	{
-		$conn = self::$dbm->acquire();
-		$conn->create( 'DELETE FROM "mw_log_test"' )->execute()->finish();
+		self::$conn->create( 'DELETE FROM "mw_log_test"' )->execute()->finish();
 
 		$this->object->log( array( 'scalar', 'errortest' ) );
 
-		$result = $conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
+		$result = self::$conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
 
 		$row = $result->fetch();
-
-		self::$dbm->release( $conn );
 
 		if( $row === null ) {
 			throw new \RuntimeException( 'No log record found' );
@@ -134,12 +96,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object->log( 'critical', \Aimeos\Base\Logger\Iface::CRIT );
 
-		$conn = self::$dbm->acquire();
-
-		$result = $conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
+		$result = self::$conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
 		$row = $result->fetch();
-
-		self::$dbm->release( $conn );
 
 		if( $row === null ) {
 			throw new \RuntimeException( 'No log record found' );
@@ -156,12 +114,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object->log( 'debug', \Aimeos\Base\Logger\Iface::WARN );
 
-		$conn = self::$dbm->acquire();
-
-		$result = $conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
+		$result = self::$conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
 		$row = $result->fetch();
-
-		self::$dbm->release( $conn );
 
 		$this->assertNull( $row );
 	}
@@ -171,12 +125,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object->log( 'user auth', \Aimeos\Base\Logger\Iface::ERR, 'auth' );
 
-		$conn = self::$dbm->acquire();
-
-		$result = $conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
+		$result = self::$conn->create( 'SELECT * FROM "mw_log_test"' )->execute();
 		$row = $result->fetch();
-
-		self::$dbm->release( $conn );
 
 		if( $row === null ) {
 			throw new \RuntimeException( 'No log record found' );

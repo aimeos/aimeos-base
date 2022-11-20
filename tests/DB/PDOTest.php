@@ -11,23 +11,18 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
-		$this->object = new \Aimeos\Base\DB\Manager\PDO( \TestHelper::getConfig()->get( 'resource', [] ) );
-
 		$sql = 'CREATE TABLE "mw_unit_test" ( "id" INTEGER NOT NULL, "name" VARCHAR(20) NOT NULL )';
 
-		$this->conn = $this->object->acquire();
+		$this->conn = new \Aimeos\Base\DB\Connection\PDO( \TestHelper::getConfig()->get( 'resource/db', [] ) );
 		$this->conn->create( $sql )->execute()->finish();
 	}
 
 
 	protected function tearDown() : void
 	{
-		$sql = 'DROP TABLE "mw_unit_test"';
+		$this->conn->create( 'DROP TABLE "mw_unit_test"' )->execute()->finish();
 
-		$this->conn->create( $sql )->execute()->finish();
-		$this->object->release( $this->conn );
-
-		unset( $this->object );
+		unset( $this->conn );
 	}
 
 
@@ -375,27 +370,5 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->expectException( \Aimeos\Base\DB\Exception::class );
 		$this->conn->create( 'SELECT *' )->execute()->finish();
-	}
-
-
-	public function testPDOException()
-	{
-		$mock = $this->getMockBuilder( \Aimeos\Base\DB\Connection\Iface::class )->getMock();
-
-		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		$this->object->release( $mock );
-	}
-
-
-	public function testDBFactory()
-	{
-		$this->assertInstanceOf( \Aimeos\Base\DB\Manager\Iface::class, $this->object );
-	}
-
-
-	public function testFactoryFail()
-	{
-		$this->expectException( \Aimeos\Base\DB\Exception::class );
-		\Aimeos\Base\DB\Factory::create( \TestHelper::getConfig()->get( 'resource', [] ), 'notDefined' );
 	}
 }

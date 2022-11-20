@@ -44,9 +44,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testToString()
 	{
-		$dbm = \TestHelper::getDBManager();
-		$conn = $dbm->acquire();
-		$dbm->release( $conn );
+		$conn = \TestHelper::getConnection();
 
 		$types = array(
 			'list' => \Aimeos\Base\DB\Statement\Base::PARAM_STR,
@@ -85,9 +83,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testToArray()
 	{
-		$dbm = \TestHelper::getDBManager();
-		$conn = $dbm->acquire();
-		$dbm->release( $conn );
+		$conn = \TestHelper::getConnection();
 
 		$expected = [
 			'&&' => [

@@ -17,24 +17,23 @@ namespace Aimeos\Base\DB\Connection;
  * @package Base
  * @subpackage DB
  */
-class DBAL extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Connection\Iface
+class DBAL extends Base implements Iface
 {
 	private $connection;
 	private $txnumber = 0;
-	private $stmts = [];
+	private $stmts;
 
 
 	/**
 	 * Initializes the DBAL connection object
 	 *
 	 * @param array $params Associative list of connection parameters
-	 * @param string[] $stmts List of SQL statements to execute after connecting
 	 */
-	public function __construct( array $params, array $stmts )
+	public function __construct( array $params )
 	{
-		parent::__construct( $params );
+		parent::__construct( $this->normalize( $params ) );
 
-		$this->stmts = $stmts;
+		$this->stmts = $params['stmt'] ?? [];
 		$this->connect();
 	}
 
@@ -196,5 +195,36 @@ class DBAL extends \Aimeos\Base\DB\Connection\Base implements \Aimeos\Base\DB\Co
 
 		$this->txnumber--;
 		return $this;
+	}
+
+
+	/**
+	 * Normalizes the the connection parameters
+	 *
+	 * @param array $params Associative list of connection parameters
+	 * @return array Normalized connection parameters
+	 */
+	protected function normalize( array $params ) : array
+	{
+		$adapter = $params['adapter'] ?? 'mysql';
+
+		$params['user'] = $params['username'] ?? null;
+		$params['dbname'] = $params['database'] ?? null;
+
+		if( $socket = $params['socket'] ?? null ) {
+			$params['unix_socket'] = $socket;
+		}
+
+		switch( $adapter )
+		{
+			case 'mysql': $params['driver'] = 'pdo_mysql'; break;
+			case 'oracle': $params['driver'] = 'pdo_oci'; break;
+			case 'pgsql': $params['driver'] = 'pdo_pgsql'; break;
+			case 'sqlite': $params['driver'] = 'pdo_sqlite'; break;
+			case 'sqlsrv': $params['driver'] = 'pdo_sqlsrv'; break;
+			default: $params['driver'] = $adapter;
+		}
+
+		return $params;
 	}
 }

@@ -21,16 +21,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 			$this->markTestSkipped( 'No database configured' );
 		}
 
-
-		$dbm = \TestHelper::getDBManager();
-		$this->conn = $dbm->acquire();
-	}
-
-
-	protected function tearDown() : void
-	{
-		$dbm = \TestHelper::getDBManager();
-		$dbm->release( $this->conn );
+		$this->conn = \TestHelper::getConnection();
 	}
 
 
@@ -80,11 +71,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 	public function testToArray()
 	{
-		$dbm = \TestHelper::getDBManager();
-		$conn = $dbm->acquire();
-		$dbm->release( $conn );
-
-		$object = new \Aimeos\Base\Criteria\Expression\Sort\SQL( $conn, '+', 'stringvar' );
+		$object = new \Aimeos\Base\Criteria\Expression\Sort\SQL( $this->conn, '+', 'stringvar' );
 
 		$this->assertEquals( ['stringvar' => '+'], $object->__toArray() );
 	}

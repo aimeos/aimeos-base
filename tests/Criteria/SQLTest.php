@@ -21,12 +21,8 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 			$this->markTestSkipped( 'No database configured' );
 		}
 
-
-		$dbm = \TestHelper::getDBManager();
-
-		$conn = $dbm->acquire();
+		$conn = \TestHelper::getConnection();
 		$this->object = new \Aimeos\Base\Criteria\SQL( $conn );
-		$dbm->release( $conn );
 	}
 
 
