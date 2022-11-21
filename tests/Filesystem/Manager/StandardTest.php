@@ -37,7 +37,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 		$object = new \Aimeos\Base\Filesystem\Manager\Standard( ['fs' => ['basedir' => __DIR__]] );
 
 		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
-		$object->get();
+		$object->get( 'fs' );
 	}
 
 

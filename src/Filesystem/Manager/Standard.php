@@ -26,7 +26,7 @@ class Standard implements Iface
 	/**
 	 * Initializes the object
 	 *
-	 * @param array $config Configuration object
+	 * @param array $config Associative multi-dimensional configuration
 	 */
 	public function __construct( array $config )
 	{
@@ -78,10 +78,10 @@ class Standard implements Iface
 	 * Returns the configuration for the given name
 	 *
 	 * @param string $name Name of the resource, e.g. "fs" or "fs-media"
-	 * @return array Configuration values
+	 * @return array|string Configuration values or alias name
 	 * @throws \Aimeos\Base\Filesystem\Exception If an no configuration for that name is found
 	 */
-	protected function config( string $name ) : array
+	protected function config( string $name )
 	{
 		foreach( [$name, 'fs'] as $fsname )
 		{
@@ -102,7 +102,7 @@ class Standard implements Iface
 	 * @return \Aimeos\Base\Filesystem\Iface File system object
 	 * @throws \Aimeos\Base\Filesystem\Exception if file system class isn't found
 	 */
-	protected function create( array $config )
+	protected function create( array $config ) : \Aimeos\Base\Filesystem\Iface
 	{
 		if( !isset( $config['adapter'] ) ) {
 			throw new \Aimeos\Base\Filesystem\Exception( 'File system not configured' );

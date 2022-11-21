@@ -5,7 +5,6 @@ namespace Aimeos\Base\DB;
 
 class PDOTest extends \PHPUnit\Framework\TestCase
 {
-	private $object;
 	private $conn;
 
 

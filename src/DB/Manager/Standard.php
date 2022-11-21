@@ -19,7 +19,7 @@ namespace Aimeos\Base\DB\Manager;
  */
 class Standard implements \Aimeos\Base\DB\Manager\Iface
 {
-	private $conns = [];
+	private $objects = [];
 	private $config;
 	private $type;
 
@@ -42,8 +42,8 @@ class Standard implements \Aimeos\Base\DB\Manager\Iface
 	 */
 	public function __destruct()
 	{
-		foreach( $this->conns as $key => $conn ) {
-			unset( $this->conns[$key] );
+		foreach( $this->objects as $key => $conn ) {
+			unset( $this->objects[$key] );
 		}
 	}
 
@@ -53,7 +53,7 @@ class Standard implements \Aimeos\Base\DB\Manager\Iface
 	 */
 	public function __clone()
 	{
-		$this->conns = [];
+		$this->objects = [];
 	}
 
 
@@ -63,7 +63,7 @@ class Standard implements \Aimeos\Base\DB\Manager\Iface
 	public function __sleep()
 	{
 		$this->__destruct();
-		$this->conns = [];
+		$this->objects = [];
 
 		return get_object_vars( $this );
 	}
@@ -82,11 +82,11 @@ class Standard implements \Aimeos\Base\DB\Manager\Iface
 			return $this->create( $this->config( $name ) );
 		}
 
-		if( !isset( $this->conns[$name] ) ) {
-			$this->conns[$name] = $this->create( $this->config( $name ) );
+		if( !isset( $this->objects[$name] ) ) {
+			$this->objects[$name] = $this->create( $this->config( $name ) );
 		}
 
-		return $this->conns[$name];
+		return $this->objects[$name];
 	}
 
 
