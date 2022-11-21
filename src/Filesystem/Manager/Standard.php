@@ -51,7 +51,6 @@ class Standard implements Iface
 	public function __sleep()
 	{
 		$this->__destruct();
-
 		$this->objects = [];
 
 		return get_object_vars( $this );
@@ -68,7 +67,7 @@ class Standard implements Iface
 	public function get( string $name ) : \Aimeos\Base\Filesystem\Iface
 	{
 		if( !isset( $this->objects[$name] ) ) {
-			$this->objects[$name] = \Aimeos\Base\Filesystem\Factory::create( (array) $this->getConfig( $name ) );
+			$this->objects[$name] = $this->create( $this->config( $name ) );
 		}
 
 		return $this->objects[$name];
@@ -79,21 +78,42 @@ class Standard implements Iface
 	 * Returns the configuration for the given name
 	 *
 	 * @param string $name Name of the resource, e.g. "fs" or "fs-media"
-	 * @return array|string Configuration values
+	 * @return array Configuration values
 	 * @throws \Aimeos\Base\Filesystem\Exception If an no configuration for that name is found
 	 */
-	protected function getConfig( string $name )
+	protected function config( string $name ) : array
 	{
-		if( isset( $this->config[$name] ) ) {
-			return $this->config[$name];
-		}
-
-		$name = 'fs';
-		if( isset( $this->config[$name] ) ) {
-			return $this->config[$name];
+		foreach( [$name, 'fs'] as $fsname )
+		{
+			if( isset( $this->config[$fsname] ) ) {
+				return $this->config[$fsname];
+			}
 		}
 
 		$msg = sprintf( 'No resource configuration for "%1$s" available', $name );
 		throw new \Aimeos\Base\Filesystem\Exception( $msg );
+	}
+
+
+	/**
+	 * Creates and returns a new file system object
+	 *
+	 * @param array $config Resource configuration
+	 * @return \Aimeos\Base\Filesystem\Iface File system object
+	 * @throws \Aimeos\Base\Filesystem\Exception if file system class isn't found
+	 */
+	protected function create( array $config )
+	{
+		if( !isset( $config['adapter'] ) ) {
+			throw new \Aimeos\Base\Filesystem\Exception( 'File system not configured' );
+		}
+
+		$classname = '\Aimeos\Base\Filesystem\\' . ucfirst( (string) $config['adapter'] );
+
+		if( !class_exists( $classname ) ) {
+			throw new \Aimeos\Base\Filesystem\Exception( sprintf( 'File system "%1$s" not found', $config['adapter'] ) );
+		}
+
+		return new $classname( $config );
 	}
 }

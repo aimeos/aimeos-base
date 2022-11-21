@@ -32,6 +32,15 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function tesGetNoAdapter()
+	{
+		$object = new \Aimeos\Base\Filesystem\Manager\Standard( ['fs' => ['basedir' => __DIR__]] );
+
+		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+		$object->get();
+	}
+
+
 	public function testSleep()
 	{
 		$object = new \Aimeos\Base\Filesystem\Manager\Standard( [] );
