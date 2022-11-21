@@ -12,15 +12,12 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$this->config = \TestHelper::getConfig();
-		$this->object = new \Aimeos\Base\MQueue\Manager\Standard( $this->config );
+		$this->object = new \Aimeos\Base\MQueue\Manager\Standard( \TestHelper::getConfig()->get( 'resource', [] ) );
 	}
 
 
 	protected function tearDown() : void
 	{
-		$this->config->set( 'resource/mq-email', null );
-		$this->config->set( 'resource/mq', null );
-
 		unset( $this->object );
 	}
 
@@ -48,14 +45,16 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetException()
 	{
+		$object = new \Aimeos\Base\MQueue\Manager\Standard( [] );
+
 		$this->expectException( \Aimeos\Base\MQueue\Exception::class );
-		$this->object->get( 'xx' );
+		$object->get( 'xx' );
 	}
 
 
 	public function testGetDatabaseConfig()
 	{
-		$this->config->set( 'resource/mq-email', array( 'adapter' => 'None', 'db' => 'db' ) );
+		$this->config->set( 'resource/mq-email', array( 'adapter' => 'Standard', 'db' => 'db' ) );
 		$this->assertInstanceof( 'Aimeos\Base\MQueue\Iface', $this->object->get( 'mq-email' ) );
 	}
 }

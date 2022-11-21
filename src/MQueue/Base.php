@@ -40,7 +40,7 @@ abstract class Base
 	 * @param mixed $default Default value if no setting is found
 	 * @return mixed Configuration setting or default value
 	 */
-	protected function getConfig( string $key, $default = null )
+	protected function config( string $key, $default = null )
 	{
 		$config = $this->config;
 

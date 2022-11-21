@@ -26,9 +26,9 @@ class Standard implements Iface
 	/**
 	 * Initializes the object
 	 *
-	 * @param \Aimeos\Base\Config\Iface $config Configuration object
+	 * @param array $config Associative multi-dimensional configuration
 	 */
-	public function __construct( \Aimeos\Base\Config\Iface $config )
+	public function __construct( array $config )
 	{
 		$this->config = $config;
 	}
@@ -39,8 +39,8 @@ class Standard implements Iface
 	 */
 	public function __destruct()
 	{
-		foreach( $this->objects as $object ) {
-			unset( $object );
+		foreach( $this->objects as $key => $object ) {
+			unset( $this->objects[$key] );
 		}
 	}
 
@@ -50,56 +50,81 @@ class Standard implements Iface
 	 */
 	public function __clone()
 	{
-		$this->config = clone $this->config;
+		$this->objects[] = [];
+	}
 
-		foreach( $this->objects as $resource => $object ) {
-			unset( $this->objects[$resource] );
-		}
+
+	/**
+	 * Clean up the objects inside
+	 */
+	public function __sleep()
+	{
+		$this->__destruct();
+		$this->objects = [];
+
+		return get_object_vars( $this );
 	}
 
 
 	/**
 	 * Returns the message queue for the given name
 	 *
-	 * @param string $resource Resource name of the message queue
+	 * @param string $name Resource name of the message queue
 	 * @return \Aimeos\Base\MQueue\Iface Message queue object
 	 * @throws \Aimeos\Base\MQueue\Exception If an no configuration for that name is found
 	 */
-	public function get( string $resource ) : \Aimeos\Base\MQueue\Iface
+	public function get( string $name ) : \Aimeos\Base\MQueue\Iface
 	{
-		$conf = (array) $this->getConfig( $resource );
-
-		if( isset( $conf['db'] ) && is_string( $conf['db'] ) ) {
-			$conf['db'] = (array) $this->getConfig( $conf['db'] );
+		if( !isset( $this->objects[$name] ) ) {
+			$this->objects[$name] = $this->create( $this->config( $name ) );
 		}
 
-		if( !isset( $this->objects[$resource] ) ) {
-			$this->objects[$resource] = \Aimeos\Base\MQueue\Factory::create( $conf );
-		}
-
-		return $this->objects[$resource];
+		return $this->objects[$name];
 	}
 
 
 	/**
 	 * Returns the configuration for the given name
 	 *
-	 * @param string &$resource Name of the resource, e.g. "mq" or "mq-email"
+	 * @param string $name Name of the resource, e.g. "mq" or "mq-email"
 	 * @return array Configuration values
 	 * @throws \Aimeos\Base\MQueue\Exception If an no configuration for that name is found
 	 */
-	protected function getConfig( string &$resource ) : array
+	protected function config( string $name ) : array
 	{
-		if( ( $conf = $this->config->get( 'resource/' . $resource ) ) !== null ) {
-			return $conf;
+		foreach( [$name, 'mq'] as $mqname )
+		{
+			if( isset( $this->config[$mqname] ) ) {
+				return $this->config[$mqname];
+			}
 		}
 
-		$resource = 'mq';
-		if( ( $conf = $this->config->get( 'resource/mq' ) ) !== null ) {
-			return $conf;
-		}
-
-		$msg = sprintf( 'No resource configuration for "%1$s" available', $resource );
+		$msg = sprintf( 'No resource configuration for "%1$s" available', $name );
 		throw new \Aimeos\Base\MQueue\Exception( $msg );
+	}
+
+
+	/**
+	 * Creates and returns a new message queue object
+	 *
+	 * @param array $config Resource configuration
+	 * @return \Aimeos\Base\MQueue\Iface Message queue object
+	 * @throws \Aimeos\Base\MQueue\Exception if message queue class isn't found
+	 */
+	protected function create( array $config )
+	{
+		if( !isset( $config['adapter'] ) ) {
+			throw new \Aimeos\Base\MQueue\Exception( 'Message queue not configured' );
+		}
+
+		$classname = '\Aimeos\Base\MQueue\\' . ucfirst( (string) $config['adapter'] );
+
+		if( !class_exists( $classname ) ) {
+			throw new \Aimeos\Base\MQueue\Exception( sprintf( 'Message queue "%1$s" not found', $config['adapter'] ) );
+		}
+
+		$config['db'] = $this->config[$config['db'] ?? 'db'] ?? [];
+
+		return new $classname( $config );
 	}
 }

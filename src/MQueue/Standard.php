@@ -33,9 +33,9 @@ class Standard extends Base implements Iface
 		parent::__construct( $config );
 
 		try {
-			$this->conn = $this->createConnection();
+			$this->conn = new \Aimeos\Base\DB\Connection\PDO( $config['db'] ?? [] );
 		} catch( \Aimeos\Base\DB\Exception $e ) {
-			throw new \Aimeos\Base\MQueue\Exception( $e->getMessage() );
+			throw new \Aimeos\Base\MQueue\Exception( $e->getMessage(), -1, $e );
 		}
 	}
 
@@ -50,13 +50,13 @@ class Standard extends Base implements Iface
 	{
 		if( !isset( $this->queues[$name] ) )
 		{
-			$adapter = $this->getConfig( 'db/adapter' );
+			$adapter = $this->config( 'db/adapter' );
 
 			$sql = array(
-				'insert' => $this->getConfig( 'sql/insert', '
+				'insert' => $this->config( 'sql/insert', '
 					INSERT INTO madmin_queue (queue, cname, rtime, message) VALUES (?, ?, ?, ?)
 				' ),
-				'reserve' => $this->getConfig( 'sql/reserve', $adapter !== 'mysql' ? '
+				'reserve' => $this->config( 'sql/reserve', $adapter !== 'mysql' ? '
 					UPDATE madmin_queue SET cname = ?, rtime = ? WHERE id IN (
 						SELECT id FROM (
 							SELECT id FROM madmin_queue WHERE queue = ? AND rtime < ?
@@ -70,60 +70,22 @@ class Standard extends Base implements Iface
 						) AS t
 					)
 				' ),
-				'get' => $this->getConfig( 'sql/get', $adapter !== 'mysql' ? '
+				'get' => $this->config( 'sql/get', $adapter !== 'mysql' ? '
 					SELECT * FROM madmin_queue WHERE queue = ? AND cname = ? AND rtime = ?
 					ORDER BY id OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
 				' : '
 					SELECT * FROM madmin_queue WHERE queue = ? AND cname = ? AND rtime = ? ORDER BY id LIMIT 1
 				' ),
-				'delete' => $this->getConfig( 'sql/delete', '
+				'delete' => $this->config( 'sql/delete', '
 					DELETE FROM madmin_queue WHERE id = ? AND queue = ?
 				' ),
 			);
 
-			$rtime = $this->getConfig( 'releasetime', 60 );
+			$rtime = $this->config( 'releasetime', 60 );
 
 			$this->queues[$name] = new \Aimeos\Base\MQueue\Queue\Standard( $this->conn, $name, $sql, $rtime );
 		}
 
 		return $this->queues[$name];
-	}
-
-
-	/**
-	 * Creates a new database connection.
-	 *
-	 * @return \Aimeos\Base\DB\Connection\Iface Database connection
-	 */
-	protected function createConnection() : \Aimeos\Base\DB\Connection\Iface
-	{
-		$params = $this->getConfig( 'db' );
-		$host = $this->getConfig( 'db/host' );
-		$port = $this->getConfig( 'db/port' );
-		$sock = $this->getConfig( 'db/socket' );
-		$dbase = $this->getConfig( 'db/database' );
-		$adapter = $this->getConfig( 'db/adapter', 'mysql' );
-
-		$dsn = $adapter . ':';
-
-		if( $adapter === 'sqlsrv' )
-		{
-			$dsn .= 'Database=' . $dbase;
-			$dsn .= isset( $host ) ? ';Server=' . $host . ( isset( $port ) ? ',' . $port : '' ) : '';
-		}
-		elseif( $sock == null )
-		{
-			$dsn .= 'dbname=' . $dbase;
-			$dsn .= isset( $host ) ? ';host=' . $host : '';
-			$dsn .= isset( $port ) ? ';port=' . $port : '';
-		}
-		else
-		{
-			$dsn .= 'dbname=' . $dbase . ';unix_socket=' . $sock;
-		}
-
-		$stmts = $this->getConfig( 'db/stmt', [] );
-
-		return new \Aimeos\Base\DB\Connection\PDO( $params + ['dsn' => $dsn], $stmts );
 	}
 }
