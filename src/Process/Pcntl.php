@@ -149,11 +149,13 @@ class Pcntl implements Iface
 		{
 			if( is_object( $value ) )
 			{
+				$value = clone $value;
+
 				if( method_exists( $value, '__sleep' ) ) {
 					$value->__sleep();
 				}
 
-				$data[$key] = clone $value;
+				$data[$key] = $value;
 			}
 		}
 
