@@ -225,6 +225,7 @@ class Str
 	 */
 	public static function strtime( string $format ) : string
 	{
+		$format = str_replace( ['%M', '%S'], ['%i', '%s'], $format );
 		return trim( date_create()->format( str_replace( '\\%\\', '', '\\' . join( '\\', str_split( $format ) ) ) ) );
 	}
 
