@@ -111,13 +111,6 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testScanException()
-	{
-		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
-		$this->object->scan( 'scaninvalid' );
-	}
-
-
 	public function testSize()
 	{
 		file_put_contents( $this->basedir . 'file2', 'test' );

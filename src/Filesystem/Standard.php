@@ -108,10 +108,11 @@ class Standard implements Iface, DirIface, MetaIface
 	 */
 	public function scan( string $path = null ) : iterable
 	{
-		try {
-			return new \DirectoryIterator( $this->resolve( (string) $path ) );
-		} catch( \Exception $e ) {
-			throw new Exception( $e->getMessage(), 0, $e );
+		foreach( new \DirectoryIterator( $this->resolve( (string) $path ) ) as $entry )
+		{
+			if( !$entry->isDot() ) {
+				yield $entry->getFileName();
+			}
 		}
 	}
 
