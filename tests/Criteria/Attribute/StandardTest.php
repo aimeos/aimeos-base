@@ -111,6 +111,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 			'public' => false,
 			'default' => 'default value',
 			'required' => false,
+			'value' => null,
 		);
 
 		$this->assertEquals( $expected, $this->object->toArray() );
@@ -126,6 +127,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 			'public' => false,
 			'default' => 'default value',
 			'required' => false,
+			'value' => null,
 			'internalcode' => 'internalcode',
 			'internaldeps' => ['test'],
 			'internaltype' => 'internaltype',
