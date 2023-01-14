@@ -24,6 +24,9 @@ namespace Aimeos\Base\Criteria\Attribute;
  */
 class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 {
+	/* Custom value */
+	public $value;
+
 	private $values;
 
 
@@ -182,6 +185,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 			'public' => $this->isPublic(),
 			'default' => $this->getDefault(),
 			'required' => $this->isRequired(),
+			'value' => $this->value
 		];
 
 		if( $private )
