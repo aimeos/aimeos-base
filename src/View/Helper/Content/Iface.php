@@ -25,7 +25,6 @@ interface Iface extends \Aimeos\Base\View\Helper\Iface
 	 * @param string|null $url Absolute, relative or data: URL
 	 * @param string $fsname File system name the file is stored at
 	 * @return string Complete encoded content URL
-	 * @todo 2023.01 Add version parameter to interface
 	 */
-	public function transform( ?string $url, $fsname = 'fs-media' ) : string;
+	public function transform( ?string $url, $fsname = 'fs-media', bool $version = false ) : string;
 }
