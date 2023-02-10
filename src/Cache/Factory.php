@@ -23,12 +23,11 @@ class Factory
 	 * Creates and returns a cache object.
 	 *
 	 * @param string $name Object type name
-	 * @param array $config Associative list of configuration strings for the cache object
-	 * @param mixed $resource Reference to the resource which should be used by the cache
+	 * @param array $args Variable list of arguments passed to the cache object constructor
 	 * @return \Aimeos\Base\Cache\Iface Cache object of the requested type
 	 * @throws \Aimeos\Base\Cache\Exception if class isn't found
 	 */
-	public static function create( $name, array $config = [], $resource = null )
+	public static function create( $name, ...$args ) : \Aimeos\Base\Cache\Iface
 	{
 		if( ctype_alnum( $name ) === false )
 		{
@@ -43,7 +42,7 @@ class Factory
 			throw new \Aimeos\Base\Cache\Exception( sprintf( 'Class "%1$s" not available', $classname ) );
 		}
 
-		$object = new $classname( $config, $resource );
+		$object = new $classname( ...$args );
 
 		if( !( $object instanceof $iface ) ) {
 			throw new \Aimeos\Base\Cache\Exception( sprintf( 'Class "%1$s" does not implement interface "%2$s"', $classname, $iface ) );
