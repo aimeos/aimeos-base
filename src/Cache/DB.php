@@ -288,13 +288,8 @@ class DB
 	 */
 	public function setMultiple( iterable $pairs, $expires = null, iterable $tags = [] ) : bool
 	{
-		$keys = [];
-		foreach( $pairs as $key => $v ) {
-			$keys[] = $key;
-		}
-
 		// Remove existing entries first to avoid duplicate key conflicts
-		$this->deleteMultiple( $keys );
+		$this->deleteMultiple( array_keys( iterator_to_array( $pairs ) ) );
 
 		try
 		{
