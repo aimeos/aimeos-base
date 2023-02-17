@@ -185,7 +185,7 @@ class DBALTest extends \PHPUnit\Framework\TestCase
 		$stmt = $this->conn->create( $sqlinsert );
 		$stmt->execute()->finish();
 
-		$this->assertRegexp( '/^INSERT INTO "mw_unit_test" \("name"\) VALUES \(\'\(.*\\\'\)\'\)$/', strval( $stmt ) );
+		$this->assertMatchesRegularExpression( '/^INSERT INTO "mw_unit_test" \("name"\) VALUES \(\'\(.*\\\'\)\'\)$/', strval( $stmt ) );
 	}
 
 

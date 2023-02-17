@@ -44,7 +44,7 @@ class ErrorlogTest extends \PHPUnit\Framework\TestCase
 		$this->assertFileExists( 'error.log', 'Unable to open file "error.log"' );
 
 		foreach( file( 'error.log' ) as $line ) {
-			$this->assertRegExp( '/\[[^\]]+\] <message> \[[^\]]+\] \[[^\]]+\] .+test/', $line, $line );
+			$this->assertMatchesRegularExpression( '/\[[^\]]+\] <message> \[[^\]]+\] \[[^\]]+\] .+test/', $line, $line );
 		}
 	}
 
@@ -58,7 +58,7 @@ class ErrorlogTest extends \PHPUnit\Framework\TestCase
 
 		ini_restore( "error_log" );
 
-		$this->assertFileNotExists( 'error.log', 'File "error.log" should not be created' );
+		$this->assertFileDoesNotExist( 'error.log', 'File "error.log" should not be created' );
 	}
 
 

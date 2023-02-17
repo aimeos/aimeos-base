@@ -12,7 +12,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$this->stub = $this->getMockBuilder( 'Aimeos\Base\Process\Iface' )
-			->setMethods( ['isAvailable', 'start', 'wait'] )
+			->onlyMethods( ['isAvailable', 'start', 'wait'] )
 			->getMock();
 
 		$this->object = new \Aimeos\Base\Process\Decorator\Check( $this->stub );

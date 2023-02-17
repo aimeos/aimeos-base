@@ -189,7 +189,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 		$stmt = $this->conn->create( $sqlinsert );
 		$stmt->execute()->finish();
 
-		$this->assertRegexp( '/^INSERT INTO "mw_unit_test" \("id", "name"\) VALUES \(1, \'\(.*\\\'\)\'\)$/', strval( $stmt ) );
+		$this->assertMatchesRegularExpression( '/^INSERT INTO "mw_unit_test" \("id", "name"\) VALUES \(1, \'\(.*\\\'\)\'\)$/', strval( $stmt ) );
 	}
 
 

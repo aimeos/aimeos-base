@@ -123,7 +123,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals( "concat('hello','world') LIKE '%low%' ESCAPE '#'", $expr->toSource( $types, $translations ) );
 
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'lcounter(["a","b","c","\'d"])', 4 );
-		$this->assertRegexp( "/^count\(name IN \('a','b','c','('|\\\\)'d'\)\) = 4$/", $expr->toSource( $types, $translations ) );
+		$this->assertMatchesRegularExpression( "/^count\(name IN \('a','b','c','('|\\\\)'d'\)\) = 4$/", $expr->toSource( $types, $translations ) );
 
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'lcounter([])', 0 );
 		$this->assertEquals( "count(name IN ()) = 0", $expr->toSource( $types, $translations ) );

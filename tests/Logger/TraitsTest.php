@@ -17,7 +17,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$this->object = $this->getMockBuilder( \Aimeos\Base\Logger\Errorlog::class )
-			->setMethods( ['log'] )
+			->onlyMethods( ['log'] )
 			->getMock();
 	}
 
