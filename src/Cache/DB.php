@@ -73,7 +73,6 @@ class DB
 		}
 		catch( \Exception $e )
 		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return false;
 		}
 
@@ -90,13 +89,9 @@ class DB
 	 */
 	public function clear() : bool
 	{
-		try
-		{
+		try {
 			$this->conn->create( $this->sql( 'clear' ) )->execute()->finish();
-		}
-		catch( \Exception $e )
-		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
+		} catch( \Exception $e ) {
 			return false;
 		}
 
@@ -135,7 +130,6 @@ class DB
 		}
 		catch( \Exception $e )
 		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return false;
 		}
 
@@ -175,7 +169,6 @@ class DB
 		}
 		catch( \Exception $e )
 		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return false;
 		}
 
@@ -231,7 +224,6 @@ class DB
 		}
 		catch( \Exception $e )
 		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return [];
 		}
 
@@ -264,7 +256,6 @@ class DB
 		}
 		catch( \Exception $e )
 		{
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return false;
 		}
 
@@ -328,8 +319,6 @@ class DB
 		catch( \Exception $e )
 		{
 			$this->conn->rollback();
-
-			error_log( __METHOD__ . ': ' . $e->getMessage() );
 			return false;
 		}
 
