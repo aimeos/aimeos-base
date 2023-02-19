@@ -19,7 +19,7 @@ namespace Aimeos\Base\DB\Statement\DBAL;
  */
 class Simple extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB\Statement\Iface
 {
-	private $sql;
+	private string $sql;
 
 
 	/**

@@ -19,7 +19,7 @@ namespace Aimeos\Base\Config\Decorator;
  */
 abstract class Base implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $object;
+	private \Aimeos\Base\Config\Iface $object;
 
 
 	/**

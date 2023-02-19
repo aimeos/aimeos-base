@@ -21,8 +21,8 @@ class DB
 	extends \Aimeos\Base\Cache\Base
 	implements \Aimeos\Base\Cache\Iface
 {
-	private $conn;
-	private $sql;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
+	private array $sql;
 
 
 	/**

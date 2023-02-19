@@ -23,8 +23,8 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Block\Iface
 {
-	private $blocks = [];
-	private $stack = [];
+	private array $blocks = [];
+	private array $stack = [];
 
 
 	/**

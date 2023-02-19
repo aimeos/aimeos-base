@@ -19,7 +19,7 @@ namespace Aimeos\Base\MQueue;
  */
 abstract class Base
 {
-	private $config;
+	private array $config;
 
 
 	/**

@@ -21,7 +21,7 @@ namespace Aimeos\Base\Criteria\Expression\Sort;
 class SQL extends Base
 {
 	private static $operators = array( '+' => 'ASC', '-' => 'DESC' );
-	private $conn;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
 
 
 	/**

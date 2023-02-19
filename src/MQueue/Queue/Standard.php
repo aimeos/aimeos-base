@@ -19,11 +19,11 @@ namespace Aimeos\Base\MQueue\Queue;
  */
 class Standard implements Iface
 {
-	private $cname;
-	private $conn;
-	private $queue;
-	private $sql;
-	private $rtime;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
+	private string $cname;
+	private string $queue;
+	private array $sql;
+	private int $rtime;
 
 
 	/**

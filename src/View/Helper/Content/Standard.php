@@ -21,9 +21,9 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Content\Iface
 {
-	private $baseurls = [];
-	private $version;
-	private $enc;
+	private array $baseurls = [];
+	private string $version;
+	private \Aimeos\Base\View\Helper\Encoder\Iface $enc;
 
 
 	/**

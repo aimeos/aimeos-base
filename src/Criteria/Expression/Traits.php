@@ -19,7 +19,7 @@ namespace Aimeos\Base\Criteria\Expression;
  */
 trait Traits
 {
-	private $exprPlugins = [];
+	private array $exprPlugins = [];
 
 
 	/**

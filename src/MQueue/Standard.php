@@ -19,8 +19,8 @@ namespace Aimeos\Base\MQueue;
  */
 class Standard extends Base implements Iface
 {
-	private $conn;
-	private $queues = [];
+	private \Aimeos\Base\DB\Connection\Iface $conn;
+	private array $queues = [];
 
 
 	/**

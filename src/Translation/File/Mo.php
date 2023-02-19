@@ -25,10 +25,10 @@ class Mo
 	const MAGIC3 = 2500072158;
 
 
-	private $str;
-	private $strlen;
-	private $pos = 0;
-	private $messages = [];
+	private string $str;
+	private int $strlen;
+	private int $pos = 0;
+	private array $messages = [];
 
 
 	/**

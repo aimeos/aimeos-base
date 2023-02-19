@@ -21,7 +21,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Session\Iface
 {
-	private $session;
+	private \Aimeos\Base\Session\Iface $session;
 
 
 	/**

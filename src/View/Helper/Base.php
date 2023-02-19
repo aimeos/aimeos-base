@@ -32,7 +32,7 @@ namespace Aimeos\Base\View\Helper;
  */
 abstract class Base
 {
-	private $view;
+	private \Aimeos\Base\View\Iface $view;
 
 
 	/**

@@ -19,9 +19,9 @@ namespace Aimeos\Base\DB\Connection;
  */
 class PDO extends Base implements Iface
 {
-	private $connection;
-	private $txnumber = 0;
-	private $stmts = [];
+	private ?\PDO $connection = null;
+	private int $txnumber = 0;
+	private array $stmts = [];
 
 
 	/**

@@ -21,7 +21,7 @@ class Locale
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Number\Iface
 {
-	private $formatter;
+	private \NumberFormatter $formatter;
 
 
 	/**

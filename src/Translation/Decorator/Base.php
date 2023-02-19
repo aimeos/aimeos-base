@@ -21,7 +21,7 @@ abstract class Base
 	extends \Aimeos\Base\Translation\Base
 	implements \Aimeos\Base\Translation\Decorator\Iface
 {
-	private $object;
+	private \Aimeos\Base\Translation\Iface $object;
 
 
 	/**

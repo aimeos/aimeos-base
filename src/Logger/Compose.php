@@ -22,7 +22,7 @@ class Compose implements Iface
 	use Traits;
 
 
-	private $loggers;
+	private array $loggers;
 
 
 	/**

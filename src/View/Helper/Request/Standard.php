@@ -24,9 +24,9 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Request\Iface
 {
-	private $request;
-	private $clientaddr;
-	private $target;
+	private \Psr\Http\Message\ServerRequestInterface $request;
+	private ?string $clientaddr;
+	private ?string $target;
 
 
 	/**

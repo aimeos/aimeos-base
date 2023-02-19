@@ -21,8 +21,8 @@ abstract class Base implements Iface
 {
 	use \Aimeos\Base\Criteria\Expression\Traits;
 
-	private $operator;
-	private $name;
+	private string $operator;
+	private string $name;
 
 
 	/**

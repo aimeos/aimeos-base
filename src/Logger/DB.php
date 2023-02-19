@@ -22,10 +22,10 @@ class DB implements Iface
 	use Traits;
 
 
-	private $stmt;
-	private $loglevel;
-	private $requestid;
-	private $facilities;
+	private \Aimeos\Base\DB\Statement\Iface $stmt;
+	private string $requestid;
+	private ?array $facilities;
+	private int $loglevel;
 
 
 	/**
@@ -45,11 +45,7 @@ class DB implements Iface
 		$this->stmt = $stmt;
 		$this->loglevel = $loglevel;
 		$this->facilities = $facilities;
-
-		if( $requestid === null ) {
-			$requestid = md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) );
-		}
-		$this->requestid = $requestid;
+		$this->requestid = $requestid ?: md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) );
 	}
 
 

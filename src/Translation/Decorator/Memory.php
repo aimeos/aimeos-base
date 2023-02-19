@@ -21,7 +21,7 @@ class Memory
 	extends \Aimeos\Base\Translation\Decorator\Base
 	implements \Aimeos\Base\Translation\Decorator\Iface
 {
-	private $translations;
+	private array $translations;
 
 
 	/**

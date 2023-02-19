@@ -19,8 +19,8 @@ namespace Aimeos\Base\DB\Statement\PDO;
  */
 class Prepared extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB\Statement\Iface
 {
-	private $binds = [];
-	private $sql;
+	private array $binds = [];
+	private string $sql;
 
 
 	/**

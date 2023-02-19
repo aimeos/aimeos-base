@@ -50,7 +50,7 @@ abstract class Base
 	const PARAM_LOB = 5;
 
 
-	private $conn;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
 
 
 	/**

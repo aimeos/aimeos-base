@@ -21,9 +21,9 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Csrf\Iface
 {
-	private $name;
-	private $value;
-	private $formfield = '';
+	private string $name;
+	private ?string $value;
+	private string $formfield = '';
 
 
 	/**

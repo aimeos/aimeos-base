@@ -32,10 +32,10 @@ namespace Aimeos\Base\View;
  */
 class Standard implements \Aimeos\Base\View\Iface
 {
-	private $helper = [];
-	private $values = [];
-	private $engines;
-	private $paths;
+	private array $helper = [];
+	private array $values = [];
+	private array $engines;
+	private array $paths;
 
 
 	/**

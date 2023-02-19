@@ -19,9 +19,9 @@ namespace Aimeos\Base\DB\Manager;
  */
 class Standard implements \Aimeos\Base\DB\Manager\Iface
 {
-	private $objects = [];
-	private $config;
-	private $type;
+	private array $objects = [];
+	private array $config;
+	private string $type;
 
 
 	/**

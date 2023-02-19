@@ -21,9 +21,9 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Number\Iface
 {
-	private $dsep;
-	private $tsep;
-	private $decimals;
+	private string $dsep;
+	private string $tsep;
+	private int $decimals;
 
 
 	/**

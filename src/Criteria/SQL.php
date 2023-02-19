@@ -20,11 +20,11 @@ namespace Aimeos\Base\Criteria;
  */
 class SQL extends \Aimeos\Base\Criteria\Base
 {
-	private $conn;
-	private $conditions;
-	private $sortations = [];
-	private $sliceStart = 0;
-	private $sliceSize = 100;
+	private ?\Aimeos\Base\Criteria\Expression\Iface $conditions = null;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
+	private array $sortations = [];
+	private int $sliceStart = 0;
+	private int $sliceSize = 100;
 
 
 	/**

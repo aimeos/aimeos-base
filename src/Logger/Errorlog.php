@@ -22,9 +22,9 @@ class Errorlog implements Iface
 	use Traits;
 
 
-	private $loglevel;
-	private $facilities;
-	private $requestid;
+	private int $loglevel;
+	private ?array $facilities;
+	private string $requestid;
 
 
 	/**
@@ -38,11 +38,7 @@ class Errorlog implements Iface
 	{
 		$this->loglevel = $loglevel;
 		$this->facilities = $facilities;
-
-		if( $requestid === null ) {
-			$requestid = substr( md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) ), 24 );
-		}
-		$this->requestid = $requestid;
+		$this->requestid = $requestid ?: md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) );
 	}
 
 

@@ -21,8 +21,8 @@ class APC
 	extends \Aimeos\Base\Translation\Decorator\Base
 	implements \Aimeos\Base\Translation\Decorator\Iface
 {
-	private $enable;
-	private $prefix;
+	private bool $enable;
+	private string $prefix;
 
 
 	/**

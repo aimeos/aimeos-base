@@ -19,8 +19,8 @@ namespace Aimeos\Base\Criteria\Expression\Combine;
  */
 abstract class Base implements Iface
 {
-	private $expressions = [];
-	private $operator;
+	private array $expressions = [];
+	private string $operator;
 
 
 	/**

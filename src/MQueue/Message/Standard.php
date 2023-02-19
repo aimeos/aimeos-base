@@ -19,7 +19,7 @@ namespace Aimeos\Base\MQueue\Message;
  */
 class Standard implements Iface
 {
-	private $values;
+	private array $values;
 
 
 	/**

@@ -21,7 +21,7 @@ class Documentor
 	extends \Aimeos\Base\Config\Decorator\Base
 	implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $file;
+	private ConfigFile $file;
 
 
 	/**
@@ -65,7 +65,7 @@ class Documentor
  */
 class ConfigFile
 {
-	private $config = [];
+	private array $config = [];
 	private $file;
 
 

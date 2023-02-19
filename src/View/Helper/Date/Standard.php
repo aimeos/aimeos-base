@@ -21,7 +21,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Date\Iface
 {
-	private $format;
+	private string $format;
 
 
 	/**

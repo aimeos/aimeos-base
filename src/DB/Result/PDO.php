@@ -19,7 +19,7 @@ namespace Aimeos\Base\DB\Result;
  */
 class PDO extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result\Iface
 {
-	private $statement;
+	private \PDOStatement $statement;
 
 
 	/**

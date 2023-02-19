@@ -21,8 +21,8 @@ class Gettext
 	extends \Aimeos\Base\Translation\Base
 	implements \Aimeos\Base\Translation\Iface
 {
-	private $files;
-	private $sources;
+	private array $files = [];
+	private array $sources;
 
 
 	/**
@@ -133,7 +133,7 @@ class Gettext
 			}
 		}
 
-		return ( isset( $this->files[$domain] ) ? $this->files[$domain] : [] );
+		return $this->files[$domain] ?? [];
 	}
 
 }

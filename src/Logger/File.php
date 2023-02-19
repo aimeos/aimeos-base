@@ -22,10 +22,10 @@ class File implements \Aimeos\Base\Logger\Iface
 	use Traits;
 
 
-	private $loglevel;
-	private $filename;
-	private $facilities;
-	private $requestid;
+	private int $loglevel;
+	private string $filename;
+	private string $requestid;
+	private ?array $facilities;
 
 
 	/**
@@ -41,11 +41,7 @@ class File implements \Aimeos\Base\Logger\Iface
 		$this->filename = $filename;
 		$this->loglevel = $priority;
 		$this->facilities = $facilities;
-
-		if( $requestid === null ) {
-			$requestid = substr( md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) ), 24 );
-		}
-		$this->requestid = $requestid;
+		$this->requestid = $requestid ?: substr( md5( php_uname( 'n' ) . getmypid() . date( 'Y-m-d H:i:s' ) ), 24 );
 	}
 
 

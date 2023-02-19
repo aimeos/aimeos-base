@@ -27,10 +27,10 @@ class Exception extends \Aimeos\Base\Exception
 	 * Initializes the exception.
 	 *
 	 * @param string $message Error message
-	 * @param string $state SQL error code
-	 * @param string $info Additional error info
+	 * @param string|int $state SQL error code
+	 * @param string|array $info Additional error info
 	 */
-	public function __construct( $message, $state = '', $info = '' )
+	public function __construct( string $message, $state = '', $info = '' )
 	{
 		parent::__construct( $message, is_numeric( $state ) ? (int) $state : 0 );
 

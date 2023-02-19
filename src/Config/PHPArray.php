@@ -21,7 +21,7 @@ class PHPArray
 	extends \Aimeos\Base\Config\Base
 	implements \Aimeos\Base\Config\Iface
 {
-	private $config;
+	private array $config;
 
 
 	/**

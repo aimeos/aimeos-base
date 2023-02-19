@@ -19,8 +19,8 @@ namespace Aimeos\Base\MQueue\Manager;
  */
 class Standard implements Iface
 {
-	private $config;
-	private $objects = [];
+	private array $config;
+	private array $objects = [];
 
 
 	/**

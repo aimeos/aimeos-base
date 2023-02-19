@@ -19,8 +19,8 @@ namespace Aimeos\Base\Filesystem;
  */
 class Standard implements Iface, DirIface, MetaIface
 {
-	private $basedir;
-	private $tempdir;
+	private string $basedir;
+	private string $tempdir;
 
 
 	/**

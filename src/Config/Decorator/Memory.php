@@ -21,9 +21,9 @@ class Memory
 	extends \Aimeos\Base\Config\Decorator\Base
 	implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $negCache = [];
-	private $cache = [];
-	private $config;
+	private array $negCache = [];
+	private array $cache = [];
+	private array $config;
 
 
 	/**

@@ -27,7 +27,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	/* Custom value */
 	public $value;
 
-	private $values;
+	private array $values;
 
 
 	/**

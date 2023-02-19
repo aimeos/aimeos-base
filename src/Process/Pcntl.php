@@ -19,9 +19,9 @@ namespace Aimeos\Base\Process;
  */
 class Pcntl implements Iface
 {
-	private $max;
-	private $prio;
-	private $list = [];
+	private int $max;
+	private int $prio;
+	private array $list = [];
 
 
 	/**

@@ -21,7 +21,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Config\Iface
 {
-	private $config;
+	private \Aimeos\Base\Config\Iface $config;
 
 
 	/**

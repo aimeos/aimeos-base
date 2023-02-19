@@ -21,7 +21,7 @@ namespace Aimeos\Base\Process\Decorator;
  */
 class Check implements Iface
 {
-	private $object;
+	private \Aimeos\Base\Process\Iface $object;
 
 
 	/**

@@ -19,7 +19,7 @@ namespace Aimeos\Base\DB\Connection;
  */
 abstract class Base implements Iface
 {
-	private $params;
+	private array $params;
 
 
 	/**

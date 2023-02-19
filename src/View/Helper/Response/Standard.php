@@ -23,7 +23,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Response\Iface
 {
-	private $response;
+	private \Psr\Http\Message\ResponseInterface $response;
 
 
 	/**

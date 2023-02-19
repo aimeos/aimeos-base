@@ -21,8 +21,8 @@ class Protect
 	extends \Aimeos\Base\Config\Decorator\Base
 	implements \Aimeos\Base\Config\Decorator\Iface
 {
-	private $allow = [];
-	private $deny = [];
+	private array $allow = [];
+	private array $deny = [];
 
 
 	/**

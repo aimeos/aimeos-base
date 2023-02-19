@@ -21,7 +21,7 @@ namespace Aimeos\Base\Criteria\Expression\Compare;
 class SQL extends Base
 {
 	private static $operators = ['=~' => 'LIKE', '~=' => 'LIKE', '==' => '=', '!=' => '<>', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', '-' => '-'];
-	private $conn;
+	private \Aimeos\Base\DB\Connection\Iface $conn;
 
 
 	/**

@@ -19,7 +19,7 @@ namespace Aimeos\Base\Translation;
  */
 abstract class Base
 {
-	private $locale;
+	private string $locale;
 
 
 	/**

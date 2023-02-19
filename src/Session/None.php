@@ -19,7 +19,7 @@ namespace Aimeos\Base\Session;
  */
 class None extends Base implements \Aimeos\Base\Session\Iface
 {
-	private $data = [];
+	private array $data = [];
 
 
 	/**

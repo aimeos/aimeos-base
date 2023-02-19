@@ -19,7 +19,7 @@ namespace Aimeos\Base\Config;
  */
 abstract class Base implements \Aimeos\Base\Config\Iface
 {
-	private $includeCache = [];
+	private array $includeCache = [];
 
 
 	/**

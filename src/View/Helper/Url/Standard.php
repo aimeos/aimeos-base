@@ -21,7 +21,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Url\Base
 	implements \Aimeos\Base\View\Helper\Url\Iface
 {
-	private $baseUrl;
+	private string $baseUrl;
 
 
 	/**

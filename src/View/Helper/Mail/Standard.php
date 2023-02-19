@@ -21,7 +21,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Mail\Iface
 {
-	private $message;
+	private \Aimeos\Base\Mail\Message\Iface $message;
 
 
 	/**
