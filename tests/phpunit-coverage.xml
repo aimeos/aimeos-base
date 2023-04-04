@@ -10,20 +10,7 @@
   </coverage>
   <testsuites>
     <testsuite name="Base">
-      <directory>Cache/</directory>
-      <directory>Config/</directory>
-      <directory>Criteria/</directory>
-      <directory>DB/</directory>
-      <directory>Filesystem/</directory>
-      <directory>Logger/</directory>
-      <directory>Mail/</directory>
-      <directory>MQueue/</directory>
-      <directory>Password/</directory>
-      <directory>Process/</directory>
-      <directory>Session/</directory>
-      <directory>Translation/</directory>
-      <directory>View/</directory>
-      <file>StrTest.php</file>
+      <directory>./</directory>
     </testsuite>
   </testsuites>
   <logging/>
