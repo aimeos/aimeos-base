@@ -9,7 +9,7 @@
 namespace Aimeos\Base\Password;
 
 
-class StandardtTest extends \PHPUnit\Framework\TestCase
+class StandardTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
 
