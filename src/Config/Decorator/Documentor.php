@@ -77,7 +77,7 @@ class ConfigFile
 	 */
 	public function __construct( string $filename )
 	{
-		if( ( $this->file = fopen( $filename, 'w' ) ) === false ) {
+		if( ( $this->file = fopen( $filename, 'a' ) ) === false ) {
 			throw new \Aimeos\Base\Config\Exception( sprintf( 'Unable to open file "%1$s"', $filename ) );
 		}
 	}
