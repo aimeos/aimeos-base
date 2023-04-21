@@ -56,7 +56,7 @@ class Standard
 		$path .= ( $controller !== null ? $controller . '/' : '' );
 		$path .= ( $action !== null ? $action . '/' : '' );
 
-		$parameter = ( !empty( $params ) ? '?' . http_build_query( $this->sanitize( $params ) ) : '' );
+		$parameter = ( !empty( $params ) ? '?' . http_build_query( $this->sanitize( $params ), '', null, PHP_QUERY_RFC3986 ) : '' );
 		$pretty = ( !empty( $trailing ) ? implode( '-', $this->sanitize( $trailing ) ) : '' );
 
 		return $this->baseUrl . '/' . $path . $pretty . $parameter;
