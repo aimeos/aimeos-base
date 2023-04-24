@@ -171,11 +171,8 @@ trait Traits
 	 */
 	protected function translateValue( string $name, $value, $type )
 	{
-		if( isset( $this->exprPlugins[$name] ) ) {
-			return $this->exprPlugins[$name]->translate( $value, $type );
-		}
-
-		return $value;
+		$plugin = $this->getPlugin( $name );
+		return $plugin ? $plugin->translate( $value, $type ) : $value;
 	}
 
 
@@ -187,6 +184,18 @@ trait Traits
 	protected function setPlugins( array $plugins )
 	{
 		$this->exprPlugins = \Aimeos\Base\Criteria\Base::implements( \Aimeos\Base\Criteria\Plugin\Iface::class, $plugins );
+	}
+
+
+	/**
+	 * Returns the plugin for translating values.
+	 *
+	 * @param string $name Column name
+	 * @return \Aimeos\Base\Criteria\Plugin\Iface|null Plugin item or NULL if not available
+	 */
+	protected function getPlugin( string $name ) : ?\Aimeos\Base\Criteria\Plugin\Iface
+	{
+		return $this->exprPlugins[$name] ?? null;
 	}
 
 
