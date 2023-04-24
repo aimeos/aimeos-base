@@ -86,8 +86,14 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '<', 'float', 0.1 );
 		$this->assertEquals( "t.float < 0.1", $expr->toSource( $types, $translations ) );
 
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'float', '' );
+		$this->assertEquals( "t.float IS NULL", $expr->toSource( $types, $translations ) );
+
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '>', 'int', 10 );
 		$this->assertEquals( "t.int > 10", $expr->toSource( $types, $translations ) );
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'int', '' );
+		$this->assertEquals( "t.int IS NULL", $expr->toSource( $types, $translations ) );
 
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '!=', 'undefined', null );
 		$this->assertEquals( "t.undefined IS NOT NULL", $expr->toSource( $types, $translations ) );

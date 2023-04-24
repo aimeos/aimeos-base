@@ -8,11 +8,11 @@
  */
 
 
-namespace Aimeos\Base\Criteria\Expression\Compare;
+namespace Aimeos\Base\Criteria\Expression\Sort;
 
 
 /**
- * PostgreSQL implementation for comparing objects
+ * PostgreSQL implementation for sorting entries
  *
  * @package Base
  * @subpackage Common

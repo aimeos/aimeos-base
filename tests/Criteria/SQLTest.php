@@ -154,7 +154,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals( "1 = 1", $this->object->getConditionSource( $types, $translations ) );
 
-		$expr = array( $this->object->compare( '==', 'int_column', 'a' ), $this->object->compare( '==', 'str_column', 'test' ) );
+		$expr = array( $this->object->compare( '==', 'int_column', '10' ), $this->object->compare( '==', 'str_column', 'test' ) );
 		$this->object->setConditions( $this->object->and( $expr ) );
 		$this->assertEquals( "( int_col = 10 AND str_col = 'test' )", $this->object->getConditionSource( $types, $translations, $plugins ) );
 
@@ -401,7 +401,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
  */
 class TestSQL implements \Aimeos\Base\Criteria\Plugin\Iface
 {
-	public function translate( $value )
+	public function translate( $value, $type )
 	{
 		switch( $value )
 		{
@@ -410,7 +410,7 @@ class TestSQL implements \Aimeos\Base\Criteria\Plugin\Iface
 		}
 	}
 
-	public function reverse( $value )
+	public function reverse( $value, $type )
 	{
 		switch( $value )
 		{
