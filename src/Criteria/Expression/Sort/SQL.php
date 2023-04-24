@@ -105,16 +105,27 @@ class SQL extends Base
 				$value = $value !== '' ? (double) $value : 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
 				if( $operator === '~=' ) {
-					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->conn->escape( (string) $value ) ) . '%\''; break;
+					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
 				}
 				if( $operator === '=~' ) {
-					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->conn->escape( (string) $value ) ) . '%\''; break;
+					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
 				}
 			default: // all other operators: escape in default case
-				$value = '\'' . $this->conn->escape( (string) $value ) . '\'';
+				$value = '\'' . $this->getConnection()->escape( (string) $value ) . '\'';
 		}
 
 		return $value;
+	}
+
+
+	/**
+	 * Returns the connection object.
+	 *
+	 * return \Aimeos\Base\DB\Connection\Iface Connection object
+	 */
+	public function getConnection() : \Aimeos\Base\DB\Connection\Iface
+	{
+		return $this->conn;
 	}
 
 
