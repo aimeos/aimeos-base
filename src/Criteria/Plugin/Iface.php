@@ -27,7 +27,7 @@ interface Iface
 	 * @param mixed $type Expected value type
 	 * @return mixed Translated value
 	 */
-	public function translate( $value, $type );
+	public function translate( $value, $type = null );
 
 	/**
 	 * Reverses the translation of the value.
@@ -36,5 +36,5 @@ interface Iface
 	 * @param mixed $type Expected value type
 	 * @return mixed Reversed translation
 	 */
-	public function reverse( $value, $type );
+	public function reverse( $value, $type = null );
 }
