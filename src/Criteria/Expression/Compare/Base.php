@@ -109,11 +109,11 @@ abstract class Base implements Iface
 			$transname = $name;
 		}
 
-		$transvalue = $this->translateValue( $name, $this->value );
-
 		if( !isset( $types[$name] ) ) {
 			throw new \Aimeos\Base\Exception( sprintf( 'Invalid name "%1$s"', $name ) );
 		}
+
+		$transvalue = $this->translateValue( $name, $this->value, $types[$name] );
 
 		if( $transvalue === null && in_array( $this->getOperator(), ['==', '!='] ) ) {
 			return $this->createNullTerm( $transname, $types[$name] );

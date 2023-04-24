@@ -91,27 +91,30 @@ class SQL extends Base
 	 */
 	protected function escape( string $operator, string $type, $value ) : string
 	{
-		$value = $this->translateValue( $this->getName(), $value );
+		$value = $this->translateValue( $this->getName(), $value, $type );
 
 		switch( $type )
 		{
+			case \Aimeos\Base\DB\Statement\Base::PARAM_NULL:
+				$value = 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
-				$value = (bool) $value; break;
+				$value = (int) (bool) $value; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$value = (int) $value; break;
+				$value = $value !== '' ? (int) $value : 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = (float) $value; break;
+				$value = $value !== '' ? (double) $value : 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
-				if( $operator == '~=' )
-				{
-					$value = '\'%' . $this->conn->escape( $value ) . '%\'';
-					break;
+				if( $operator === '~=' ) {
+					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->conn->escape( (string) $value ) ) . '%\''; break;
+				}
+				if( $operator === '=~' ) {
+					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->conn->escape( (string) $value ) ) . '%\''; break;
 				}
 			default: // all other operators: escape in default case
-				$value = '\'' . $this->conn->escape( $value ) . '\'';
+				$value = '\'' . $this->conn->escape( (string) $value ) . '\'';
 		}
 
-		return (string) $value;
+		return $value;
 	}
 
 

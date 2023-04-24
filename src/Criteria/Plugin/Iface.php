@@ -24,15 +24,17 @@ interface Iface
 	 * Translates a value to another one.
 	 *
 	 * @param mixed $value Value to translate
+	 * @param mixed $type Expected value type
 	 * @return mixed Translated value
 	 */
-	public function translate( $value );
+	public function translate( $value, $type );
 
 	/**
 	 * Reverses the translation of the value.
 	 *
 	 * @param mixed $value Value to reverse
+	 * @param mixed $type Expected value type
 	 * @return mixed Reversed translation
 	 */
-	public function reverse( $value );
+	public function reverse( $value, $type );
 }

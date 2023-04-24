@@ -163,7 +163,7 @@ class SQL extends Base
 	 */
 	protected function escape( string $operator, string $type, $value )
 	{
-		$value = $this->translateValue( $this->getName(), $value );
+		$value = $this->translateValue( $this->getName(), $value, $type );
 
 		switch( $type )
 		{
@@ -172,9 +172,9 @@ class SQL extends Base
 			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
 				$value = (int) (bool) $value; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$value = (int) (string) $value; break;
+				$value = $value !== '' ? (int) $value : 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = (double) (string) $value; break;
+				$value = $value !== '' ? (double) $value : 'null'; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
 				if( $operator === '~=' ) {
 					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->conn->escape( (string) $value ) ) . '%\''; break;
@@ -219,5 +219,24 @@ class SQL extends Base
 		}
 
 		return \Aimeos\Base\DB\Statement\Base::PARAM_STR;
+	}
+
+
+	/**
+	 * Translates a value to another one by a plugin if available.
+	 *
+	 * @param string $name Name of variable or column that should be translated
+	 * @param mixed $value Original value
+	 * @param mixed $type Value type
+	 * @return mixed Translated value
+	 */
+	protected function translateValue( string $name, $value, $type )
+	{
+		if( isset( $this->exprPlugins[$name] ) ) {
+			return $this->exprPlugins[$name]->translate( $value, $type );
+		}
+
+		$types = [\Aimeos\Base\DB\Statement\Base::PARAM_INT, \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT];
+		return in_array( $type, $types ) && $value === '' ? null : $value;
 	}
 }

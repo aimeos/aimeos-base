@@ -166,12 +166,13 @@ trait Traits
 	 *
 	 * @param string $name Name of variable or column that should be translated
 	 * @param mixed $value Original value
+	 * @param mixed $type Value type
 	 * @return mixed Translated value
 	 */
-	protected function translateValue( string $name, $value )
+	protected function translateValue( string $name, $value, $type )
 	{
 		if( isset( $this->exprPlugins[$name] ) ) {
-			return $this->exprPlugins[$name]->translate( $value );
+			return $this->exprPlugins[$name]->translate( $value, $type );
 		}
 
 		return $value;
