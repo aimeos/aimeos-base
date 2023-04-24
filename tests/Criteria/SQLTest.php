@@ -401,7 +401,7 @@ class SQLTest extends \PHPUnit\Framework\TestCase
  */
 class TestSQL implements \Aimeos\Base\Criteria\Plugin\Iface
 {
-	public function translate( $value, $type )
+	public function translate( $value, $type = null )
 	{
 		switch( $value )
 		{
@@ -410,7 +410,7 @@ class TestSQL implements \Aimeos\Base\Criteria\Plugin\Iface
 		}
 	}
 
-	public function reverse( $value, $type )
+	public function reverse( $value, $type = null )
 	{
 		switch( $value )
 		{
