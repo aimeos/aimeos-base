@@ -10,6 +10,7 @@
 
 namespace Aimeos\Base\View\Helper\Response;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 
@@ -23,7 +24,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Response\Iface
 {
-	private \Psr\Http\Message\ResponseInterface $response;
+	private ResponseInterface $response;
 
 
 	/**
@@ -32,7 +33,7 @@ class Standard
 	 * @param \Aimeos\Base\View\Iface $view View instance with registered view helpers
 	 * @param \Psr\Http\Message\ResponseInterface $response Response object
 	 */
-	public function __construct( \Aimeos\Base\View\Iface $view, \Psr\Http\Message\ResponseInterface $response )
+	public function __construct( \Aimeos\Base\View\Iface $view, ResponseInterface $response )
 	{
 		parent::__construct( $view );
 
@@ -87,7 +88,7 @@ class Standard
 	 *
 	 * @return string HTTP protocol version.
 	 */
-	public function getProtocolVersion()
+	public function getProtocolVersion() : string
 	{
 		return $this->response->getProtocolVersion();
 	}
@@ -99,7 +100,7 @@ class Standard
 	 * @param string $version HTTP protocol version
 	 * @return self
 	 */
-	public function withProtocolVersion( $version )
+	public function withProtocolVersion( $version ) : ResponseInterface
 	{
 		$this->response = $this->response->withProtocolVersion( $version );
 		return $this;
@@ -113,7 +114,7 @@ class Standard
 	 *	 Each key MUST be a header name, and each value MUST be an array of
 	 *	 strings for that header.
 	 */
-	public function getHeaders()
+	public function getHeaders() : array
 	{
 		return $this->response->getHeaders();
 	}
@@ -127,7 +128,7 @@ class Standard
 	 *	 name using a case-insensitive string comparison. Returns false if
 	 *	 no matching header name is found in the message.
 	 */
-	public function hasHeader( $name )
+	public function hasHeader( $name ) : bool
 	{
 		return $this->response->hasHeader( $name );
 	}
@@ -141,7 +142,7 @@ class Standard
 	 *	header. If the header does not appear in the message, this method MUST
 	 *	return an empty array.
 	 */
-	public function getHeader( $name )
+	public function getHeader( $name ) : array
 	{
 		return $this->response->getHeader( $name );
 	}
@@ -155,7 +156,7 @@ class Standard
 	 *	concatenated together using a comma. If the header does not appear in
 	 *	the message, this method MUST return an empty string.
 	 */
-	public function getHeaderLine( $name )
+	public function getHeaderLine( $name ) : string
 	{
 		return $this->response->getHeaderLine( $name );
 	}
@@ -169,7 +170,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException for invalid header names or values.
 	 */
-	public function withHeader( $name, $value )
+	public function withHeader( $name, $value ) : ResponseInterface
 	{
 		$this->response = $this->response->withHeader( $name, $value );
 		return $this;
@@ -183,7 +184,7 @@ class Standard
 	 * @param string|string[] $value Header value(s).
 	 * @return self
 	 */
-	public function withAddedHeader( $name, $value )
+	public function withAddedHeader( $name, $value ) : ResponseInterface
 	{
 		$this->response = $this->response->withAddedHeader( $name, $value );
 		return $this;
@@ -196,7 +197,7 @@ class Standard
 	 * @param string $name Case-insensitive header field name to remove.
 	 * @return self
 	 */
-	public function withoutHeader( $name )
+	public function withoutHeader( $name ) : ResponseInterface
 	{
 		$this->response = $this->response->withoutHeader( $name );
 		return $this;
@@ -208,7 +209,7 @@ class Standard
 	 *
 	 * @return StreamInterface Returns the body as a stream.
 	 */
-	public function getBody()
+	public function getBody() : StreamInterface
 	{
 		return $this->response->getBody();
 	}
@@ -221,7 +222,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException When the body is not valid.
 	 */
-	public function withBody( StreamInterface $body )
+	public function withBody( StreamInterface $body ) : ResponseInterface
 	{
 		$this->response = $this->response->withBody( $body );
 		return $this;
@@ -233,7 +234,7 @@ class Standard
 	 *
 	 * @return int Status code.
 	 */
-	public function getStatusCode()
+	public function getStatusCode() : int
 	{
 		return $this->response->getStatusCode();
 	}
@@ -249,7 +250,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException For invalid status code arguments.
 	 */
-	public function withStatus( $code, $reasonPhrase = '' )
+	public function withStatus( $code, $reasonPhrase = '' ) : ResponseInterface
 	{
 		$this->response = $this->response->withStatus( $code, $reasonPhrase );
 		return $this;
@@ -261,7 +262,7 @@ class Standard
 	 *
 	 * @return string Reason phrase; must return an empty string if none present.
 	 */
-	public function getReasonPhrase()
+	public function getReasonPhrase() : string
 	{
 		return $this->response->getReasonPhrase();
 	}
