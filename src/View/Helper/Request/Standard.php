@@ -10,6 +10,9 @@
 
 namespace Aimeos\Base\View\Helper\Request;
 
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -24,7 +27,7 @@ class Standard
 	extends \Aimeos\Base\View\Helper\Base
 	implements \Aimeos\Base\View\Helper\Request\Iface
 {
-	private \Psr\Http\Message\ServerRequestInterface $request;
+	private ServerRequestInterface $request;
 	private ?string $clientaddr;
 	private ?string $target;
 
@@ -37,7 +40,7 @@ class Standard
 	 * @param string|null $clientaddr Client IP address
 	 * @param string|null $target Page ID or route name
 	 */
-	public function __construct( \Aimeos\Base\View\Iface $view, \Psr\Http\Message\ServerRequestInterface $request,
+	public function __construct( \Aimeos\Base\View\Iface $view, ServerRequestInterface $request,
 		string $clientaddr = null, string $target = null )
 	{
 		parent::__construct( $view );
@@ -86,7 +89,7 @@ class Standard
 	 *
 	 * @return string HTTP protocol version.
 	 */
-	public function getProtocolVersion()
+	public function getProtocolVersion() : string
 	{
 		return $this->request->getProtocolVersion();
 	}
@@ -98,7 +101,7 @@ class Standard
 	 * @param string $version HTTP protocol version
 	 * @return self
 	 */
-	public function withProtocolVersion( $version )
+	public function withProtocolVersion( $version ) : MessageInterface
 	{
 		$this->request = $this->request->withProtocolVersion( $version );
 		return $this;
@@ -112,7 +115,7 @@ class Standard
 	 *	 Each key MUST be a header name, and each value MUST be an array of
 	 *	 strings for that header.
 	 */
-	public function getHeaders()
+	public function getHeaders() : array
 	{
 		return $this->request->getHeaders();
 	}
@@ -126,7 +129,7 @@ class Standard
 	 *	 name using a case-insensitive string comparison. Returns false if
 	 *	 no matching header name is found in the message.
 	 */
-	public function hasHeader( $name )
+	public function hasHeader( $name ) : bool
 	{
 		return $this->request->hasHeader( $name );
 	}
@@ -140,7 +143,7 @@ class Standard
 	 *	header. If the header does not appear in the message, this method MUST
 	 *	return an empty array.
 	 */
-	public function getHeader( $name )
+	public function getHeader( $name ) : array
 	{
 		return $this->request->getHeader( $name );
 	}
@@ -154,7 +157,7 @@ class Standard
 	 *	concatenated together using a comma. If the header does not appear in
 	 *	the message, this method MUST return an empty string.
 	 */
-	public function getHeaderLine( $name )
+	public function getHeaderLine( $name ) : string
 	{
 		return $this->request->getHeaderLine( $name );
 	}
@@ -168,7 +171,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException for invalid header names or values.
 	 */
-	public function withHeader( $name, $value )
+	public function withHeader( $name, $value ) : MessageInterface
 	{
 		$this->request = $this->request->withHeader( $name, $value );
 		return $this;
@@ -182,7 +185,7 @@ class Standard
 	 * @param string|string[] $value Header value(s).
 	 * @return self
 	 */
-	public function withAddedHeader( $name, $value )
+	public function withAddedHeader( $name, $value ) : MessageInterface
 	{
 		$this->request = $this->request->withAddedHeader( $name, $value );
 		return $this;
@@ -195,7 +198,7 @@ class Standard
 	 * @param string $name Case-insensitive header field name to remove.
 	 * @return self
 	 */
-	public function withoutHeader( $name )
+	public function withoutHeader( $name ) : MessageInterface
 	{
 		$this->request = $this->request->withoutHeader( $name );
 		return $this;
@@ -207,7 +210,7 @@ class Standard
 	 *
 	 * @return StreamInterface Returns the body as a stream.
 	 */
-	public function getBody()
+	public function getBody() : StreamInterface
 	{
 		return $this->request->getBody();
 	}
@@ -220,7 +223,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException When the body is not valid.
 	 */
-	public function withBody( StreamInterface $body )
+	public function withBody( StreamInterface $body ) : MessageInterface
 	{
 		$this->request = $this->request->withBody( $body );
 		return $this;
@@ -232,7 +235,7 @@ class Standard
 	 *
 	 * @return string
 	 */
-	public function getRequestTarget()
+	public function getRequestTarget() : string
 	{
 		return $this->request->getRequestTarget();
 	}
@@ -246,7 +249,7 @@ class Standard
 	 * @param mixed $requestTarget
 	 * @return self
 	 */
-	public function withRequestTarget( $requestTarget )
+	public function withRequestTarget( $requestTarget ) : RequestInterface
 	{
 		$this->request = $this->request->withRequestTarget( $requestTarget );
 		return $this;
@@ -258,7 +261,7 @@ class Standard
 	 *
 	 * @return string Returns the request method.
 	 */
-	public function getMethod()
+	public function getMethod() : string
 	{
 		return $this->request->getMethod();
 	}
@@ -271,7 +274,7 @@ class Standard
 	 * @return self
 	 * @throws \InvalidArgumentException for invalid HTTP methods.
 	 */
-	public function withMethod( $method )
+	public function withMethod( $method ) : RequestInterface
 	{
 		$this->request = $this->request->withMethod( $method );
 		return $this;
@@ -285,7 +288,7 @@ class Standard
 	 * @return UriInterface Returns a UriInterface instance
 	 *	 representing the URI of the request.
 	 */
-	public function getUri()
+	public function getUri() : UriInterface
 	{
 		return $this->request->getUri();
 	}
@@ -298,7 +301,7 @@ class Standard
 	 * @param bool $preserveHost Preserve the original state of the Host header.
 	 * @return self
 	 */
-	public function withUri( UriInterface $uri, $preserveHost = false )
+	public function withUri( UriInterface $uri, $preserveHost = false ) : RequestInterface
 	{
 		$this->request = $this->request->withUri( $uri, $preserveHost );
 		return $this;
@@ -310,7 +313,7 @@ class Standard
 	 *
 	 * @return array List of key/value pairs from $_SERVER
 	 */
-	public function getServerParams()
+	public function getServerParams() : array
 	{
 		return $this->request->getServerParams();
 	}
@@ -321,7 +324,7 @@ class Standard
 	 *
 	 * @return array List of key/value pairs from $_SERVER
 	 */
-	public function getCookieParams()
+	public function getCookieParams() : array
 	{
 		return $this->request->getCookieParams();
 	}
@@ -333,7 +336,7 @@ class Standard
 	 * @param array $cookies Array of key/value pairs representing cookies.
 	 * @return self
 	 */
-	public function withCookieParams( array $cookies )
+	public function withCookieParams( array $cookies ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withCookieParams( $cookies );
 		return $this;
@@ -345,7 +348,7 @@ class Standard
 	 *
 	 * @return array
 	 */
-	public function getQueryParams()
+	public function getQueryParams() : array
 	{
 		return $this->request->getQueryParams();
 	}
@@ -357,7 +360,7 @@ class Standard
 	 * @param array $query Array of query string arguments, typically from $_GET.
 	 * @return self
 	 */
-	public function withQueryParams( array $query )
+	public function withQueryParams( array $query ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withQueryParams( $query );
 		return $this;
@@ -370,7 +373,7 @@ class Standard
 	 * @return array An array tree of \Psr\Http\Message\UploadedFileInterface instances; an empty
 	 *	 array MUST be returned if no data is present.
 	 */
-	public function getUploadedFiles()
+	public function getUploadedFiles() : array
 	{
 		return $this->request->getUploadedFiles();
 	}
@@ -382,7 +385,7 @@ class Standard
 	 * @param array $uploadedFiles An array tree of \Psr\Http\Message\UploadedFileInterface instances
 	 * @return self
 	 */
-	public function withUploadedFiles( array $uploadedFiles )
+	public function withUploadedFiles( array $uploadedFiles ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withUploadedFiles( $uploadedFiles );
 		return $this;
@@ -410,7 +413,7 @@ class Standard
 	 * @throws \InvalidArgumentException if an unsupported argument type is
 	 *	 provided.
 	 */
-	public function withParsedBody( $data )
+	public function withParsedBody( $data ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withParsedBody( $data );
 		return $this;
@@ -422,7 +425,7 @@ class Standard
 	 *
 	 * @return mixed[] Attributes derived from the request.
 	 */
-	public function getAttributes()
+	public function getAttributes() : array
 	{
 		return $this->request->getAttributes();
 	}
@@ -448,7 +451,7 @@ class Standard
 	 * @param mixed $value The value of the attribute.
 	 * @return self
 	 */
-	public function withAttribute( $name, $value )
+	public function withAttribute( $name, $value ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withAttribute( $name, $value );
 		return $this;
@@ -461,7 +464,7 @@ class Standard
 	 * @param string $name The attribute name.
 	 * @return self
 	 */
-	public function withoutAttribute( $name )
+	public function withoutAttribute( $name ) : ServerRequestInterface
 	{
 		$this->request = $this->request->withoutAttribute( $name );
 		return $this;
