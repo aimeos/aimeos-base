@@ -33,9 +33,9 @@ class Standard
 	public function transform( string $cfgkey, array $params = [], $config = [], array $fragments = [] ) : string
 	{
 		$view = $this->view();
-		$parts = explode( '/', $cfgkey );
+		$cntl = $action = null;
 
-		if( count( $parts ) > 4 )
+		if( count( $parts = explode( '/', $cfgkey ) ) > 4 )
 		{
 			$list = array_slice( $parts, 2 );
 			$cntl = array_shift( $list );
@@ -44,7 +44,7 @@ class Standard
 
 		$target = $view->config( $cfgkey . '/target' );
 		$cntl = $view->config( $cfgkey . '/controller', $cntl ? ucfirst( $cntl ) : null );
-		$action = $view->config( $cfgkey . '/action', $action ? $action : null );
+		$action = $view->config( $cfgkey . '/action', $action );
 		$config = array_replace( $view->config( $cfgkey . '/config', [] ), $config );
 		$filter = $view->config( $cfgkey . '/filter', [] );
 
