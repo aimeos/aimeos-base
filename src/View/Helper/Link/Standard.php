@@ -33,12 +33,18 @@ class Standard
 	public function transform( string $cfgkey, array $params = [], $config = [], array $fragments = [] ) : string
 	{
 		$view = $this->view();
-		$list = array_slice( explode( '/', $cfgkey ), 2 );
-		$cntl = array_shift( $list );
+		$parts = explode( '/', $cfgkey );
+
+		if( count( $parts ) > 4 )
+		{
+			$list = array_slice( $parts, 2 );
+			$cntl = array_shift( $list );
+			$action = array_shift( $list );
+		}
 
 		$target = $view->config( $cfgkey . '/target' );
 		$cntl = $view->config( $cfgkey . '/controller', $cntl ? ucfirst( $cntl ) : null );
-		$action = $view->config( $cfgkey . '/action', array_shift( $list ) );
+		$action = $view->config( $cfgkey . '/action', $action ? $action : null );
 		$config = array_replace( $view->config( $cfgkey . '/config', [] ), $config );
 		$filter = $view->config( $cfgkey . '/filter', [] );
 
