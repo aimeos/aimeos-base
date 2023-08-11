@@ -99,10 +99,10 @@ class Standard implements \Aimeos\Base\DB\Manager\Iface
 	 */
 	protected function config( string $name ) : array
 	{
-		foreach( [$name, 'db'] as $fsname )
+		foreach( [$name, 'db'] as $dbname )
 		{
-			if( isset( $this->config[$fsname] ) ) {
-				return $this->config[$fsname];
+			if( isset( $this->config[$dbname] ) ) {
+				return $this->config[$dbname];
 			}
 		}
 
