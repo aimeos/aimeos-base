@@ -47,11 +47,8 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function __construct( array $params = [] )
 	{
-		foreach( ['type', 'code'] as $entry )
-		{
-			if( !isset( $params[$entry] ) ) {
-				throw new \Aimeos\Base\Exception( sprintf( 'Required parameter "%1$s" is missing', $entry ) );
-			}
+		if( !isset( $params['code'] ) ) {
+			throw new \Aimeos\Base\Exception( sprintf( 'Required parameter "%1$s" is missing', 'code' ) );
 		}
 
 		$this->values = $params;
@@ -67,7 +64,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getType() : string
 	{
-		return $this->values['type'];
+		return $this->values['type'] ?? 'string';
 	}
 
 
@@ -78,7 +75,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getInternalType()
 	{
-		return array_key_exists( 'internaltype', $this->values ) ? $this->values['internaltype'] : $this->getType();
+		return $this->values['internaltype'] ?? $this->getType();
 	}
 
 
@@ -100,7 +97,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getInternalCode()
 	{
-		return array_key_exists( 'internalcode', $this->values ) ? $this->values['internalcode'] : $this->getCode();
+		return $this->values['internalcode'] ?? $this->getCode();
 	}
 
 
@@ -111,7 +108,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getInternalDeps() : array
 	{
-		return isset( $this->values['internaldeps'] ) ? (array) $this->values['internaldeps'] : [];
+		return (array) $this->values['internaldeps'] ?? [];
 	}
 
 
@@ -122,7 +119,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getFunction() : ?\Closure
 	{
-		return isset( $this->values['function'] ) ? $this->values['function'] : null;
+		return $this->values['function'] ?? null;
 	}
 
 
@@ -133,7 +130,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getLabel() : string
 	{
-		return isset( $this->values['label'] ) ? $this->values['label'] : '';
+		return $this->values['label'] ?? $this->getCode();
 	}
 
 
@@ -144,7 +141,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getDefault()
 	{
-		return isset( $this->values['default'] ) ? $this->values['default'] : null;
+		return $this->values['default'] ?? null;
 	}
 
 
@@ -155,7 +152,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function isPublic() : bool
 	{
-		return isset( $this->values['public'] ) ? (bool) $this->values['public'] : true;
+		return (bool) $this->values['public'] ?? true;
 	}
 
 
@@ -166,7 +163,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function isRequired() : bool
 	{
-		return isset( $this->values['required'] ) ? (bool) $this->values['required'] : true;
+		return (bool) $this->values['required'] ?? true;
 	}
 
 
