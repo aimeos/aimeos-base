@@ -101,12 +101,8 @@ abstract class Base implements Iface
 
 		$name = $this->name;
 
-		if( ( $transname = $this->translateName( $name, $translations, $funcs ) ) === null ) {
+		if( !( $transname = $this->translateName( $name, $translations, $funcs ) ) ) {
 			return;
-		}
-
-		if( $transname === '' ) {
-			$transname = $name;
 		}
 
 		if( !isset( $types[$name] ) ) {
