@@ -42,6 +42,32 @@ abstract class Base implements \Aimeos\Base\Criteria\Iface
 
 
 	/**
+	 * Returns the database type constant for the given type value
+	 *
+	 * @param string $value Type value
+	 * @return int Database type constant
+	 */
+	public static function type( string $value ) : int
+	{
+		switch( $value )
+		{
+			case 'null':
+				return \Aimeos\Base\DB\Statement\Base::PARAM_NULL;
+			case 'bool':
+			case 'boolean':
+				return \Aimeos\Base\DB\Statement\Base::PARAM_BOOL;
+			case 'int':
+			case 'integer':
+				return \Aimeos\Base\DB\Statement\Base::PARAM_INT;
+			case 'float':
+				return \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT;
+		}
+
+		return \Aimeos\Base\DB\Statement\Base::PARAM_STR;
+	}
+
+
+	/**
 	 * Returns an array representation of the expression that can be parsed again
 	 *
 	 * @return array Multi-dimensional expression structure

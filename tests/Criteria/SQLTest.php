@@ -393,6 +393,18 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals( $array, $this->object->__toArray() );
 	}
+
+
+	public function testType()
+	{
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_NULL, \Aimeos\Base\Criteria\SQL::type( 'null' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_BOOL, \Aimeos\Base\Criteria\SQL::type( 'bool' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_BOOL, \Aimeos\Base\Criteria\SQL::type( 'boolean' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_INT, \Aimeos\Base\Criteria\SQL::type( 'int' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_INT, \Aimeos\Base\Criteria\SQL::type( 'integer' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT, \Aimeos\Base\Criteria\SQL::type( 'float' ) );
+		$this->assertEquals( \Aimeos\Base\DB\Statement\Base::PARAM_STR, \Aimeos\Base\Criteria\SQL::type( 'string' ) );
+	}
 }
 
 
