@@ -108,7 +108,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function getInternalDeps() : array
 	{
-		return (array) $this->values['internaldeps'] ?? [];
+		return (array) ( $this->values['internaldeps'] ?? [] );
 	}
 
 
@@ -152,7 +152,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function isPublic() : bool
 	{
-		return (bool) $this->values['public'] ?? true;
+		return (bool) ( $this->values['public'] ?? true );
 	}
 
 
@@ -163,7 +163,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 */
 	public function isRequired() : bool
 	{
-		return (bool) $this->values['required'] ?? true;
+		return (bool) ( $this->values['required'] ?? true );
 	}
 
 
