@@ -227,6 +227,7 @@ trait Traits
 			case 'float':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
 				$value = $value !== '' ? (double) $value : 'null'; break;
+			case 'json':
 			case 'string':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
 				if( $operator === '~=' ) {
