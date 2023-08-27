@@ -205,9 +205,42 @@ trait Traits
 	 * @param string $operator Operator used for the expression
 	 * @param string $type Type constant
 	 * @param mixed $value Value that the variable or column should be compared to
-	 * @return string|int|double Escaped value
+	 * @return double|string|int Escaped value
 	 */
-	abstract protected function escape( string $operator, string $type, $value );
+	protected function escape( string $operator, string $type, $value )
+	{
+		$value = $this->translateValue( $this->getName(), $value, $type );
+
+		switch( $type )
+		{
+			case 'null':
+			case \Aimeos\Base\DB\Statement\Base::PARAM_NULL:
+				$value = 'null'; break;
+			case 'bool':
+			case 'boolean':
+			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
+				$value = (int) (bool) $value; break;
+			case 'int':
+			case 'integer':
+			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
+				$value = $value !== '' ? (int) $value : 'null'; break;
+			case 'float':
+			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
+				$value = $value !== '' ? (double) $value : 'null'; break;
+			case 'string':
+			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
+				if( $operator === '~=' ) {
+					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
+				}
+				if( $operator === '=~' ) {
+					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
+				}
+			default: // all other operators: escape in default case
+				$value = '\'' . $this->getConnection()->escape( (string) $value ) . '\'';
+		}
+
+		return $value;
+	}
 
 
 	/**

@@ -154,43 +154,6 @@ class SQL extends Base
 
 
 	/**
-	 * Escapes the value so it can be inserted into a SQL statement
-	 *
-	 * @param string $operator Operator used for the expression
-	 * @param string $type Type constant
-	 * @param mixed $value Value that the variable or column should be compared to
-	 * @return double|string|int Escaped value
-	 */
-	protected function escape( string $operator, string $type, $value )
-	{
-		$value = $this->translateValue( $this->getName(), $value, $type );
-
-		switch( $type )
-		{
-			case \Aimeos\Base\DB\Statement\Base::PARAM_NULL:
-				$value = 'null'; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
-				$value = (int) (bool) $value; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$value = $value !== '' ? (int) $value : 'null'; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = $value !== '' ? (double) $value : 'null'; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
-				if( $operator === '~=' ) {
-					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
-				}
-				if( $operator === '=~' ) {
-					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
-				}
-			default: // all other operators: escape in default case
-				$value = '\'' . $this->getConnection()->escape( (string) $value ) . '\'';
-		}
-
-		return $value;
-	}
-
-
-	/**
 	 * Returns the connection object.
 	 *
 	 * return \Aimeos\Base\DB\Connection\Iface Connection object

@@ -33,26 +33,12 @@ class PgSQL extends SQL
 
 		switch( $type )
 		{
-			case \Aimeos\Base\DB\Statement\Base::PARAM_NULL:
-				$value = 'null'; break;
+			case 'bool':
+			case 'boolean':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
-				$value = ( $value ? "'t'" : "'f'" ); break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$value = (int) $value; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = (double) $value; break;
-			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
-				if( $operator === '~=' ) {
-					$value = '\'%' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
-				}
-				if( $operator === '=~' ) {
-					$value = '\'' . str_replace( ['#', '%', '_', '['], ['##', '#%', '#_', '#['], $this->getConnection()->escape( (string) $value ) ) . '%\''; break;
-				}
-				// all other operators: escape in default case
-			default:
-				$value = '\'' . $this->getConnection()->escape( (string) $value ) . '\'';
+				return ( $value ? "'t'" : "'f'" ); break;
 		}
 
-		return $value;
+		return parent::escape( $operator, $type, $value );
 	}
 }
