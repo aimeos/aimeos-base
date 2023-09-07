@@ -72,6 +72,7 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 * Returns the type internally used by the manager.
 	 *
 	 * @return int|string Type used by the manager
+	 * @deprecated 2024.01
 	 */
 	public function getInternalType()
 	{
