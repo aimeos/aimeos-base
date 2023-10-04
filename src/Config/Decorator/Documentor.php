@@ -66,7 +66,7 @@ class Documentor
 class ConfigFile
 {
 	private array $config = [];
-	private $file;
+	private $filename;
 
 
 	/**
@@ -77,9 +77,7 @@ class ConfigFile
 	 */
 	public function __construct( string $filename )
 	{
-		if( ( $this->file = fopen( $filename, 'a' ) ) === false ) {
-			throw new \Aimeos\Base\Config\Exception( sprintf( 'Unable to open file "%1$s"', $filename ) );
-		}
+		$this->filename = $filename;
 	}
 
 
@@ -88,13 +86,8 @@ class ConfigFile
 	 */
 	public function __destruct()
 	{
-		if( is_resource( $this->file ) )
-		{
-			if( fwrite( $this->file, serialize( $this->config ) ) === false ) {
-				echo 'Unable to write collected configuration to file' . PHP_EOL;
-			}
-
-			fclose( $this->file );
+		if( file_put_contents( $this->filename, serialize( $this->config ), LOCK_EX ) === false ) {
+			echo 'Unable to write collected configuration to file' . PHP_EOL;
 		}
 	}
 
