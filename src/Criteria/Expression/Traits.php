@@ -226,7 +226,7 @@ trait Traits
 				$value = $value !== '' ? (int) (string) $value : 'null'; break; // objects must be casted to strings first
 			case 'float':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = $value !== '' : (double) $value : 'null'; break;
+				$value = $value !== '' ? (double) $value : 'null'; break;
 			case 'json':
 			case 'string':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
