@@ -220,13 +220,25 @@ trait Traits
 			case 'boolean':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
 				$value = (int) (bool) $value; break;
-			case 'int':
-			case 'integer':
-			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$value = $value !== '' ? (int) $value : 'null'; break;
-			case 'float':
-			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$value = $value !== '' ? (double) $value : 'null'; break;
+            case 'int':
+            case 'integer':
+            case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
+                $value = $value !== ''
+                    ? ( $value instanceof \Aimeos\MShop\Common\Item\Base
+                        ? (int) (string) $value
+                        : (int) $value
+                    )
+                    : 'null';
+                break;
+            case 'float':
+            case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
+                $value = $value !== ''
+                    ? ( $value instanceof \Aimeos\MShop\Common\Item\Base
+                        ? (double) (string) $value
+                        : (double) $value
+                    )
+                    : 'null';
+                break;
 			case 'json':
 			case 'string':
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
