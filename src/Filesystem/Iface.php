@@ -84,7 +84,7 @@ interface Iface
 	 *
 	 *  $readhandle = $fs->reads( '/path/to/remote/file' );
 	 *
-	 *  while( ( $content = stream_get_contents( $handle, 1024000 ) ) != false ) {
+	 *  while( ( $content = stream_get_contents( $readhandle, 1024000 ) ) != false ) {
 	 *      if( fwrite( $writehandle, $content ) === false ) {
 	 *          throw new \RuntimeException( $localfile );
 	 *      }
