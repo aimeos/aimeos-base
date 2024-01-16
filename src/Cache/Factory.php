@@ -27,27 +27,14 @@ class Factory
 	 * @return \Aimeos\Base\Cache\Iface Cache object of the requested type
 	 * @throws \Aimeos\Base\Cache\Exception if class isn't found
 	 */
-	public static function create( $name, ...$args ) : \Aimeos\Base\Cache\Iface
+	public static function create( string $name, ...$args ) : \Aimeos\Base\Cache\Iface
 	{
-		if( ctype_alnum( $name ) === false )
-		{
-			$classname = is_string( $name ) ? '\Aimeos\Base\Cache\\' . $name : '<not a string>';
-			throw new \Aimeos\Base\Cache\Exception( sprintf( 'Invalid characters in class name "%1$s"', $classname ) );
-		}
-
-		$iface = \Aimeos\Base\Cache\Iface::class;
-		$classname = '\Aimeos\Base\Cache\\' . ucwords( $name );
+		$classname = '\Aimeos\Base\Cache\\' . ucfirst( $name );
 
 		if( class_exists( $classname ) === false ) {
 			throw new \Aimeos\Base\Cache\Exception( sprintf( 'Class "%1$s" not available', $classname ) );
 		}
 
-		$object = new $classname( ...$args );
-
-		if( !( $object instanceof $iface ) ) {
-			throw new \Aimeos\Base\Cache\Exception( sprintf( 'Class "%1$s" does not implement interface "%2$s"', $classname, $iface ) );
-		}
-
-		return $object;
+		return new $classname( ...$args );
 	}
 }
