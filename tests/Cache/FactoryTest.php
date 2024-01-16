@@ -46,7 +46,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
 	public function testFactoryInvalidClass()
 	{
-		$this->expectException( \Aimeos\Base\Cache\Exception::class );
+		$this->expectException( \TypeError::class );
 		\Aimeos\Base\Cache\Factory::create( 'InvalidCache' );
 	}
 }
