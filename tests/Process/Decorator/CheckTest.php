@@ -28,7 +28,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 	public function testIsAvailable()
 	{
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertTrue( $this->object->isAvailable() );
 	}
@@ -37,7 +37,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 	public function testIsAvailableFalse()
 	{
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( false ) );
+			->willReturn( false );
 
 		$this->assertFalse( $this->object->isAvailable() );
 	}
@@ -48,7 +48,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 		$fcn = function() {};
 
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->stub->expects( $this->once() )->method( 'start' );
 
@@ -61,7 +61,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 		$fcn = function() {};
 
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( false ) );
+			->willReturn( false );
 
 		$this->stub->expects( $this->never() )->method( 'start' );
 
@@ -72,7 +72,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 	public function testWait()
 	{
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->stub->expects( $this->once() )->method( 'wait' );
 
@@ -83,7 +83,7 @@ class CheckTest extends \PHPUnit\Framework\TestCase
 	public function testWaitNotAvailable()
 	{
 		$this->stub->expects( $this->once() )->method( 'isAvailable' )
-			->will( $this->returnValue( false ) );
+			->willReturn( false );
 
 		$this->stub->expects( $this->never() )->method( 'wait' );
 

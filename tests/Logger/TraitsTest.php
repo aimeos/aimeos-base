@@ -31,7 +31,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testEmergency()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->emergency( 'emergency' ) );
 	}
@@ -40,7 +40,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testAlert()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->alert( 'alert' ) );
 	}
@@ -49,7 +49,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testCritical()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->critical( 'critical' ) );
 	}
@@ -58,7 +58,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testError()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->error( 'error' ) );
 	}
@@ -67,7 +67,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testWarning()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->warning( 'warning' ) );
 	}
@@ -76,7 +76,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testNotice()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->notice( 'notice' ) );
 	}
@@ -85,7 +85,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testInfo()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->info( 'info' ) );
 	}
@@ -94,7 +94,7 @@ class TraitsTest extends \PHPUnit\Framework\TestCase
 	public function testDebug()
 	{
 		$this->object->expects( $this->once() )->method( 'log' )
-			->will( $this->returnSelf() );
+			->willReturnSelf();
 
 		$this->assertInstanceOf( \Aimeos\Base\Logger\Iface::class, $this->object->debug( 'debug' ) );
 	}
