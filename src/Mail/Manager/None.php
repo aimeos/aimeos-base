@@ -27,7 +27,7 @@ class None implements Iface
 	 * @throws \Aimeos\Base\Mail\Exception If an error occurs
 	 */
 	public function get( string $name = null ) : \Aimeos\Base\Mail\Iface
-    {
-        return new \Aimeos\Base\Mail\None();
-    }
+	{
+		return new \Aimeos\Base\Mail\None();
+	}
 }
