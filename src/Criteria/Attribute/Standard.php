@@ -59,6 +59,30 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 
 
 	/**
+	 * Returns the value of the attribute.
+	 *
+	 * @param string $name Name of the attribute
+	 * @return mixed|null Value of the attribute or NULL if not available
+	 */
+	public function __get( string $name )
+	{
+		return $this->values[$name] ?? null;
+	}
+
+
+	/**
+	 * Tests if the property name is available.
+	 *
+	 * @param string $name Name of the attribute
+	 * @return bool TRUE if the property is available, FALSE if not
+	 */
+    public function __isset( string $name ) : bool
+    {
+        return isset( $this->values[$name] );
+    }
+
+
+	/**
 	 * Returns the type of the attribute.
 	 *
 	 * Can be used in the frontend to create a speacial form for this type
