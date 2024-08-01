@@ -42,6 +42,18 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testMagicGet()
+	{
+		$this->assertEquals( 'attribute_type', $this->object->__get( 'type' ) );
+	}
+
+
+	public function testMagicIsset()
+	{
+		$this->assertTrue( $this->object->__isset( 'type' ) );
+	}
+
+
 	public function testGetType()
 	{
 		$this->assertEquals( 'attribute_type', $this->object->getType() );
