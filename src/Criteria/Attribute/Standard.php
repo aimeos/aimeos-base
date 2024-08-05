@@ -73,10 +73,10 @@ class Standard implements \Aimeos\Base\Criteria\Attribute\Iface
 	 * @param string $name Name of the attribute
 	 * @return bool TRUE if the property is available, FALSE if not
 	 */
-    public function __isset( string $name ) : bool
-    {
-        return isset( $this->values[$name] );
-    }
+	public function __isset( string $name ) : bool
+	{
+		return isset( $this->values[$name] );
+	}
 
 
 	/**
