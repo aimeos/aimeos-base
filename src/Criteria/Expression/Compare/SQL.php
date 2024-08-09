@@ -74,7 +74,11 @@ class SQL extends Base
 				. ' AND ' . $name . ' <= ' . $this->escape( '<=', $type, $p[1] );
 		}
 
-		$term = $name . ' ' . self::$operators[$op] . ' ' . $this->escape( $op, $type, $value );
+		if( ( $value = $this->escape( $op, $type, $value ) ) === 'null' ) {
+			return $this->createNullTerm( $name, $type );
+		}
+
+		$term = $name . ' ' . self::$operators[$op] . ' ' . $value;
 
 		if( in_array( $op, array( '=~', '~=' ), true ) ) {
 			$term .= ' ESCAPE \'#\'';
