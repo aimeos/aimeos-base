@@ -70,8 +70,8 @@ class Simple extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB\S
 	public function execute() : \Aimeos\Base\DB\Result\Iface
 	{
 		try {
-			$result = $this->getConnection()->getRawObject()->getWrappedConnection()->query( $this->sql );
-		} catch( \Doctrine\DBAL\Driver\Exception $e ) {
+			$result = $this->getConnection()->getRawObject()->getNativeConnection()->query( $this->sql );
+		} catch( \PDOException $e ) {
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage() . ': ' . $this->sql, $e->getCode() );
 		}
 

@@ -62,7 +62,7 @@ class DBAL extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result
 	{
 		try {
 			return $this->result->rowCount();
-		} catch( \Doctrine\DBAL\Driver\Exception $e ) {
+		} catch( \PDOException $e ) {
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage(), $e->getCode() );
 		}
 	}
@@ -79,21 +79,10 @@ class DBAL extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result
 	{
 		try
 		{
-			$class = '\Doctrine\DBAL\Driver\Statement';
-
-			if( $this->result instanceof $class )
-			{
-				$fetch = $style === \Aimeos\Base\DB\Result\Base::FETCH_NUM ? \PDO::FETCH_NUM : \PDO::FETCH_ASSOC;
-				return $this->result->fetch( $fetch ) ?: null;
-			}
-
-			if( $style === \Aimeos\Base\DB\Result\Base::FETCH_NUM ) {
-				return $this->result->fetchNumeric() ?: null;
-			} else {
-				return $this->result->fetchAssociative() ?: null;
-			}
+			$fetch = $style === \Aimeos\Base\DB\Result\Base::FETCH_NUM ? \PDO::FETCH_NUM : \PDO::FETCH_ASSOC;
+			return $this->result->fetch( $fetch ) ?: null;
 		}
-		catch( \Doctrine\DBAL\Driver\Exception $e )
+		catch( \PDOException $e )
 		{
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage(), $e->getCode() );
 		}
@@ -122,7 +111,7 @@ class DBAL extends \Aimeos\Base\DB\Result\Base implements \Aimeos\Base\DB\Result
 				$this->result->closeCursor();
 			}
 		}
-		catch( \Doctrine\DBAL\Driver\Exception $e )
+		catch( \PDOException $e )
 		{
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage(), $e->getCode() );
 		}

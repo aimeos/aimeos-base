@@ -128,7 +128,7 @@ class DBAL extends Base implements Iface
 	 */
 	public function inTransaction() : bool
 	{
-		$conn = $this->connection->getWrappedConnection();
+		$conn = $this->connection->getNativeConnection();
 
 		if( $conn instanceof \PDO ) {
 			return $conn->inTransaction();
@@ -150,7 +150,7 @@ class DBAL extends Base implements Iface
 	{
 		if( $this->txnumber === 0 )
 		{
-			if( $this->connection->getWrappedConnection()->beginTransaction() === false ) {
+			if( $this->connection->getNativeConnection()->beginTransaction() === false ) {
 				throw new \Aimeos\Base\DB\Exception( 'Unable to start new transaction' );
 			}
 		}
@@ -169,7 +169,7 @@ class DBAL extends Base implements Iface
 	{
 		if( $this->txnumber === 1 )
 		{
-			if( $this->connection->getWrappedConnection()->commit() === false ) {
+			if( $this->connection->getNativeConnection()->commit() === false ) {
 				throw new \Aimeos\Base\DB\Exception( 'Failed to commit transaction' );
 			}
 		}
@@ -188,7 +188,7 @@ class DBAL extends Base implements Iface
 	{
 		if( $this->txnumber === 1 )
 		{
-			if( $this->connection->getWrappedConnection()->rollBack() === false ) {
+			if( $this->connection->getNativeConnection()->rollBack() === false ) {
 				throw new \Aimeos\Base\DB\Exception( 'Failed to roll back transaction' );
 			}
 		}
