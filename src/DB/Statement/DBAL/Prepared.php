@@ -73,7 +73,7 @@ class Prepared extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB
 	{
 		try {
 			$result = $this->exec();
-		} catch( \Doctrine\DBAL\Driver\Exception $e ) {
+		} catch( \PDOException $e ) {
 			throw new \Aimeos\Base\DB\Exception( $e->getMessage() . ': ' . $this->sql . json_encode( array_column( $this->binds, 0 ) ), $e->getCode() );
 		}
 
@@ -88,19 +88,26 @@ class Prepared extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB
 	 */
 	protected function exec()
 	{
-		$stmt = $this->getConnection()->getRawObject()->getWrappedConnection()->prepare( $this->sql );
+		try
+		{
+			$stmt = $this->getConnection()->getRawObject()->getNativeConnection()->prepare( $this->sql );
 
-		foreach( $this->binds as $position => $list ) {
-			$stmt->bindValue( $position, $list[0], $this->getDbalType( $list[1], $list[0] ) );
+			foreach( $this->binds as $position => $list ) {
+				$stmt->bindValue( $position, $list[0], $this->getDbalType( $list[1], $list[0] ) );
+			}
+
+			$result = $stmt->execute();
+
+			if( $result instanceof \Doctrine\DBAL\Driver\Result ) {
+				return $result;
+			}
+
+			return $stmt;
 		}
-
-		$result = $stmt->execute();
-
-		if( $result instanceof \Doctrine\DBAL\Driver\Result ) {
-			return $result;
+		catch( \PDOException $e )
+		{
+			throw new \Aimeos\Base\DB\Exception( $e->getMessage(), $e->getCode() );
 		}
-
-		return $stmt;
 	}
 
 
@@ -117,23 +124,23 @@ class Prepared extends \Aimeos\Base\DB\Statement\Base implements \Aimeos\Base\DB
 		switch( $type )
 		{
 			case \Aimeos\Base\DB\Statement\Base::PARAM_NULL:
-				$dbaltype = \Doctrine\DBAL\ParameterType::NULL; break;
+				$dbaltype = \PDO::PARAM_NULL; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_BOOL:
-				$dbaltype = \Doctrine\DBAL\ParameterType::BOOLEAN; break;
+				$dbaltype = \PDO::PARAM_BOOL; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_INT:
-				$dbaltype = \Doctrine\DBAL\ParameterType::INTEGER; break;
+				$dbaltype = \PDO::PARAM_INT; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_FLOAT:
-				$dbaltype = \Doctrine\DBAL\ParameterType::STRING; break;
+				$dbaltype = \PDO::PARAM_STR; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_STR:
-				$dbaltype = \Doctrine\DBAL\ParameterType::STRING; break;
+				$dbaltype = \PDO::PARAM_STR; break;
 			case \Aimeos\Base\DB\Statement\Base::PARAM_LOB:
-				$dbaltype = \Doctrine\DBAL\ParameterType::LARGE_OBJECT; break;
+				$dbaltype = \PDO::PARAM_LOB; break;
 			default:
 				throw new \Aimeos\Base\DB\Exception( sprintf( 'Invalid parameter type "%1$s"', $type ) );
 		}
 
 		if( is_null( $value ) ) {
-			$dbaltype = \Doctrine\DBAL\ParameterType::NULL;
+			$dbaltype = \PDO::PARAM_NULL;
 		}
 
 		return $dbaltype;
