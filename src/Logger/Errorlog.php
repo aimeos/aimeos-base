@@ -34,7 +34,7 @@ class Errorlog implements Iface
 	 * @param string[]|null $facilities Facilities for which messages should be logged
 	 * @param string|null $requestid Unique identifier to identify multiple log entries for the same request faster
 	 */
-	public function __construct( int $loglevel = Iface::ERR, array $facilities = null, string $requestid = null )
+	public function __construct( int $loglevel = Iface::ERR, ?array $facilities = null, ?string $requestid = null )
 	{
 		$this->loglevel = $loglevel;
 		$this->facilities = $facilities;

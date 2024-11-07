@@ -26,5 +26,5 @@ interface Iface
 	 * @return \Aimeos\Base\Mail\Iface Mail object
 	 * @throws \Aimeos\Base\Mail\Exception If an error occurs
 	 */
-	public function get( string $name = null ) : \Aimeos\Base\Mail\Iface;
+	public function get( ?string $name = null ) : \Aimeos\Base\Mail\Iface;
 }

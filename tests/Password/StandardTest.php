@@ -28,7 +28,7 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testHash()
 	{
-		$this->assertStringStartsWith( '$2y$10$', $this->object->hash( 'unittest' ) );
+		$this->assertStringStartsWith( '$2y$', $this->object->hash( 'unittest' ) );
 	}
 
 

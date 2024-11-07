@@ -23,7 +23,7 @@ namespace Aimeos\Base\View;
  * @method \Aimeos\Base\View\Helper\Encoder\Iface encoder() Returns the encoder helper object
  * @method string formparam(string|array $names) Returns the name for the HTML form parameter
  * @method \Aimeos\Base\Mail\Message\Iface mail() Returns the e-mail message object
- * @method string number(integer|float|decimal $number, integer $decimals = null) Returns the formatted number
+ * @method string number(integer|float|decimal $number, ?integer $decimals = null) Returns the formatted number
  * @method string|array param(string|null $name, string|array $default) Parameter value or associative list of key/value pairs
  * @method string partial(string $filepath, array $params = []) Renders the rendered partial template
  * @method \Aimeos\Base\View\Helper\Request\Iface request() Returns the request view helper object

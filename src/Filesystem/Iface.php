@@ -68,7 +68,7 @@ interface Iface
 	 * @return string Path of the local file
 	 * @throws \Aimeos\Base\Filesystem\Exception If an error occurs
 	 */
-	public function readf( string $path, string $local = null ) : string;
+	public function readf( string $path, ?string $local = null ) : string;
 
 	/**
 	 * Returns the stream descriptor of the remote file
@@ -130,7 +130,7 @@ interface Iface
 	 * @return iterable Iterator over the entries or array with entries
 	 * @throws \Aimeos\Base\Filesystem\Exception If an error occurs
 	 */
-	public function scan( string $path = null ) : iterable;
+	public function scan( ?string $path = null ) : iterable;
 
 	/**
 	 * Writes the given content to the file
