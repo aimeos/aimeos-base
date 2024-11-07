@@ -40,7 +40,7 @@ class DB implements Iface
 	 * @param string|null $requestid Unique identifier to identify multiple log entries for the same request faster
 	 */
 	public function __construct( \Aimeos\Base\DB\Statement\Iface $stmt, int $loglevel = Iface::ERR,
-		array $facilities = null, string $requestid = null )
+		?array $facilities = null, ?string $requestid = null )
 	{
 		$this->stmt = $stmt;
 		$this->loglevel = $loglevel;

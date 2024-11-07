@@ -51,7 +51,7 @@ class Standard
 	 * @param int|null $decimals Number of decimals behind the decimal point or null for default value
 	 * @return string Formatted number
 	 */
-	public function transform( $number, int $decimals = null ) : string
+	public function transform( $number, ?int $decimals = null ) : string
 	{
 		if( $decimals === null ) {
 			$decimals = $this->decimals;
