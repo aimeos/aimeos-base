@@ -33,7 +33,7 @@ class Standard
 	 * @param string $name CSRF token name
 	 * @param string|null $value CSRF token value
 	 */
-	public function __construct( \Aimeos\Base\View\Iface $view, string $name = '', string $value = null )
+	public function __construct( \Aimeos\Base\View\Iface $view, string $name = '', ?string $value = null )
 	{
 		parent::__construct( $view );
 

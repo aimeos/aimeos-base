@@ -32,7 +32,7 @@ class None
 	 * @param array $config Additional configuration parameter per URL
 	 * @return string Complete URL that can be used in the template
 	 */
-	public function transform( string$target = null, string$controller = null, string$action = null,
+	public function transform( ?string $target = null, ?string $controller = null, ?string $action = null,
 		array $params = [], array $trailing = [], array $config = [] ) : string
 	{
 		return '';

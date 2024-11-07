@@ -54,7 +54,7 @@ interface Iface
 	 * @param string|null $data Value to escape or null for no value
 	 * @return string Escaped string
 	 */
-	public function escape( string $data = null ) : string;
+	public function escape( ?string $data = null ) : string;
 
 	/**
 	 * Returns a quoted identifier for the passed name

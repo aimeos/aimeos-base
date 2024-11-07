@@ -28,7 +28,7 @@ interface Iface
 	 * @param string $disposition Type of the disposition ("attachment" or "inline")
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function attach( ?string $data, string $filename = null, string $mimetype = null, string $disposition = 'attachment' ) : Iface;
+	public function attach( ?string $data, ?string $filename = null, ?string $mimetype = null, string $disposition = 'attachment' ) : Iface;
 
 	/**
 	 * Adds a destination e-mail address for a hidden copy of the message.
@@ -45,7 +45,7 @@ interface Iface
 	 * @param string|null $name Name of the user owning the target mailbox or null for no name
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function cc( string $email, string $name = null ) : Iface;
+	public function cc( string $email, ?string $name = null ) : Iface;
 
 	/**
 	 * Embeds an attachment into the message and returns its reference.
@@ -55,7 +55,7 @@ interface Iface
 	 * @param string|null $filename Name of the attached file
 	 * @return string Content ID for referencing the attachment in the HTML body
 	 */
-	public function embed( ?string $data, string $filename = null, string $mimetype = null ) : string;
+	public function embed( ?string $data, ?string $filename = null, ?string $mimetype = null ) : string;
 
 	/**
 	 * Adds a source e-mail address of the message.
@@ -64,7 +64,7 @@ interface Iface
 	 * @param string|null $name Name of the user sending the e-mail or null for no name
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function from( string $email, string $name = null ) : Iface;
+	public function from( string $email, ?string $name = null ) : Iface;
 
 	/**
 	 * Adds a custom header to the message.
@@ -90,7 +90,7 @@ interface Iface
 	 * @param string|null $name Name of the user which should receive all replies or null for no name
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function replyTo( string $email, string $name = null ) : Iface;
+	public function replyTo( string $email, ?string $name = null ) : Iface;
 
 	/**
 	 * Sends the e-mail message to the mail server.
@@ -106,7 +106,7 @@ interface Iface
 	 * @param string|null $name Name of the user who sent the message or null for no name
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function sender( string $email, string $name = null ) : Iface;
+	public function sender( string $email, ?string $name = null ) : Iface;
 
 	/**
 	 * Sets the subject of the message.
@@ -131,5 +131,5 @@ interface Iface
 	 * @param string|null $name Name of the user owning the target mailbox or null for no name
 	 * @return \Aimeos\Base\Mail\Message\Iface Message object
 	 */
-	public function to( string $email, string $name = null ) : Iface;
+	public function to( string $email, ?string $name = null ) : Iface;
 }

@@ -41,7 +41,7 @@ class Standard
 	 * @param string|null $target Page ID or route name
 	 */
 	public function __construct( \Aimeos\Base\View\Iface $view, ServerRequestInterface $request,
-		string $clientaddr = null, string $target = null )
+	?string $clientaddr = null, ?string $target = null )
 	{
 		parent::__construct( $view );
 
