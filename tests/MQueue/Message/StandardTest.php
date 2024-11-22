@@ -31,4 +31,10 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEquals( 'test', $this->object->getBody() );
 	}
+
+
+	public function testToString()
+	{
+		$this->assertEquals( 'test', (string) $this->object );
+	}
 }

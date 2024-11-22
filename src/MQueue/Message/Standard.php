@@ -53,4 +53,15 @@ class Standard implements Iface
 	{
 		return ( isset( $this->values['id'] ) ? $this->values['id'] : null );
 	}
+
+
+	/**
+	 * Returns the message body
+	 *
+	 * @return string Message body
+	 */
+	public function __toString() : string
+	{
+		return ( isset( $this->values['message'] ) ? $this->values['message'] : '' );
+	}
 }

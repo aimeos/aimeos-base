@@ -25,4 +25,12 @@ interface Iface
 	 * @return string Message body
 	 */
 	public function getBody() : string;
+
+
+	/**
+	 * Returns the message body
+	 *
+	 * @return string Message body
+	 */
+	public function __toString() : string;
 }
