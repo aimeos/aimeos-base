@@ -44,6 +44,6 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	public function testSleep()
 	{
 		$object = new \Aimeos\Base\Filesystem\Manager\Standard( [] );
-		$this->assertEquals( ['config' => [], 'objects' => []], $object->__sleep() );
+		$this->assertEquals( ['config', 'objects'], $object->__sleep() );
 	}
 }
