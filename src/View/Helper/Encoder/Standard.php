@@ -116,7 +116,7 @@ class Standard
 			return (string) $value;
 		}
 
-		return Str::html( (string) $value, ENT_NOQUOTES );
+		return Str::html( (string) $value, ENT_XML1 );
 	}
 
 
