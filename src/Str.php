@@ -77,6 +77,19 @@ class Str
 
 
 	/**
+	 * Replaces special HTML characters by their entities.
+	 *
+	 * @param mixed $str Stringable value
+	 * @param int $flags Which characters to encode
+	 * @return string String which isn't interpreted as HTML and save to include in HTML documents
+	 */
+	public static function decode( $str, int $flags = ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5 ) : string
+	{
+		return str_replace( '&#96;', '`', htmlspecialchars_decode( (string) $str, $flags | ENT_QUOTES ) );
+	}
+
+
+	/**
 	 * Tests if the strings ends with the needle.
 	 *
 	 * @param mixed $str Stringable value
@@ -111,7 +124,7 @@ class Str
 	 * @param int $flags Which characters to encode
 	 * @return string String which isn't interpreted as HTML and save to include in HTML documents
 	 */
-	public static function html( $str, int $flags = ENT_COMPAT | ENT_HTML401 ) : string
+	public static function html( $str, int $flags = ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5 ) : string
 	{
 		return htmlspecialchars( (string) $str, $flags, 'UTF-8' );
 	}

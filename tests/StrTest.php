@@ -65,6 +65,15 @@ class StrTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testDecode()
+	{
+		$str = '&lt;html onclick=&quot;alert(&#96;xss&#96;, &apos;yes&apos;)&quot;&gt;';
+		$this->assertEquals( '<html onclick="alert(`xss`, \'yes\')">', Str::decode( $str ) );
+		$this->assertEquals( '123', Str::decode( 123 ) );
+		$this->assertEquals( '', Str::decode( null ) );
+	}
+
+
 	public function testEnds()
 	{
 		$this->assertFalse( Str::ends( 'abc', '' ) );
