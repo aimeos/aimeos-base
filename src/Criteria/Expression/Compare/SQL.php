@@ -71,7 +71,7 @@ class SQL extends Base
 			$p = explode( ' - ', $value );
 
 			return $name . ' >= ' . $this->escape( '>=', $type, $p[0] )
-				. ' AND ' . $name . ' <= ' . $this->escape( '<=', $type, $p[1] );
+				. ' AND ' . $name . ' <= ' . $this->escape( '<=', $type, $p[1] ?? $p[0] );
 		}
 
 		if( ( $value = $this->escape( $op, $type, $value ) ) === 'null' ) {
