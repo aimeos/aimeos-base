@@ -66,7 +66,7 @@ jobs:
           key: php83-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "CREATE DATABASE aimeos;" > sqlserver.sql; for i in `seq 1 5`; do /opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U SA -P 'S3c0r3P4ss -C' -i sqlserver.sql && exit 0; sleep 3; done
-      - run: echo "<?php return array( 'db' => array( 'adapter' => 'sqlsrv', 'dsn' => 'sqlsrv:Server=127.0.0.1,1433;Database=aimeos;TrustServerCertificate=true', 'username' => 'SA', 'password' => 'S3c0r3P4ss', 'limit' => 2, 'opt-persistent' => false, 'stmt' => array() ), 'fs' => array( 'adapter' => 'Standard', 'basedir' => '.' ), 'mq' => array( 'adapter' => 'Standard', 'db' => 'db' ) );" > config/resource.php
+      - run: echo "<?php return array( 'db' => array( 'adapter' => 'sqlsrv', 'dsn' => 'sqlsrv:Server=127.0.0.1,1433;Database=aimeos;Encrypt=false', 'username' => 'SA', 'password' => 'S3c0r3P4ss', 'limit' => 2, 'opt-persistent' => false, 'stmt' => array() ), 'fs' => array( 'adapter' => 'Standard', 'basedir' => '.' ), 'mq' => array( 'adapter' => 'Standard', 'db' => 'db' ) );" > config/resource.php
       - run: ./vendor/bin/phing test
 
   "php84-mysql80":
