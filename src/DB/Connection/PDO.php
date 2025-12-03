@@ -213,7 +213,7 @@ class PDO extends Base implements Iface
 		{
 			$dsn .= 'Database=' . $dbase;
 			$dsn .= isset( $host ) ? ';Server=' . $host . ( isset( $port ) ? ',' . $port : '' ) : '';
-			$dsn .= ( $params['encrypt'] ?? false ) ? ';Encrypt=True' : ';Encrypt=False';
+			$dsn .= ( $params['encrypt'] ?? false ) ? ';Encrypt=True;TrustServerCertificate=True' : ';Encrypt=False;TrustServerCertificate=True';
 		}
 		elseif( $sock == null )
 		{
