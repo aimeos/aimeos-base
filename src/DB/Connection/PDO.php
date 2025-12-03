@@ -214,6 +214,7 @@ print_r( $param );
 		{
 			$dsn .= 'Database=' . $dbase;
 			$dsn .= isset( $host ) ? ';Server=' . $host . ( isset( $port ) ? ',' . $port : '' ) : '';
+			$dsn .= ( $params['encrypt'] ?? false ) ? ';Encrypt=True' : ';Encrypt=False';
 		}
 		elseif( $sock == null )
 		{
