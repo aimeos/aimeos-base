@@ -70,7 +70,6 @@ class PDO extends Base implements Iface
 		$param['driverOptions'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
 		$param['driverOptions'][\PDO::ATTR_ORACLE_NULLS] = \PDO::NULL_NATURAL;
 		$param['driverOptions'][\PDO::ATTR_STRINGIFY_FETCHES] = false;
-print_r( $param );
 
 		$pdo = new \PDO( $param['dsn'], $param['username'] ?? '', $param['password'] ?? '', $param['driverOptions'] );
 		$conn = $this->connection;
