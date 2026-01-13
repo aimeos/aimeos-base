@@ -46,6 +46,32 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testAdd()
+	{
+		$this->object->set( 'test', 'oldvalue' );
+		$this->object->set( 'test2', 'existing' );
+		$result = $this->object->add( ['test' => 'value', 'key' => 'val'] );
+
+		$this->assertInstanceOf( \Aimeos\Base\View\Iface::class, $result );
+		$this->assertEquals( 'existing', $this->object->get( 'test2' ) );
+		$this->assertEquals( 'value', $this->object->get( 'test' ) );
+		$this->assertEquals( 'val', $this->object->get( 'key' ) );
+	}
+
+
+	public function testAssign()
+	{
+		$this->object->set( 'test', 'oldvalue' );
+		$this->object->set( 'test2', 'existing' );
+		$result = $this->object->assign( ['test' => 'value', 'key' => 'val'] );
+
+		$this->assertInstanceOf( \Aimeos\Base\View\Iface::class, $result );
+		$this->assertEquals( null, $this->object->get( 'test2' ) );
+		$this->assertEquals( 'value', $this->object->get( 'test' ) );
+		$this->assertEquals( 'val', $this->object->get( 'key' ) );
+	}
+
+
 	public function testGet()
 	{
 		$this->object->test = 'val';

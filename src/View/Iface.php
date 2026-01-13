@@ -82,6 +82,15 @@ interface Iface
 	public function __set( string $key, $value );
 
 	/**
+	 * Adds several key/value pairs at once to the view.
+	 * Overwrites existing key/value pairs.
+	 *
+	 * @param array $values Associative list of key/value pairs
+	 * @return \Aimeos\Base\View\Iface View object for method chaining
+	 */
+	public function add( array $values ) : Iface;
+
+	/**
 	 * Adds a view helper instance to the view.
 	 *
 	 * @param string $name Name of the view helper as called in the template
@@ -92,7 +101,7 @@ interface Iface
 
 	/**
 	 * Assigns a whole set of values at once to the view.
-	 * This method overwrites already existing key/value pairs set by the magic method.
+	 * This method replaces all existing key/value pairs set by the magic method.
 	 *
 	 * @param array $values Associative list of key/value pairs
 	 * @return \Aimeos\Base\View\Iface View object for method chaining
