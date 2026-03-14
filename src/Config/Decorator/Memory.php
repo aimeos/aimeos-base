@@ -59,8 +59,13 @@ class Memory
 			return $this->cache[$name];
 		}
 
-		if( ( $value = $this->getValueFromArray( $this->config, explode( '/', $name ) ) ) === null ) {
-			$value = parent::get( $name, null );
+		$local = $this->getValueFromArray( $this->config, explode( '/', $name ) );
+		$value = parent::get( $name, null );
+
+		if( is_array( $local ) && is_array( $value ) ) {
+			$value = array_replace_recursive( $value, $local );
+		} elseif( $local !== null ) {
+			$value = $local;
 		}
 
 		if( $value === null )

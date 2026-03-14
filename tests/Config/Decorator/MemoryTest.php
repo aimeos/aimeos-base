@@ -73,8 +73,29 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
 
 		$result = $object->get( 'resource/db', [] );
-		$this->assertArrayNotHasKey( 'database', $result );
+		$this->assertArrayHasKey( 'database', $result );
 		$this->assertArrayHasKey( 'host', $result );
+		$this->assertEquals( 'test', $result['database'] );
+		$this->assertEquals( '127.0.0.1', $result['host'] );
+	}
+
+
+	public function testGetMergeNested()
+	{
+		$cfg = ['resource' => ['db' => ['host' => 'localhost', 'database' => 'aimeos']]];
+		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
+
+		$local = ['resource' => ['fs' => ['baseurl' => 'https://example.com/uploads']]];
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+
+		$this->assertEquals( 'https://example.com/uploads', $object->get( 'resource/fs/baseurl' ) );
+		$this->assertEquals( ['host' => 'localhost', 'database' => 'aimeos'], $object->get( 'resource/db' ) );
+
+		$result = $object->get( 'resource' );
+		$this->assertArrayHasKey( 'db', $result );
+		$this->assertArrayHasKey( 'fs', $result );
+		$this->assertEquals( 'aimeos', $result['db']['database'] );
+		$this->assertEquals( 'https://example.com/uploads', $result['fs']['baseurl'] );
 	}
 
 
