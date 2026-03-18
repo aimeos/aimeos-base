@@ -52,7 +52,7 @@ jobs:
   "php83-mssql2019":
     docker:
       - image: aimeos/ci-php:8.3
-      - image: mcr.microsoft.com/mssql/server:2019-latest
+      - image: mcr.microsoft.com/mssql/server:2017-latest
         environment:
           SA_PASSWORD: S3c0r3P4ss
           ACCEPT_EULA: Y
