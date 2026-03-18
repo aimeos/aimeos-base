@@ -41,7 +41,7 @@ class Locale
 			$this->formatter = new \NumberFormatter( $locale ?: 'en', \NumberFormatter::DECIMAL );
 		}
 
-        $this->formatter->setAttribute( \NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_HALFUP );
+		$this->formatter->setAttribute( \NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_HALFUP );
 	}
 
 
