@@ -57,6 +57,6 @@ class Standard
 			$decimals = $this->decimals;
 		}
 
-		return number_format( (double) $number, $decimals, $this->dsep, $this->tsep );
+		return number_format( (float) $number, $decimals, $this->dsep, $this->tsep );
 	}
 }
