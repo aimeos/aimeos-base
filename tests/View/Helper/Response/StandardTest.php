@@ -12,44 +12,51 @@ namespace Aimeos\Base\View\Helper\Response;
 class StandardTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
-	private $response;
+	private $mock;
 
 
-	protected function setUp() : void
+	private function mock()
 	{
 		$view = new \Aimeos\Base\View\Standard();
-		$this->response = $this->getMockBuilder( \Psr\Http\Message\ResponseInterface::class )->getMock();
-		$this->object = new \Aimeos\Base\View\Helper\Response\Standard( $view, $this->response );
-	}
-
-
-	protected function tearDown() : void
-	{
-		unset( $this->object, $this->response );
+		$this->mock = $this->getMockBuilder( \Psr\Http\Message\ResponseInterface::class )->getMock();
+		$this->object = new \Aimeos\Base\View\Helper\Response\Standard( $view, $this->mock );
 	}
 
 
 	public function testTransform()
 	{
-		$this->assertInstanceOf( \Aimeos\Base\View\Helper\Response\Iface::class, $this->object->transform() );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ResponseInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Response\Standard( $view, $stub );
+
+		$this->assertInstanceOf( \Aimeos\Base\View\Helper\Response\Iface::class, $object->transform() );
 	}
 
 
 	public function testCreateStream()
 	{
-		$this->assertInstanceOf( \Psr\Http\Message\StreamInterface::class, $this->object->createStream( __FILE__ ) );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ResponseInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Response\Standard( $view, $stub );
+
+		$this->assertInstanceOf( \Psr\Http\Message\StreamInterface::class, $object->createStream( __FILE__ ) );
 	}
 
 
 	public function testCreateStreamFromString()
 	{
-		$this->assertInstanceOf( \Psr\Http\Message\StreamInterface::class, $this->object->createStreamFromString( 'test' ) );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ResponseInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Response\Standard( $view, $stub );
+
+		$this->assertInstanceOf( \Psr\Http\Message\StreamInterface::class, $object->createStreamFromString( 'test' ) );
 	}
 
 
 	public function testGetProtocolVersion()
 	{
-		$this->response->expects( $this->once() )->method( 'getProtocolVersion' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getProtocolVersion' )
 			->willReturn( '1.0' );
 
 		$this->assertEquals( '1.0', $this->object->getProtocolVersion() );
@@ -58,8 +65,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithProtocolVersion()
 	{
-		$this->response->expects( $this->once() )->method( 'withProtocolVersion' )
-			->willReturn( $this->response );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withProtocolVersion' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withProtocolVersion( '1.0' ) );
 	}
@@ -67,7 +75,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeaders()
 	{
-		$this->response->expects( $this->once() )->method( 'getHeaders' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeaders' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getHeaders() );
@@ -76,7 +85,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasHeader()
 	{
-		$this->response->expects( $this->once() )->method( 'hasHeader' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'hasHeader' )
 			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->hasHeader( 'test' ) );
@@ -85,7 +95,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeader()
 	{
-		$this->response->expects( $this->once() )->method( 'getHeader' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeader' )
 			->willReturn( ['value'] );
 
 		$this->assertEquals( ['value'], $this->object->getHeader( 'test' ) );
@@ -94,7 +105,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeaderLine()
 	{
-		$this->response->expects( $this->once() )->method( 'getHeaderLine' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeaderLine' )
 			->willReturn( 'value' );
 
 		$this->assertEquals( 'value', $this->object->getHeaderLine( 'test' ) );
@@ -103,8 +115,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithHeader()
 	{
-		$this->response->expects( $this->once() )->method( 'withHeader' )
-			->willReturn( $this->response );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withHeader( 'test', 'value' ) );
 	}
@@ -112,8 +125,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithAddedHeader()
 	{
-		$this->response->expects( $this->once() )->method( 'withAddedHeader' )
-			->willReturn( $this->response );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withAddedHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withAddedHeader( 'test', 'value' ) );
 	}
@@ -121,8 +135,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithoutHeader()
 	{
-		$this->response->expects( $this->once() )->method( 'withoutHeader' )
-			->willReturn( $this->response );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withoutHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withoutHeader( 'test' ) );
 	}
@@ -130,9 +145,10 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetBody()
 	{
-		$stream = $this->getMockBuilder( \Psr\Http\Message\StreamInterface::class )->getMock();
+		$this->mock();
+		$stream = $this->createStub( \Psr\Http\Message\StreamInterface::class );
 
-		$this->response->expects( $this->once() )->method( 'getBody' )
+		$this->mock->expects( $this->once() )->method( 'getBody' )
 			->willReturn( $stream );
 
 		$this->assertEquals( $stream, $this->object->getBody() );
@@ -141,10 +157,11 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithBody()
 	{
-		$stream = $this->getMockBuilder( \Psr\Http\Message\StreamInterface::class )->getMock();
+		$this->mock();
+		$stream = $this->createStub( \Psr\Http\Message\StreamInterface::class );
 
-		$this->response->expects( $this->once() )->method( 'withBody' )
-			->willReturn( $this->response );
+		$this->mock->expects( $this->once() )->method( 'withBody' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withBody( $stream ) );
 	}
@@ -152,7 +169,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetStatusCode()
 	{
-		$this->response->expects( $this->once() )->method( 'getStatusCode' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getStatusCode' )
 			->willReturn( 200 );
 
 		$this->assertEquals( 200, $this->object->getStatusCode() );
@@ -161,8 +179,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithStatus()
 	{
-		$this->response->expects( $this->once() )->method( 'withStatus' )
-			->willReturn( $this->response );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withStatus' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withStatus( 500, 'phrase' ) );
 	}
@@ -170,7 +189,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetReasonPhrase()
 	{
-		$this->response->expects( $this->once() )->method( 'getReasonPhrase' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getReasonPhrase' )
 			->willReturn( 'test' );
 
 		$this->assertEquals( 'test', $this->object->getReasonPhrase() );

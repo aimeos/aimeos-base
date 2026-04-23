@@ -12,44 +12,51 @@ namespace Aimeos\Base\View\Helper\Request;
 class StandardTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
-	private $request;
+	private $mock;
 
 
-	protected function setUp() : void
+	private function mock()
 	{
 		$view = new \Aimeos\Base\View\Standard();
-		$this->request = $this->getMockBuilder( \Psr\Http\Message\ServerRequestInterface::class )->getMock();
-		$this->object = new \Aimeos\Base\View\Helper\Request\Standard( $view, $this->request, '127.0.0.1', 'test' );
-	}
-
-
-	protected function tearDown() : void
-	{
-		unset( $this->object, $this->request );
+		$this->mock = $this->getMockBuilder( \Psr\Http\Message\ServerRequestInterface::class )->getMock();
+		$this->object = new \Aimeos\Base\View\Helper\Request\Standard( $view, $this->mock, '127.0.0.1', 'test' );
 	}
 
 
 	public function testTransform()
 	{
-		$this->assertInstanceOf( \Aimeos\Base\View\Helper\Request\Iface::class, $this->object->transform() );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ServerRequestInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Request\Standard( $view, $stub, '127.0.0.1', 'test' );
+
+		$this->assertInstanceOf( \Aimeos\Base\View\Helper\Request\Iface::class, $object->transform() );
 	}
 
 
 	public function testGetClientAddress()
 	{
-		$this->assertEquals( '127.0.0.1', $this->object->transform()->getClientAddress() );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ServerRequestInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Request\Standard( $view, $stub, '127.0.0.1', 'test' );
+
+		$this->assertEquals( '127.0.0.1', $object->transform()->getClientAddress() );
 	}
 
 
 	public function testGetTarget()
 	{
-		$this->assertEquals( 'test', $this->object->transform()->getTarget() );
+		$view = new \Aimeos\Base\View\Standard();
+		$stub = $this->createStub( \Psr\Http\Message\ServerRequestInterface::class );
+		$object = new \Aimeos\Base\View\Helper\Request\Standard( $view, $stub, '127.0.0.1', 'test' );
+
+		$this->assertEquals( 'test', $object->transform()->getTarget() );
 	}
 
 
 	public function testGetProtocolVersion()
 	{
-		$this->request->expects( $this->once() )->method( 'getProtocolVersion' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getProtocolVersion' )
 			->willReturn( '1.0' );
 
 		$this->assertEquals( '1.0', $this->object->getProtocolVersion() );
@@ -58,8 +65,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithProtocolVersion()
 	{
-		$this->request->expects( $this->once() )->method( 'withProtocolVersion' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withProtocolVersion' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withProtocolVersion( '1.0' ) );
 	}
@@ -67,7 +75,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeaders()
 	{
-		$this->request->expects( $this->once() )->method( 'getHeaders' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeaders' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getHeaders() );
@@ -76,7 +85,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasHeader()
 	{
-		$this->request->expects( $this->once() )->method( 'hasHeader' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'hasHeader' )
 			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->hasHeader( 'test' ) );
@@ -85,7 +95,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeader()
 	{
-		$this->request->expects( $this->once() )->method( 'getHeader' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeader' )
 			->willReturn( ['value'] );
 
 		$this->assertEquals( ['value'], $this->object->getHeader( 'test' ) );
@@ -94,7 +105,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetHeaderLine()
 	{
-		$this->request->expects( $this->once() )->method( 'getHeaderLine' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getHeaderLine' )
 			->willReturn( 'value' );
 
 		$this->assertEquals( 'value', $this->object->getHeaderLine( 'test' ) );
@@ -103,8 +115,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithHeader()
 	{
-		$this->request->expects( $this->once() )->method( 'withHeader' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withHeader( 'test', 'value' ) );
 	}
@@ -112,8 +125,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithAddedHeader()
 	{
-		$this->request->expects( $this->once() )->method( 'withAddedHeader' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withAddedHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withAddedHeader( 'test', 'value' ) );
 	}
@@ -121,8 +135,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithoutHeader()
 	{
-		$this->request->expects( $this->once() )->method( 'withoutHeader' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withoutHeader' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withoutHeader( 'test' ) );
 	}
@@ -130,9 +145,10 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetBody()
 	{
-		$stream = $this->getMockBuilder( \Psr\Http\Message\StreamInterface::class )->getMock();
+		$this->mock();
+		$stream = $this->createStub( \Psr\Http\Message\StreamInterface::class );
 
-		$this->request->expects( $this->once() )->method( 'getBody' )
+		$this->mock->expects( $this->once() )->method( 'getBody' )
 			->willReturn( $stream );
 
 		$this->assertEquals( $stream, $this->object->getBody() );
@@ -141,10 +157,11 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithBody()
 	{
-		$stream = $this->getMockBuilder( \Psr\Http\Message\StreamInterface::class )->getMock();
+		$this->mock();
+		$stream = $this->createStub( \Psr\Http\Message\StreamInterface::class );
 
-		$this->request->expects( $this->once() )->method( 'withBody' )
-			->willReturn( $this->request );
+		$this->mock->expects( $this->once() )->method( 'withBody' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withBody( $stream ) );
 	}
@@ -152,7 +169,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetRequestTarget()
 	{
-		$this->request->expects( $this->once() )->method( 'getRequestTarget' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getRequestTarget' )
 			->willReturn( 'test' );
 
 		$this->assertEquals( 'test', $this->object->getRequestTarget() );
@@ -161,8 +179,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithRequestTarget()
 	{
-		$this->request->expects( $this->once() )->method( 'withRequestTarget' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withRequestTarget' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withRequestTarget( 'test' ) );
 	}
@@ -170,7 +189,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetMethod()
 	{
-		$this->request->expects( $this->once() )->method( 'getMethod' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getMethod' )
 			->willReturn( 'test' );
 
 		$this->assertEquals( 'test', $this->object->getMethod() );
@@ -179,8 +199,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithMethod()
 	{
-		$this->request->expects( $this->once() )->method( 'withMethod' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withMethod' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withMethod( 'test' ) );
 	}
@@ -188,9 +209,10 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetUri()
 	{
-		$uri = $this->getMockBuilder( \Psr\Http\Message\UriInterface::class )->getMock();
+		$this->mock();
+		$uri = $this->createStub( \Psr\Http\Message\UriInterface::class );
 
-		$this->request->expects( $this->once() )->method( 'getUri' )
+		$this->mock->expects( $this->once() )->method( 'getUri' )
 			->willReturn( $uri );
 
 		$this->assertEquals( $uri, $this->object->getUri() );
@@ -199,10 +221,11 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithUri()
 	{
-		$uri = $this->getMockBuilder( \Psr\Http\Message\UriInterface::class )->getMock();
+		$this->mock();
+		$uri = $this->createStub( \Psr\Http\Message\UriInterface::class );
 
-		$this->request->expects( $this->once() )->method( 'withUri' )
-			->willReturn( $this->request );
+		$this->mock->expects( $this->once() )->method( 'withUri' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withUri( $uri, false ) );
 	}
@@ -210,7 +233,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetServerParams()
 	{
-		$this->request->expects( $this->once() )->method( 'getServerParams' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getServerParams' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getServerParams() );
@@ -219,7 +243,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetCookieParams()
 	{
-		$this->request->expects( $this->once() )->method( 'getCookieParams' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getCookieParams' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getCookieParams() );
@@ -228,8 +253,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithCookieParams()
 	{
-		$this->request->expects( $this->once() )->method( 'withCookieParams' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withCookieParams' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withCookieParams( [] ) );
 	}
@@ -237,7 +263,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetQueryParams()
 	{
-		$this->request->expects( $this->once() )->method( 'getQueryParams' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getQueryParams' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getQueryParams() );
@@ -246,8 +273,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithQueryParams()
 	{
-		$this->request->expects( $this->once() )->method( 'withQueryParams' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withQueryParams' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withQueryParams( [] ) );
 	}
@@ -255,7 +283,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetUploadedFiles()
 	{
-		$this->request->expects( $this->once() )->method( 'getUploadedFiles' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getUploadedFiles' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getUploadedFiles() );
@@ -264,8 +293,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithUploadedFiles()
 	{
-		$this->request->expects( $this->once() )->method( 'withUploadedFiles' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withUploadedFiles' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withUploadedFiles( [] ) );
 	}
@@ -273,7 +303,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetParsedBody()
 	{
-		$this->request->expects( $this->once() )->method( 'getParsedBody' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getParsedBody' )
 			->willReturn( 'test' );
 
 		$this->assertEquals( 'test', $this->object->getParsedBody() );
@@ -282,8 +313,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithParsedBody()
 	{
-		$this->request->expects( $this->once() )->method( 'withParsedBody' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withParsedBody' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withParsedBody( array( 'test' ) ) );
 	}
@@ -291,7 +323,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetAttributes()
 	{
-		$this->request->expects( $this->once() )->method( 'getAttributes' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getAttributes' )
 			->willReturn( [] );
 
 		$this->assertEquals( [], $this->object->getAttributes() );
@@ -300,7 +333,8 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetAttribute()
 	{
-		$this->request->expects( $this->once() )->method( 'getAttribute' )
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'getAttribute' )
 			->willReturn( 'value' );
 
 		$this->assertEquals( 'value', $this->object->getAttribute( 'test', 'default' ) );
@@ -309,8 +343,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithAttribute()
 	{
-		$this->request->expects( $this->once() )->method( 'withAttribute' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withAttribute' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withAttribute( 'test', 'value' ) );
 	}
@@ -318,8 +353,9 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 	public function testWithoutAttribute()
 	{
-		$this->request->expects( $this->once() )->method( 'withoutAttribute' )
-			->willReturn( $this->request );
+		$this->mock();
+		$this->mock->expects( $this->once() )->method( 'withoutAttribute' )
+			->willReturn( $this->mock );
 
 		$this->assertEquals( $this->object, $this->object->withoutAttribute( 'test' ) );
 	}
