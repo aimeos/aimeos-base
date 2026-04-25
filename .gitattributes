@@ -1,6 +1,6 @@
 .circleci export-ignore
-.gitattributes exprot-ignore
-.gitignore exprot-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
 .phpcs export-ignore
 build.xml export-ignore
 tests export-ignore
