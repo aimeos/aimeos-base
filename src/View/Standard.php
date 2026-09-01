@@ -293,23 +293,27 @@ class Standard implements \Aimeos\Base\View\Iface
 	{
 		foreach( (array) $files as $file )
 		{
-			if( is_file( $file . $fileext ) ) {
-				return $file . $fileext;
-			}
-
 			$ds = DIRECTORY_SEPARATOR;
 
 			foreach( array_reverse( $this->paths ) as $path => $relPaths )
 			{
 				foreach( $relPaths as $relPath )
 				{
-					$absPath = $path . $ds . $relPath . $ds . $file . $fileext;
+					$basePath = $path . $ds . $relPath;
+					$absPath = $basePath . $ds . $file . $fileext;
 
-					if( $ds !== '/' ) {
+					if( $ds !== '/' )
+					{
+						$basePath = str_replace( '/', $ds, $basePath );
 						$absPath = str_replace( '/', $ds, $absPath );
 					}
 
-					if( is_file( $absPath ) ) {
+					$basePath = realpath( $basePath );
+					$absPath = realpath( $absPath );
+
+					// Canonical paths prevent traversal and symlinks from escaping registered template directories
+					if( $basePath !== false && $absPath !== false
+						&& str_starts_with( $absPath, rtrim( $basePath, $ds ) . $ds ) && is_file( $absPath ) ) {
 						return $absPath;
 					}
 				}
