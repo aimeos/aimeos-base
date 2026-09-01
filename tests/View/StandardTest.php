@@ -148,14 +148,25 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object->addHelper( 'translate', $this->translate );
 
-		$ds = DIRECTORY_SEPARATOR;
-		$filenames = array( 'notexisting', __DIR__ . $ds . '_testfiles' . $ds . 'template1' );
-
-		$output = $this->object->assign( array( 'quantity' => 1 ) )->render( $filenames );
+		$output = $this->object->assign( ['quantity' => 1] )->render( ['notexisting', 'template1'] );
 		$this->assertEquals( "Number of files: 1 File", $output );
 
-		$output = $this->object->assign( array( 'quantity' => 0 ) )->render( $filenames );
+		$output = $this->object->assign( ['quantity' => 0] )->render( ['notexisting', 'template1'] );
 		$this->assertEquals( "Number of files: 0 Files", $output );
+	}
+
+
+	public function testRenderAbsolutePath()
+	{
+		$this->expectException( \Aimeos\Base\View\Exception::class );
+		$this->object->render( __DIR__ . DIRECTORY_SEPARATOR . '_testfiles' . DIRECTORY_SEPARATOR . 'template1' );
+	}
+
+
+	public function testRenderTraversalPath()
+	{
+		$this->expectException( \Aimeos\Base\View\Exception::class );
+		$this->object->render( '../_outside/template' );
 	}
 
 
