@@ -56,6 +56,31 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testIsdirSymlinkException()
+	{
+		$target = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid( 'ai-fs-' );
+		$link = $this->basedir . uniqid( 'fslink-' );
+		mkdir( $target );
+
+		if( @symlink( $target, $link ) === false )
+		{
+			rmdir( $target );
+			$this->markTestSkipped( 'Creating symlinks isn\'t supported' );
+		}
+
+		try
+		{
+			$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+			$this->object->isdir( basename( $link ) );
+		}
+		finally
+		{
+			unlink( $link );
+			rmdir( $target );
+		}
+	}
+
+
 	public function testMkdir()
 	{
 		$object = $this->object->mkdir( 'fstest' );
@@ -266,6 +291,35 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 
 		$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
 		$this->object->write( 'path', 'test' );
+	}
+
+
+	public function testWriteSymlinkException()
+	{
+		$target = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid( 'ai-fs-' );
+		$link = $this->basedir . uniqid( 'fslink-' );
+		mkdir( $target );
+
+		if( @symlink( $target, $link ) === false )
+		{
+			rmdir( $target );
+			$this->markTestSkipped( 'Creating symlinks isn\'t supported' );
+		}
+
+		try
+		{
+			$this->expectException( \Aimeos\Base\Filesystem\Exception::class );
+			$this->object->write( basename( $link ) . '/file', 'test' );
+		}
+		finally
+		{
+			if( file_exists( $target . DIRECTORY_SEPARATOR . 'file' ) ) {
+				unlink( $target . DIRECTORY_SEPARATOR . 'file' );
+			}
+
+			unlink( $link );
+			rmdir( $target );
+		}
 	}
 
 

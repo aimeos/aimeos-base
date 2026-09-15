@@ -372,10 +372,33 @@ class Standard implements Iface, DirIface, MetaIface
 	{
 		$path = trim( $path, '/' );
 
-		if( strpos( $path, '..' ) !== false ) {
-			throw new Exception( sprintf( 'No ".." allowed in path "%1$s"', $path ) );
+		if( str_contains( $path, "\0" ) || str_contains( $path, '..' ) ) {
+			throw new Exception( sprintf( 'Invalid path "%1$s"', $path ) );
 		}
 
-		return $this->basedir . str_replace( '/', DIRECTORY_SEPARATOR, $path );
+		$ds = DIRECTORY_SEPARATOR;
+		$absPath = $this->basedir . str_replace( '/', $ds, $path );
+		$realPath = $absPath;
+
+		while( !file_exists( $realPath ) && !is_link( $realPath ) )
+		{
+			$parent = dirname( $realPath );
+
+			if( $parent === $realPath ) {
+				throw new Exception( sprintf( 'Unable to resolve path "%1$s"', $path ) );
+			}
+
+			$realPath = $parent;
+		}
+
+		$basePath = rtrim( $this->basedir, $ds );
+		$realPath = realpath( $realPath );
+
+		if( $realPath === false || ( $realPath !== $basePath
+			&& !str_starts_with( $realPath, $basePath . $ds ) ) ) {
+			throw new Exception( sprintf( 'Path "%1$s" outside filesystem root', $path ) );
+		}
+
+		return $absPath;
 	}
 }
