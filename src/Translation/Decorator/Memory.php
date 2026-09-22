@@ -40,6 +40,21 @@ class Memory
 
 
 	/**
+	 * Returns all locale string of the given domain.
+	 *
+	 * @param string $domain Translation domain
+	 * @return array Associative list with original string as key and translation
+	 * 	as value or an associative list with index => translation as value if
+	 * 	plural forms are available
+	 */
+	public function all( string $domain ) : array
+	{
+		$list = array_map( fn( $forms ) => count( $forms ) > 1 ? $forms : reset( $forms ), $this->translations[$domain] ?? [] );
+		return $list + parent::all( $domain );
+	}
+
+
+	/**
 	 * Returns the translated string.
 	 *
 	 * @param string $domain Translation domain

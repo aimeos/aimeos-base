@@ -37,7 +37,34 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 
 	public function testAll()
 	{
-		$this->assertEquals( [], $this->object->all( 'domain' ) );
+		$expected = [
+			'test singular' => 'translation singular',
+			'test plural' => [
+				0 => 'plural translation singular',
+				1 => 'plural translation plural',
+				2 => 'plural translation plural (cs)',
+			]
+		];
+
+		$this->assertEquals( $expected, $this->object->all( 'domain' ) );
+	}
+
+
+	public function testAllNone()
+	{
+		$this->assertEquals( [], $this->object->all( 'none' ) );
+	}
+
+
+	public function testAllOverwrite()
+	{
+		$stub = $this->createStub( \Aimeos\Base\Translation\Iface::class );
+		$stub->method( 'all' )->willReturn( ['test singular' => 'file singular', 'test file' => 'file translation'] );
+
+		$object = new \Aimeos\Base\Translation\Decorator\Memory( $stub, ['domain' => ['test singular' => ['memory singular']]] );
+		$expected = ['test singular' => 'memory singular', 'test file' => 'file translation'];
+
+		$this->assertEquals( $expected, $object->all( 'domain' ) );
 	}
 
 
