@@ -21,6 +21,7 @@ class Standard implements Iface, DirIface, MetaIface
 {
 	private string $basedir;
 	private string $tempdir;
+	private bool $symlinks;
 
 
 	/**
@@ -49,6 +50,7 @@ class Standard implements Iface, DirIface, MetaIface
 		$ds = DIRECTORY_SEPARATOR;
 		$this->basedir = realpath( str_replace( '/', $ds, rtrim( $config['basedir'], '/' ) ) ) . $ds;
 		$this->tempdir = realpath( str_replace( '/', $ds, rtrim( $config['tempdir'], '/' ) ) ) . $ds;
+		$this->symlinks = (bool) ( $config['symlinks'] ?? false );
 	}
 
 
@@ -379,6 +381,11 @@ class Standard implements Iface, DirIface, MetaIface
 
 		$ds = DIRECTORY_SEPARATOR;
 		$absPath = $this->basedir . str_replace( '/', $ds, $path );
+
+		if( $this->symlinks ) {
+			return $absPath;
+		}
+
 		$realPath = $absPath;
 
 		while( !file_exists( $realPath ) && !is_link( $realPath ) )
