@@ -62,8 +62,8 @@ class Memory
 		$local = $this->getValueFromArray( $this->config, explode( '/', $name ) );
 		$value = parent::get( $name, null );
 
-		if( is_array( $local ) && is_array( $value ) ) {
-			$value = array_replace_recursive( $value, $local );
+		if( is_array( $local ) ) {
+			$value = $this->merge( is_array( $value ) ? $value : [], $local );
 		} elseif( $local !== null ) {
 			$value = $local;
 		}
@@ -114,15 +114,39 @@ class Memory
 	 */
 	protected function getValueFromArray( array $config, array $parts )
 	{
-		if( ( $key = array_shift( $parts ) ) !== null && isset( $config[$key] ) )
-		{
-			if( count( $parts ) > 0 ) {
-				return $this->getValueFromArray( $config[$key], $parts );
-			}
-
-			return $config[$key];
+		if( ( $key = array_shift( $parts ) ) === null || !isset( $config[$key] ) ) {
+			return null;
 		}
 
-		return null;
+		if( count( $parts ) > 0 ) {
+			return is_array( $config[$key] ) ? $this->getValueFromArray( $config[$key], $parts ) : null;
+		}
+
+		return $config[$key];
+	}
+
+
+	/**
+	 * Merges the local configuration into the configuration of the underlying object
+	 *
+	 * Associative arrays are merged recursively while lists replace the existing
+	 * values completely.
+	 *
+	 * @param array $base Configuration of the underlying object
+	 * @param array $local Local configuration
+	 * @return array Merged configuration
+	 */
+	protected function merge( array $base, array $local ) : array
+	{
+		if( array_is_list( $local ) ) {
+			return $local;
+		}
+
+		foreach( $local as $key => $val )
+		{
+			$base[$key] = is_array( $val ) ? $this->merge( is_array( $base[$key] ?? null ) ? $base[$key] : [], $val ) : $val;
+		}
+
+		return $base;
 	}
 }

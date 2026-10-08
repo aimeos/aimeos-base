@@ -99,6 +99,44 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testGetReplaceList()
+	{
+		$cfg = ['common' => ['countries' => ['AD', 'DE', 'RS', 'US'], 'currencies' => ['EUR']]];
+		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
+
+		$local = ['common' => ['countries' => ['RS']]];
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+
+		$this->assertEquals( ['RS'], $object->get( 'common/countries' ) );
+		$this->assertEquals( ['countries' => ['RS'], 'currencies' => ['EUR']], $object->get( 'common' ) );
+	}
+
+
+	public function testGetReplaceListEmpty()
+	{
+		$cfg = ['resource' => ['db' => ['stmt' => ['SET NAMES utf8mb4'], 'host' => 'localhost']]];
+		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
+
+		$local = ['resource' => ['db' => ['stmt' => []]]];
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $conf, $local );
+
+		$this->assertEquals( [], $object->get( 'resource/db/stmt' ) );
+		$this->assertEquals( ['stmt' => [], 'host' => 'localhost'], $object->get( 'resource/db' ) );
+	}
+
+
+	public function testGetReplaceStacked()
+	{
+		$cfg = ['common' => ['countries' => ['AD', 'DE', 'RS']]];
+		$conf = new \Aimeos\Base\Config\PHPArray( $cfg );
+
+		$inner = new \Aimeos\Base\Config\Decorator\Memory( $conf, ['common' => ['countries' => ['DE', 'RS']]] );
+		$object = new \Aimeos\Base\Config\Decorator\Memory( $inner, ['common' => ['countries' => ['RS']]] );
+
+		$this->assertEquals( ['RS'], $object->get( 'common/countries' ) );
+	}
+
+
 	public function testSet()
 	{
 		$conf = new \Aimeos\Base\Config\PHPArray( [] );
