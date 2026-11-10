@@ -25,6 +25,9 @@ class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 	/**
 	 * Initializes the view helper
 	 *
+	 * The "super" group is ignored because super users must be granted access
+	 * by the \Aimeos\Base\View\Helper\Access\All helper instead of an editable group.
+	 *
 	 * @param \Aimeos\Base\View\Iface $view View object
 	 * @param \Closure|array $groups Group codes assigned to the current user or closure function that returns the list
 	 */
@@ -49,6 +52,7 @@ class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 			$this->groups = $fcn();
 		}
 
-		return (bool) count( array_intersect( (array) $groups, (array) $this->groups ) );
+		$list = array_diff( (array) $this->groups, ['super'] );
+		return (bool) count( array_intersect( (array) $groups, $list ) );
 	}
 }
