@@ -49,4 +49,15 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 		$object = new \Aimeos\Base\View\Helper\Access\Standard( $view, $fcn );
 		$this->assertFalse( $object->transform( array( 'test', 'example' ) ) );
 	}
+
+
+	public function testTransformSuperIgnored()
+	{
+		$view = new \Aimeos\Base\View\Standard();
+		$fcn = function() { return array( 'super', 'admin' ); };
+
+		$object = new \Aimeos\Base\View\Helper\Access\Standard( $view, $fcn );
+		$this->assertFalse( $object->transform( 'super' ) );
+		$this->assertTrue( $object->transform( array( 'super', 'admin' ) ) );
+	}
 }
