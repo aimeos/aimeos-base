@@ -51,6 +51,21 @@ class StandardTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testTransformClone()
+	{
+		$calls = 0;
+		$view = new \Aimeos\Base\View\Standard();
+		$fcn = function() use ( &$calls ) { $calls++; return ['admin']; };
+
+		$view->addHelper( 'access', new \Aimeos\Base\View\Helper\Access\Standard( $view, $fcn ) );
+
+		$this->assertTrue( ( clone $view )->access( 'admin' ) );
+		$this->assertTrue( ( clone $view )->access( 'admin' ) );
+		$this->assertTrue( $view->access( 'admin' ) );
+		$this->assertEquals( 1, $calls );
+	}
+
+
 	public function testTransformSuperIgnored()
 	{
 		$view = new \Aimeos\Base\View\Standard();

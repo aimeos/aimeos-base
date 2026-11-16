@@ -20,6 +20,7 @@ namespace Aimeos\Base\View\Helper\Access;
 class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 {
 	private $groups;
+	private \stdClass $resolved;
 
 
 	/**
@@ -27,6 +28,7 @@ class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 	 *
 	 * The "super" group is ignored because super users must be granted access
 	 * by the \Aimeos\Base\View\Helper\Access\All helper instead of an editable group.
+	 * The closure is called only once, also if the view and its helpers are cloned.
 	 *
 	 * @param \Aimeos\Base\View\Iface $view View object
 	 * @param \Closure|array $groups Group codes assigned to the current user or closure function that returns the list
@@ -35,6 +37,8 @@ class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 	{
 		parent::__construct( $view );
 		$this->groups = $groups;
+		// shared with the clones of the helper, so they don't resolve the groups again
+		$this->resolved = new \stdClass();
 	}
 
 
@@ -46,13 +50,12 @@ class Standard extends \Aimeos\Base\View\Helper\Base implements Iface
 	 */
 	public function transform( $groups ) : bool
 	{
-		if( is_callable( $this->groups ) )
+		if( !isset( $this->resolved->groups ) )
 		{
-			$fcn = $this->groups;
-			$this->groups = $fcn();
+			$list = is_callable( $this->groups ) ? ( $this->groups )() : $this->groups;
+			$this->resolved->groups = array_diff( (array) $list, ['super'] );
 		}
 
-		$list = array_diff( (array) $this->groups, ['super'] );
-		return (bool) count( array_intersect( (array) $groups, $list ) );
+		return (bool) count( array_intersect( (array) $groups, $this->resolved->groups ) );
 	}
 }
