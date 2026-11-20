@@ -69,6 +69,16 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testToSourceFunction()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$funcs = ['func()' => fn( array $params, \Closure $quote ) => ['key = ' . $quote( $params[0] ), 'POSITION(' . $quote( $params[0] ) . ' IN name)']];
+
+		$object = new \Aimeos\Base\Criteria\Expression\Sort\SQL( $this->conn, '-', 'func("$1")' );
+		$this->assertEquals( "POSITION('$1' IN name) DESC", $object->toSource( $types, [], [], $funcs ) );
+	}
+
+
 	public function testToArray()
 	{
 		$object = new \Aimeos\Base\Criteria\Expression\Sort\SQL( $this->conn, '+', 'stringvar' );

@@ -19,7 +19,6 @@ namespace Aimeos\Base\Criteria\Expression;
  */
 trait Traits
 {
-	private static ?string $nonce = null;
 	private array $exprPlugins = [];
 
 
@@ -105,14 +104,15 @@ trait Traits
 	/**
 	 * Translates an expression string and replaces the parameter if it's an expression function.
 	 *
-	 * The positional parameters ("$1", "$2", etc.) of the translation are replaced by markers
-	 * before the function modifying the translation is called. Thus, user supplied values
-	 * inserted by the function can never be mistaken for positional parameters. All markers
-	 * are replaced in one pass afterwards so inserted parameter values are never scanned again.
+	 * Functions with a closure get the parameters and a function for quoting values and
+	 * return the translated parts built from them. Only scalar values are quoted, nested
+	 * values are removed from lists. Otherwise, the positional parameters
+	 * ("$1", "$2", etc.) of the translation are replaced by the quoted parameter values
+	 * in one pass so inserted values are never scanned again.
 	 *
 	 * @param string $name Expresion string or function
 	 * @param array $translations Associative list of names and their translations (may include parameter if a name is an expression function)
-	 * @param array $funcs Associative list of item names and functions modifying the conditions
+	 * @param array $funcs Associative list of item names and functions returning the translated parts
 	 * @return mixed Translated name (with replaced parameters if the name is an expression function)
 	 */
 	protected function translateName( string &$name, array $translations = [], array $funcs = [] )
@@ -123,20 +123,30 @@ trait Traits
 			return array_key_exists( $name, $translations ) ? $translations[$name] : $name;
 		}
 
-		// control character plus random nonce can't be part of the translation or guessed by users
-		$marker = "\x1A" . ( self::$nonce ??= bin2hex( random_bytes( 8 ) ) ) . ":%s\x1A";
-		$source = $this->mapStrings( $translations[$name] ?? $name, fn( $value ) => preg_replace( '/\$(\d+)/', sprintf( $marker, '$1' ), $value ) );
+		$params = (array) $params;
+		$escape = fn( $value ) => $this->escape( '==', $this->getParamType( $value ), $value );
+		$quote = fn( $value ) => is_array( $value )
+			? join( ',', array_map( $escape, array_filter( $value, fn( $v ) => is_scalar( $v ) || $v === null ) ) )
+			: $escape( $value );
 
 		if( isset( $funcs[$name] ) ) {
-			$params = $funcs[$name]( $source, $params );
+			return $this->translateFunction( $funcs[$name]( $params, $quote ) );
 		}
 
-		$escape = fn( $value ) => $this->escape( '==', $this->getParamType( $value ), $value );
-		$render = fn( $param ) => is_array( $param ) ? join( ',', array_map( $escape, $param ) ) : $escape( $param );
-		$replace = fn( $match ) => array_key_exists( $match[1] - 1, $params ) ? (string) $render( $params[$match[1] - 1] ) : '$' . $match[1];
-		$pattern = '/' . sprintf( $marker, '(\d+)' ) . '/';
+		$replace = fn( $match ) => array_key_exists( $match[1] - 1, $params ) ? (string) $quote( $params[$match[1] - 1] ) : $match[0];
+		return $this->mapStrings( $translations[$name] ?? $name, fn( $value ) => preg_replace_callback( '/\$(\d+)/', $replace, $value ) );
+	}
 
-		return $this->mapStrings( $source, fn( $value ) => preg_replace_callback( $pattern, $replace, $value ) );
+
+	/**
+	 * Returns the translation from the parts returned by an expression function
+	 *
+	 * @param mixed $parts Parts returned by the function, e.g. conditions and the target
+	 * @return mixed Translation of the expression function
+	 */
+	protected function translateFunction( $parts )
+	{
+		return $parts;
 	}
 
 

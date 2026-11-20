@@ -158,6 +158,18 @@ class SQL extends Base
 
 
 	/**
+	 * Returns the conditions and the target returned by an expression function combined by AND
+	 *
+	 * @param mixed $parts List of conditions and the target as last part
+	 * @return string Translation of the expression function
+	 */
+	protected function translateFunction( $parts )
+	{
+		return join( ' AND ', (array) $parts );
+	}
+
+
+	/**
 	 * Returns the connection object.
 	 *
 	 * return \Aimeos\Base\DB\Connection\Iface Connection object

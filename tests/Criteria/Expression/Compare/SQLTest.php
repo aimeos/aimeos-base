@@ -149,31 +149,54 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testToSourceFunctionParamInserted()
+	public function testToSourceFunctionParts()
 	{
 		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
-		$translations = ['func()' => ':key AND name = $1'];
-		$funcs = ['func()' => function( &$source, array $params ) {
-			$source = str_replace( ':key', 'key = \'' . $params[1] . '\'', $source );
-			return $params;
-		}];
+		$funcs = ['func()' => fn( array $params, \Closure $quote ) => ['key = ' . $quote( $params[1] ), 'name']];
 
 		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func("x","$1")', 'c' );
-		$this->assertEquals( "key = '$1' AND name = 'x' = 'c'", $expr->toSource( $types, $translations, [], $funcs ) );
+		$this->assertEquals( "key = '$1' AND name = 'c'", $expr->toSource( $types, [], [], $funcs ) );
 	}
 
 
-	public function testToSourceFunctionParamAdded()
+	public function testToSourceFunctionPartsList()
 	{
 		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
-		$translations = ['func()' => ':key name'];
-		$funcs = ['func()' => function( &$source, array $params ) {
-			$source = str_replace( ':key', 'key = $2 AND', $source );
-			return $params;
-		}];
+		$funcs = ['func()' => fn( array $params, \Closure $quote ) => ['key IN (' . $quote( $params[0] ) . ')', 'name']];
 
-		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func("x","y")', 'c' );
-		$this->assertEquals( "key = $2 AND name = 'c'", $expr->toSource( $types, $translations, [], $funcs ) );
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '!=', 'func(["a","b"])', null );
+		$this->assertEquals( "key IN ('a','b') AND name IS NOT NULL", $expr->toSource( $types, [], [], $funcs ) );
+	}
+
+
+	public function testToSourceFunctionNested()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$funcs = ['func()' => fn( array $params, \Closure $quote ) => ['key IN (' . $quote( $params[0] ) . ')', 'name']];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func(["a",["b"],{"c":"d"},1])', 'f' );
+		$this->assertEquals( "key IN ('a',1) AND name = 'f'", $expr->toSource( $types, [], [], $funcs ) );
+	}
+
+
+	public function testToSourceFunctionNestedTemplate()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$translations = ['func()' => 'key IN ($1)'];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func(["a",["b"]])', 1 );
+		$this->assertEquals( "key IN ('a') = '1'", $expr->toSource( $types, $translations ) );
+	}
+
+
+	public function testToSourceFunctionNoTemplate()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$translations = ['func()' => 'name = $1 AND key'];
+		$funcs = ['func()' => fn( array $params, \Closure $quote ) => ['key = $1', 'name']];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func("x")', 'c' );
+		$this->assertEquals( "key = $1 AND name = 'c'", $expr->toSource( $types, $translations, [], $funcs ) );
 	}
 
 

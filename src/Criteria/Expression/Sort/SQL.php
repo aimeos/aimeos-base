@@ -82,6 +82,19 @@ class SQL extends Base
 
 
 	/**
+	 * Returns the target returned by an expression function which is always the last part
+	 *
+	 * @param mixed $parts List of conditions and the target as last part
+	 * @return string Translation of the expression function
+	 */
+	protected function translateFunction( $parts )
+	{
+		$parts = (array) $parts;
+		return (string) end( $parts );
+	}
+
+
+	/**
 	 * Returns the connection object.
 	 *
 	 * return \Aimeos\Base\DB\Connection\Iface Connection object
