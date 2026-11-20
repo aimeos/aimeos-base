@@ -19,6 +19,7 @@ namespace Aimeos\Base\Criteria\Expression;
  */
 trait Traits
 {
+	private static ?string $nonce = null;
 	private array $exprPlugins = [];
 
 
@@ -80,30 +81,34 @@ trait Traits
 
 
 	/**
-	 * Replaces the parameters in nested arrays
+	 * Applies the callback to the string or all strings in nested arrays
 	 *
-	 * @param array $list Multi-dimensional associative array of values including positional parameter, e.g. "$1"
-	 * @param string[] $find List of strings to search for, e.g. ['$1', '$2']
-	 * @param string[] $replace List of strings to replace by, e.g. ['val1', 'val2']
-	 * @return array Multi-dimensional associative array with parameters replaced
+	 * @param mixed $source String or multi-dimensional associative array of values
+	 * @param \Closure $fcn Function receiving and returning a string
+	 * @return mixed String or multi-dimensional array with all strings processed
 	 */
-	protected function replaceParameter( array $list, array $find, array $replace ) : array
+	protected function mapStrings( $source, \Closure $fcn )
 	{
-		foreach( $list as $key => $value )
+		if( is_array( $source ) )
 		{
-			if( is_array( $value ) ) {
-				$list[$key] = $this->replaceParameter( $value, $find, $replace );
-			} else {
-				$list[$key] = str_replace( $find, $replace, $value );
+			foreach( $source as $key => $value ) {
+				$source[$key] = $this->mapStrings( $value, $fcn );
 			}
+
+			return $source;
 		}
 
-		return $list;
+		return is_string( $source ) ? $fcn( $source ) : $source;
 	}
 
 
 	/**
 	 * Translates an expression string and replaces the parameter if it's an expression function.
+	 *
+	 * The positional parameters ("$1", "$2", etc.) of the translation are replaced by markers
+	 * before the function modifying the translation is called. Thus, user supplied values
+	 * inserted by the function can never be mistaken for positional parameters. All markers
+	 * are replaced in one pass afterwards so inserted parameter values are never scanned again.
 	 *
 	 * @param string $name Expresion string or function
 	 * @param array $translations Associative list of names and their translations (may include parameter if a name is an expression function)
@@ -114,50 +119,24 @@ trait Traits
 	{
 		$params = [];
 
-		if( $this->isFunction( $name, $params ) === true )
-		{
-			$source = $name;
-			if( isset( $translations[$name] ) ) {
-				$source = $translations[$name];
-			}
-
-			if( isset( $funcs[$name] ) ) {
-				$params = $funcs[$name]( $source, $params );
-			}
-
-			$find = [];
-			$count = count( $params );
-
-			for( $i = 0; $i < $count; $i++ )
-			{
-				$find[$i] = '$' . ( $i + 1 );
-
-				if( is_array( $params[$i] ) )
-				{
-					$list = [];
-					foreach( $params[$i] as $key => $item ) {
-						$list[] = $this->escape( '==', $this->getParamType( $item ), $item );
-					}
-					$params[$i] = join( ',', $list );
-				}
-				else
-				{
-					$params[$i] = $this->escape( '==', $this->getParamType( $params[$i] ), $params[$i] );
-				}
-			}
-
-			if( is_array( $source ) ) {
-				return $this->replaceParameter( $source, $find, $params );
-			}
-
-			return str_replace( $find, $params, $source );
+		if( !$this->isFunction( $name, $params ) ) {
+			return array_key_exists( $name, $translations ) ? $translations[$name] : $name;
 		}
 
-		if( array_key_exists( $name, $translations ) ) {
-			return $translations[$name];
+		// control character plus random nonce can't be part of the translation or guessed by users
+		$marker = "\x1A" . ( self::$nonce ??= bin2hex( random_bytes( 8 ) ) ) . ":%s\x1A";
+		$source = $this->mapStrings( $translations[$name] ?? $name, fn( $value ) => preg_replace( '/\$(\d+)/', sprintf( $marker, '$1' ), $value ) );
+
+		if( isset( $funcs[$name] ) ) {
+			$params = $funcs[$name]( $source, $params );
 		}
 
-		return $name;
+		$escape = fn( $value ) => $this->escape( '==', $this->getParamType( $value ), $value );
+		$render = fn( $param ) => is_array( $param ) ? join( ',', array_map( $escape, $param ) ) : $escape( $param );
+		$replace = fn( $match ) => array_key_exists( $match[1] - 1, $params ) ? (string) $render( $params[$match[1] - 1] ) : '$' . $match[1];
+		$pattern = '/' . sprintf( $marker, '(\d+)' ) . '/';
+
+		return $this->mapStrings( $source, fn( $value ) => preg_replace_callback( $pattern, $replace, $value ) );
 	}
 
 
