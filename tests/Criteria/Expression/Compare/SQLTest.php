@@ -139,6 +139,44 @@ class SQLTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testToSourceFunctionParamInValue()
+	{
+		$types = ['strconcat()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$translations = ['strconcat()' => 'concat($1,$2)'];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'strconcat("a$2","b")', 'c' );
+		$this->assertEquals( "concat('a$2','b') = 'c'", $expr->toSource( $types, $translations ) );
+	}
+
+
+	public function testToSourceFunctionParamInserted()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$translations = ['func()' => ':key AND name = $1'];
+		$funcs = ['func()' => function( &$source, array $params ) {
+			$source = str_replace( ':key', 'key = \'' . $params[1] . '\'', $source );
+			return $params;
+		}];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func("x","$1")', 'c' );
+		$this->assertEquals( "key = '$1' AND name = 'x' = 'c'", $expr->toSource( $types, $translations, [], $funcs ) );
+	}
+
+
+	public function testToSourceFunctionParamAdded()
+	{
+		$types = ['func()' => \Aimeos\Base\DB\Statement\Base::PARAM_STR];
+		$translations = ['func()' => ':key name'];
+		$funcs = ['func()' => function( &$source, array $params ) {
+			$source = str_replace( ':key', 'key = $2 AND', $source );
+			return $params;
+		}];
+
+		$expr = new \Aimeos\Base\Criteria\Expression\Compare\SQL( $this->conn, '==', 'func("x","y")', 'c' );
+		$this->assertEquals( "key = $2 AND name = 'c'", $expr->toSource( $types, $translations, [], $funcs ) );
+	}
+
+
 	public function testToArray()
 	{
 		$expected = ['==' => ['stringvar' => 'value']];
