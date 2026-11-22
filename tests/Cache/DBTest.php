@@ -191,6 +191,75 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testGetMultipleEmpty()
+	{
+		$this->assertSame( [], $this->object->getMultiple( [] ) );
+	}
+
+
+	public function testGetMultipleTraversable()
+	{
+		$keys = function() {
+			yield 't:1'; yield 't:2';
+		};
+
+		$this->assertEquals( array( 't:1' => 'test 1', 't:2' => null ), $this->object->getMultiple( $keys() ) );
+	}
+
+
+	public function testDeleteMultipleTraversable()
+	{
+		$keys = function() {
+			yield 't:1'; yield 't:2';
+		};
+
+		$this->assertTrue( $this->object->deleteMultiple( $keys() ) );
+
+		$row = self::$conn->create( 'SELECT * FROM "mw_cache_test"' )->execute()->fetch();
+		$this->assertNull( $row );
+	}
+
+
+	public function testDeleteByTagsTraversable()
+	{
+		$tags = function() {
+			yield 'tag:1';
+		};
+
+		$this->assertTrue( $this->object->deleteByTags( $tags() ) );
+
+		$result = self::$conn->create( 'SELECT "id" FROM "mw_cache_test"' )->execute();
+
+		$this->assertEquals( array( 'id' => 't:2' ), $result->fetch() );
+		$this->assertNull( $result->fetch() );
+	}
+
+
+	public function testSetMultipleTraversable()
+	{
+		$pairs = function() {
+			yield 't:3' => 'test 3'; yield 't:2' => 'test 4';
+		};
+		$tags = function() {
+			yield 'tag:2'; yield 'tag:3';
+		};
+
+		$this->assertTrue( $this->object->setMultiple( $pairs(), '2100-01-01 00:00:00', $tags() ) );
+
+		$result = self::$conn->create( 'SELECT "tname" FROM "mw_cache_tag_test" WHERE "tid" = \'t:2\' ORDER BY "tname"' )->execute();
+
+		$this->assertEquals( array( 'tname' => 'tag:2' ), $result->fetch() );
+		$this->assertEquals( array( 'tname' => 'tag:3' ), $result->fetch() );
+		$this->assertNull( $result->fetch() );
+
+		$result = self::$conn->create( 'SELECT * FROM "mw_cache_test" WHERE "id" = \'t:2\'' )->execute();
+		$row = $result->fetch();
+
+		$this->assertEquals( 'test 4', $row['value'] );
+		$this->assertNull( $result->fetch() );
+	}
+
+
 	public function testHas()
 	{
 		$this->assertTrue( $this->object->has( 't:1' ) );
