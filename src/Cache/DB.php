@@ -110,6 +110,8 @@ class DB
 	 */
 	public function deleteMultiple( iterable $keys ) : bool
 	{
+		$keys = is_array( $keys ) ? $keys : iterator_to_array( $keys, false );
+
 		try
 		{
 			if( ( $cnt = count( $keys ) ) === 0 ) {
@@ -149,6 +151,8 @@ class DB
 	 */
 	public function deleteByTags( iterable $tags ) : bool
 	{
+		$tags = is_array( $tags ) ? $tags : iterator_to_array( $tags, false );
+
 		try
 		{
 			if( ( $cnt = count( $tags ) ) === 0 ) {
@@ -190,10 +194,12 @@ class DB
 	 */
 	public function getMultiple( iterable $keys, $default = null ) : iterable
 	{
+		$keys = is_array( $keys ) ? $keys : iterator_to_array( $keys, false );
+
 		try
 		{
 			if( ( $cnt = count( $keys ) ) === 0 ) {
-				return true;
+				return [];
 			}
 
 			$pos = 2;
@@ -279,6 +285,9 @@ class DB
 	 */
 	public function setMultiple( iterable $pairs, $expires = null, iterable $tags = [] ) : bool
 	{
+		$pairs = is_array( $pairs ) ? $pairs : iterator_to_array( $pairs );
+		$tags = is_array( $tags ) ? $tags : iterator_to_array( $tags, false );
+
 		$keys = [];
 		foreach( $pairs as $key => $v ) {
 			$keys[] = $key;
